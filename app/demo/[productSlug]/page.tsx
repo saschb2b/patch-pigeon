@@ -3,9 +3,11 @@ import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Stack from "@mui/material/Stack"
 import MuiLink from "@mui/material/Link"
+import Chip from "@mui/material/Chip"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { getDemoData } from "@/lib/demo-data"
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 
 export const metadata = {
   title: "Demo Changelog | PatchPigeon",
@@ -41,52 +43,107 @@ export default function DemoProductPage() {
       {/* Demo banner */}
       <Box
         sx={{
-          background: "linear-gradient(to right, #A7D8FF, #FFD4B8, #B8E8D2)",
+          background: "linear-gradient(90deg, #A7D8FF, #FFD4B8, #B8E8D2)",
           color: "#1e293b",
-          py: 1,
+          py: 1.5,
           px: 2,
           textAlign: "center",
-          fontSize: "0.875rem",
-          fontWeight: 500,
         }}
       >
-        This is a demo changelog. Want your own?{" "}
-        <MuiLink
-          href="/auth/sign-up"
-          sx={{
-            color: "inherit",
-            fontWeight: 600,
-            textDecoration: "underline",
-            "&:hover": { textDecoration: "none" },
-          }}
+        <Stack 
+          direction="row" 
+          spacing={1.5} 
+          alignItems="center" 
+          justifyContent="center"
+          flexWrap="wrap"
         >
-          Sign up for free
-        </MuiLink>
+          <RocketLaunchIcon sx={{ fontSize: 18 }} />
+          <Typography variant="body2" fontWeight={500}>
+            This is a demo changelog. Want your own?
+          </Typography>
+          <MuiLink
+            href="/auth/sign-up"
+            sx={{
+              color: "inherit",
+              fontWeight: 700,
+              textDecoration: "underline",
+              "&:hover": { textDecoration: "none" },
+            }}
+          >
+            Sign up for free →
+          </MuiLink>
+        </Stack>
       </Box>
 
-      <ChangelogHeader product={product} profile={profile} isDemo />
+      <ChangelogHeader 
+        product={product} 
+        profile={profile} 
+        isDemo 
+        entryCount={entries.length}
+      />
 
-      <Box component="main">
-        <Container maxWidth="md" sx={{ py: 6 }}>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant="h4" component="h2" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
-              Changelog
-            </Typography>
-            <Typography sx={{ color: "text.secondary" }}>
-              All the latest updates, improvements, and fixes.
-            </Typography>
-          </Box>
-
-          <Stack spacing={6} sx={{ pl: { md: 2 } }}>
-            {groupedEntries.map((group) => (
+      <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
+        <Box sx={{ maxWidth: 800, mx: "auto" }}>
+          <Stack spacing={8}>
+            {groupedEntries.map((group, index) => (
               <TimelineGroup
                 key={group.date}
                 date={group.date}
                 entries={group.entries}
                 ownerSlug="demo"
                 productSlug="acme-app"
+                isFirst={index === 0}
               />
             ))}
+          </Stack>
+        </Box>
+      </Container>
+
+      {/* Footer */}
+      <Box 
+        component="footer" 
+        sx={{ 
+          py: 4, 
+          borderTop: 1, 
+          borderColor: 'divider',
+          bgcolor: '#f8fafc',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Stack 
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between" 
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography variant="body2" color="text.secondary">
+              Powered by{' '}
+              <Box 
+                component="a" 
+                href="/" 
+                sx={{ 
+                  color: 'text.primary', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                PatchPigeon
+              </Box>
+            </Typography>
+            <Chip
+              component="a"
+              href="/auth/sign-up"
+              label="Create your own changelog"
+              size="small"
+              clickable
+              sx={{ 
+                fontWeight: 600,
+                bgcolor: '#1f2937',
+                color: 'white',
+                '&:hover': { bgcolor: '#374151' }
+              }}
+            />
           </Stack>
         </Container>
       </Box>

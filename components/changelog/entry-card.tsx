@@ -1,22 +1,36 @@
+'use client'
+
 import Link from "next/link"
 import { Box, Typography, Stack, Paper, Chip } from "@mui/material"
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
 import BugReportIcon from "@mui/icons-material/BugReport"
 import BoltIcon from "@mui/icons-material/Bolt"
 import WarningIcon from "@mui/icons-material/Warning"
+import TrendingUpIcon from "@mui/icons-material/TrendingUp"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import type { EntryWithItems, ChangeType } from "@/lib/types"
+
+// Brand colors
+const colors = {
+  sky: '#a7d8ff',
+  peach: '#ffb8a1',
+  mint: '#bfebd6',
+  butter: '#ffe7a3',
+  ink: '#1f2937',
+}
 
 interface EntryCardProps {
   entry: EntryWithItems
   ownerSlug: string
   productSlug: string
+  isHighlighted?: boolean
 }
 
-export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
+export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: EntryCardProps) {
   const publishDate = entry.publish_date
     ? new Date(entry.publish_date).toLocaleDateString("en-US", {
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
       })
     : null
@@ -39,6 +53,22 @@ export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
       .map((i) => i.title)
       .join(" • ")
 
+  // Determine primary type for card accent
+  const primaryType = typeCounts.FEATURE ? 'FEATURE' 
+    : typeCounts.IMPROVEMENT ? 'IMPROVEMENT'
+    : typeCounts.FIX ? 'FIX'
+    : typeCounts.BREAKING ? 'BREAKING'
+    : null
+
+  const accentColors: Record<string, string> = {
+    FEATURE: colors.sky,
+    IMPROVEMENT: colors.peach,
+    FIX: colors.mint,
+    BREAKING: '#fca5a5',
+  }
+
+  const accentColor = primaryType ? accentColors[primaryType] : colors.sky
+
   return (
     <Box component="article" sx={{ position: "relative" }}>
       <Link href={`/${ownerSlug}/${productSlug}/${entry.slug}`} style={{ textDecoration: "none" }}>
@@ -47,55 +77,110 @@ export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 1.5,
+            gap: 2,
             p: 3,
             borderRadius: 3,
             border: 1,
-            borderColor: "divider",
+            borderColor: isHighlighted ? accentColor : "divider",
             bgcolor: "background.paper",
-            transition: "all 0.2s",
+            position: 'relative',
+            overflow: 'hidden',
+            transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
             "&:hover": {
-              borderColor: "#cbd5e1",
-              boxShadow: 2,
+              borderColor: accentColor,
+              transform: 'translateY(-2px)',
+              boxShadow: `0 12px 24px -8px ${accentColor}40`,
               "& .entry-title": {
                 color: "primary.main",
               },
+              "& .arrow-icon": {
+                opacity: 1,
+                transform: 'translateX(0)',
+              },
+            },
+            // Accent line
+            "&::before": {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: isHighlighted ? '100%' : 4,
+              height: isHighlighted ? 4 : '100%',
+              background: isHighlighted 
+                ? `linear-gradient(90deg, ${accentColor}, ${colors.mint})`
+                : accentColor,
+              borderRadius: isHighlighted ? '12px 12px 0 0' : '12px 0 0 12px',
             },
           }}
         >
-          <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
-            {entry.version && (
-              <Chip
-                label={`v${entry.version}`}
-                size="small"
-                sx={{
-                  fontFamily: "monospace",
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  bgcolor: "#f1f5f9",
-                  color: "#475569",
-                }}
-              />
-            )}
-            {publishDate && (
-              <Typography variant="caption" color="text.secondary">
-                {publishDate}
-              </Typography>
-            )}
+          {/* Header row */}
+          <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="space-between">
+            <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+              {entry.version && (
+                <Chip
+                  label={`v${entry.version}`}
+                  size="small"
+                  sx={{
+                    fontFamily: "monospace",
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    bgcolor: `${accentColor}30`,
+                    color: colors.ink,
+                    border: 1,
+                    borderColor: `${accentColor}50`,
+                  }}
+                />
+              )}
+              {publishDate && (
+                <Typography variant="caption" color="text.secondary" fontWeight={500}>
+                  {publishDate}
+                </Typography>
+              )}
+              {isHighlighted && (
+                <Chip
+                  label="Latest"
+                  size="small"
+                  sx={{
+                    height: 20,
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    bgcolor: colors.ink,
+                    color: 'white',
+                  }}
+                />
+              )}
+            </Stack>
+
+            {/* Arrow indicator */}
+            <ArrowForwardIcon 
+              className="arrow-icon"
+              sx={{ 
+                fontSize: 18, 
+                color: 'text.secondary',
+                opacity: 0,
+                transform: 'translateX(-8px)',
+                transition: 'all 0.25s ease',
+              }} 
+            />
           </Stack>
 
+          {/* Title */}
           <Typography
             variant="h6"
             className="entry-title"
             sx={{
-              fontWeight: 600,
+              fontWeight: 700,
               color: "text.primary",
               transition: "color 0.2s",
+              lineHeight: 1.3,
             }}
           >
             {entry.title}
           </Typography>
 
+          {/* Summary */}
           {summaryText && (
             <Typography
               variant="body2"
@@ -105,6 +190,7 @@ export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: "vertical",
+                lineHeight: 1.6,
               }}
             >
               {summaryText}
@@ -115,38 +201,86 @@ export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
           {items.length > 0 && (
             <Stack
               direction="row"
-              spacing={1.5}
+              spacing={2}
               flexWrap="wrap"
-              sx={{ pt: 1, borderTop: 1, borderColor: "divider" }}
+              sx={{ pt: 2, borderTop: 1, borderColor: "divider" }}
             >
               {typeCounts.FEATURE > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
-                  <AutoAwesomeIcon sx={{ fontSize: 14, color: "#0284c7" }} />
-                  <Typography variant="caption" sx={{ color: "#0284c7" }}>
+                <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 1.5,
+                      bgcolor: `${colors.sky}40`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <AutoAwesomeIcon sx={{ fontSize: 14, color: "#0284c7" }} />
+                  </Box>
+                  <Typography variant="caption" sx={{ color: "#0284c7", fontWeight: 600 }}>
                     {typeCounts.FEATURE} feature{typeCounts.FEATURE > 1 ? "s" : ""}
                   </Typography>
                 </Stack>
               )}
               {typeCounts.IMPROVEMENT > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
-                  <BoltIcon sx={{ fontSize: 14, color: "#c2410c" }} />
-                  <Typography variant="caption" sx={{ color: "#c2410c" }}>
+                <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 1.5,
+                      bgcolor: `${colors.peach}40`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <BoltIcon sx={{ fontSize: 14, color: "#c2410c" }} />
+                  </Box>
+                  <Typography variant="caption" sx={{ color: "#c2410c", fontWeight: 600 }}>
                     {typeCounts.IMPROVEMENT} improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}
                   </Typography>
                 </Stack>
               )}
               {typeCounts.FIX > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
-                  <BugReportIcon sx={{ fontSize: 14, color: "#15803d" }} />
-                  <Typography variant="caption" sx={{ color: "#15803d" }}>
+                <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 1.5,
+                      bgcolor: `${colors.mint}40`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <BugReportIcon sx={{ fontSize: 14, color: "#15803d" }} />
+                  </Box>
+                  <Typography variant="caption" sx={{ color: "#15803d", fontWeight: 600 }}>
                     {typeCounts.FIX} fix{typeCounts.FIX > 1 ? "es" : ""}
                   </Typography>
                 </Stack>
               )}
               {typeCounts.BREAKING > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
-                  <WarningIcon sx={{ fontSize: 14, color: "#dc2626" }} />
-                  <Typography variant="caption" sx={{ color: "#dc2626" }}>
+                <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 1.5,
+                      bgcolor: '#fee2e2',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <WarningIcon sx={{ fontSize: 14, color: "#dc2626" }} />
+                  </Box>
+                  <Typography variant="caption" sx={{ color: "#dc2626", fontWeight: 600 }}>
                     {typeCounts.BREAKING} breaking
                   </Typography>
                 </Stack>

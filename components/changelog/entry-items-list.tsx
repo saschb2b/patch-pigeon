@@ -1,12 +1,24 @@
-import { Box, Typography, Stack, Chip } from "@mui/material"
+'use client'
+
+import { Box, Typography, Stack, Chip, Paper } from "@mui/material"
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
 import BugReportIcon from "@mui/icons-material/BugReport"
 import BoltIcon from "@mui/icons-material/Bolt"
 import WarningIcon from "@mui/icons-material/Warning"
 import RemoveIcon from "@mui/icons-material/Remove"
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 import type { EntryItem, ChangeType } from "@/lib/types"
 import type React from "react"
+
+// Brand colors
+const colors = {
+  sky: '#a7d8ff',
+  peach: '#ffb8a1',
+  mint: '#bfebd6',
+  butter: '#ffe7a3',
+  ink: '#1f2937',
+}
 
 interface EntryItemsListProps {
   items: EntryItem[]
@@ -17,53 +29,69 @@ const typeOrder: ChangeType[] = ["FEATURE", "IMPROVEMENT", "FIX", "BREAKING", "R
 
 interface TypeConfig {
   label: string
+  pluralLabel: string
   icon: React.ReactElement
   color: string
+  bgColor: string
   dotColor: string
 }
 
 const typeConfig: Record<ChangeType, TypeConfig> = {
   FEATURE: {
-    label: "Feature",
-    icon: <AutoAwesomeIcon sx={{ fontSize: 16 }} />,
+    label: "New Feature",
+    pluralLabel: "New Features",
+    icon: <AutoAwesomeIcon sx={{ fontSize: 18 }} />,
     color: "#0284c7",
-    dotColor: "#a7d8ff",
+    bgColor: `${colors.sky}25`,
+    dotColor: colors.sky,
   },
   IMPROVEMENT: {
     label: "Improvement",
-    icon: <BoltIcon sx={{ fontSize: 16 }} />,
+    pluralLabel: "Improvements",
+    icon: <BoltIcon sx={{ fontSize: 18 }} />,
     color: "#c2410c",
-    dotColor: "#ffb8a1",
+    bgColor: `${colors.peach}25`,
+    dotColor: colors.peach,
   },
   FIX: {
-    label: "Fix",
-    icon: <BugReportIcon sx={{ fontSize: 16 }} />,
+    label: "Bug Fix",
+    pluralLabel: "Bug Fixes",
+    icon: <BugReportIcon sx={{ fontSize: 18 }} />,
     color: "#15803d",
-    dotColor: "#bfebd6",
+    bgColor: `${colors.mint}25`,
+    dotColor: colors.mint,
   },
   KNOWNISSUE: {
     label: "Known Issue",
-    icon: <WarningIcon sx={{ fontSize: 16 }} />,
+    pluralLabel: "Known Issues",
+    icon: <InfoOutlinedIcon sx={{ fontSize: 18 }} />,
     color: "#a16207",
-    dotColor: "#ffe7a3",
+    bgColor: `${colors.butter}25`,
+    dotColor: colors.butter,
   },
   BREAKING: {
-    label: "Breaking",
-    icon: <WarningIcon sx={{ fontSize: 16 }} />,
+    label: "Breaking Change",
+    pluralLabel: "Breaking Changes",
+    icon: <WarningIcon sx={{ fontSize: 18 }} />,
     color: "#dc2626",
+    bgColor: "#fee2e2",
     dotColor: "#fca5a5",
   },
   REMOVED: {
     label: "Removed",
-    icon: <RemoveIcon sx={{ fontSize: 16 }} />,
-    color: "#757575",
-    dotColor: "#9e9e9e",
+    pluralLabel: "Removed",
+    icon: <RemoveIcon sx={{ fontSize: 18 }} />,
+    color: "#64748b",
+    bgColor: "#f1f5f9",
+    dotColor: "#94a3b8",
   },
   NOTE: {
     label: "Note",
-    icon: <ChatBubbleOutlineIcon sx={{ fontSize: 16 }} />,
-    color: "#757575",
-    dotColor: "#9e9e9e",
+    pluralLabel: "Notes",
+    icon: <ChatBubbleOutlineIcon sx={{ fontSize: 18 }} />,
+    color: "#64748b",
+    bgColor: "#f1f5f9",
+    dotColor: "#94a3b8",
   },
 }
 
@@ -81,16 +109,29 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
   if (compact) {
     // Compact view: just show counts by type
     return (
-      <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Stack direction="row" spacing={1.5} flexWrap="wrap">
         {typeOrder.map((type) => {
           const typeItems = groupedItems[type]
           if (!typeItems || typeItems.length === 0) return null
           const config = typeConfig[type]
 
           return (
-            <Stack key={type} direction="row" spacing={0.5} alignItems="center">
-              <Box sx={{ color: config.color }}>{config.icon}</Box>
-              <Typography variant="caption" color="text.secondary">
+            <Stack key={type} direction="row" spacing={0.75} alignItems="center">
+              <Box
+                sx={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: 1.5,
+                  bgcolor: config.bgColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: config.color,
+                }}
+              >
+                {config.icon}
+              </Box>
+              <Typography variant="caption" sx={{ color: config.color, fontWeight: 600 }}>
                 {typeItems.length} {config.label.toLowerCase()}
                 {typeItems.length > 1 ? "s" : ""}
               </Typography>
@@ -101,9 +142,9 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
     )
   }
 
-  // Full view: grouped list
+  // Full view: grouped list with cards
   return (
-    <Stack spacing={3}>
+    <Stack spacing={5}>
       {typeOrder.map((type) => {
         const typeItems = groupedItems[type]
         if (!typeItems || typeItems.length === 0) return null
@@ -112,67 +153,127 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
 
         return (
           <Box key={type}>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5, color: config.color }}>
-              {config.icon}
-              <Typography
-                variant="subtitle2"
-                sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}
+            {/* Section header */}
+            <Stack 
+              direction="row" 
+              spacing={1.5} 
+              alignItems="center" 
+              sx={{ mb: 3 }}
+            >
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  bgcolor: config.bgColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: config.color,
+                }}
               >
-                {config.label}
-                {typeItems.length > 1 ? "s" : ""}
-              </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.6 }}>
-                ({typeItems.length})
-              </Typography>
+                {config.icon}
+              </Box>
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{ 
+                    fontWeight: 700, 
+                    color: config.color,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {typeItems.length > 1 ? config.pluralLabel : config.label}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {typeItems.length} {typeItems.length === 1 ? 'item' : 'items'}
+                </Typography>
+              </Box>
             </Stack>
-            <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0 }}>
-              <Stack spacing={1.5}>
-                {typeItems
-                  .sort((a, b) => a.sort_order - b.sort_order)
-                  .map((item) => (
+
+            {/* Items list */}
+            <Stack spacing={2}>
+              {typeItems
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map((item, index) => (
+                  <Box
+                    key={item.id}
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      animation: 'fadeIn 0.3s ease-out',
+                      animationDelay: `${index * 0.05}s`,
+                      animationFillMode: 'backwards',
+                      '@keyframes fadeIn': {
+                        from: { opacity: 0, transform: 'translateX(-8px)' },
+                        to: { opacity: 1, transform: 'translateX(0)' },
+                      },
+                    }}
+                  >
+                    {/* Dot indicator */}
                     <Box
-                      component="li"
-                      key={item.id}
-                      sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
-                    >
-                      <Box
-                        sx={{
-                          mt: 1,
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          bgcolor: config.dotColor,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                          {item.area && (
-                            <Chip
-                              label={item.area}
-                              size="small"
-                              sx={{
-                                height: 20,
-                                fontSize: "0.7rem",
-                                bgcolor: "grey.100",
-                                color: "text.secondary",
-                              }}
-                            />
-                          )}
-                          <Typography variant="body2" color="text.primary">
-                            {item.title}
-                          </Typography>
-                        </Stack>
-                        {item.description && (
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                            {item.description}
-                          </Typography>
+                      sx={{
+                        mt: 1,
+                        width: 10,
+                        height: 10,
+                        borderRadius: '50%',
+                        bgcolor: config.dotColor,
+                        flexShrink: 0,
+                        boxShadow: `0 0 0 3px ${config.bgColor}`,
+                      }}
+                    />
+
+                    {/* Content */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Stack 
+                        direction="row" 
+                        spacing={1.5} 
+                        alignItems="flex-start" 
+                        flexWrap="wrap"
+                        sx={{ mb: item.description ? 0.75 : 0 }}
+                      >
+                        {item.area && (
+                          <Chip
+                            label={item.area}
+                            size="small"
+                            sx={{
+                              height: 22,
+                              fontSize: "0.7rem",
+                              fontWeight: 600,
+                              bgcolor: "#f1f5f9",
+                              color: "text.secondary",
+                              fontFamily: 'monospace',
+                            }}
+                          />
                         )}
-                      </Box>
+                        <Typography 
+                          variant="body1" 
+                          sx={{ 
+                            color: "text.primary",
+                            fontWeight: 500,
+                            lineHeight: 1.5,
+                            flex: 1,
+                          }}
+                        >
+                          {item.title}
+                        </Typography>
+                      </Stack>
+                      {item.description && (
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary" 
+                          sx={{ 
+                            lineHeight: 1.6,
+                            pl: item.area ? 0 : 0,
+                          }}
+                        >
+                          {item.description}
+                        </Typography>
+                      )}
                     </Box>
-                  ))}
-              </Stack>
-            </Box>
+                  </Box>
+                ))}
+            </Stack>
           </Box>
         )
       })}
