@@ -168,8 +168,8 @@ export default function OnboardingPage() {
                   onChange={(e) => handleSlugChange(e.target.value)}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start" sx={{ color: "text.secondary" }}>
-                        patchpigeon.com/
+                      <InputAdornment position="start" sx={{ color: "text.secondary", whiteSpace: 'nowrap' }}>
+                        <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>patchpigeon.com</Box>/
                       </InputAdornment>
                     ),
                     endAdornment: (

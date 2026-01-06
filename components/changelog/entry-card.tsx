@@ -77,9 +77,9 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 2,
-            p: 3,
-            borderRadius: 3,
+            gap: { xs: 1.5, sm: 2 },
+            p: { xs: 2, sm: 3 },
+            borderRadius: { xs: 2, sm: 3 },
             border: 1,
             borderColor: isHighlighted ? accentColor : "divider",
             bgcolor: "background.paper",
@@ -104,8 +104,8 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
               position: 'absolute',
               top: 0,
               left: 0,
-              width: isHighlighted ? '100%' : 4,
-              height: isHighlighted ? 4 : '100%',
+              width: isHighlighted ? '100%' : { xs: 3, sm: 4 },
+              height: isHighlighted ? { xs: 3, sm: 4 } : '100%',
               background: isHighlighted 
                 ? `linear-gradient(90deg, ${accentColor}, ${colors.mint})`
                 : accentColor,
@@ -175,6 +175,7 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
               color: "text.primary",
               transition: "color 0.2s",
               lineHeight: 1.3,
+              fontSize: { xs: "1rem", sm: "1.25rem" },
             }}
           >
             {entry.title}
@@ -201,16 +202,17 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
           {items.length > 0 && (
             <Stack
               direction="row"
-              spacing={2}
+              spacing={{ xs: 1, sm: 2 }}
               flexWrap="wrap"
-              sx={{ pt: 2, borderTop: 1, borderColor: "divider" }}
+              useFlexGap
+              sx={{ pt: { xs: 1.5, sm: 2 }, borderTop: 1, borderColor: "divider" }}
             >
               {typeCounts.FEATURE > 0 && (
-                <Stack direction="row" spacing={0.75} alignItems="center">
+                <Stack direction="row" spacing={0.5} alignItems="center">
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: { xs: 20, sm: 24 },
+                      height: { xs: 20, sm: 24 },
                       borderRadius: 1.5,
                       bgcolor: `${colors.sky}40`,
                       display: 'flex',
@@ -218,19 +220,20 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                       justifyContent: 'center',
                     }}
                   >
-                    <AutoAwesomeIcon sx={{ fontSize: 14, color: "#0284c7" }} />
+                    <AutoAwesomeIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#0284c7" }} />
                   </Box>
-                  <Typography variant="caption" sx={{ color: "#0284c7", fontWeight: 600 }}>
-                    {typeCounts.FEATURE} feature{typeCounts.FEATURE > 1 ? "s" : ""}
+                  <Typography variant="caption" sx={{ color: "#0284c7", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                    {typeCounts.FEATURE}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> feature{typeCounts.FEATURE > 1 ? "s" : ""}</Box>
                   </Typography>
                 </Stack>
               )}
               {typeCounts.IMPROVEMENT > 0 && (
-                <Stack direction="row" spacing={0.75} alignItems="center">
+                <Stack direction="row" spacing={0.5} alignItems="center">
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: { xs: 20, sm: 24 },
+                      height: { xs: 20, sm: 24 },
                       borderRadius: 1.5,
                       bgcolor: `${colors.peach}40`,
                       display: 'flex',
@@ -238,19 +241,20 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                       justifyContent: 'center',
                     }}
                   >
-                    <BoltIcon sx={{ fontSize: 14, color: "#c2410c" }} />
+                    <BoltIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#c2410c" }} />
                   </Box>
-                  <Typography variant="caption" sx={{ color: "#c2410c", fontWeight: 600 }}>
-                    {typeCounts.IMPROVEMENT} improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}
+                  <Typography variant="caption" sx={{ color: "#c2410c", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                    {typeCounts.IMPROVEMENT}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}</Box>
                   </Typography>
                 </Stack>
               )}
               {typeCounts.FIX > 0 && (
-                <Stack direction="row" spacing={0.75} alignItems="center">
+                <Stack direction="row" spacing={0.5} alignItems="center">
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: { xs: 20, sm: 24 },
+                      height: { xs: 20, sm: 24 },
                       borderRadius: 1.5,
                       bgcolor: `${colors.mint}40`,
                       display: 'flex',
@@ -258,19 +262,20 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                       justifyContent: 'center',
                     }}
                   >
-                    <BugReportIcon sx={{ fontSize: 14, color: "#15803d" }} />
+                    <BugReportIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#15803d" }} />
                   </Box>
-                  <Typography variant="caption" sx={{ color: "#15803d", fontWeight: 600 }}>
-                    {typeCounts.FIX} fix{typeCounts.FIX > 1 ? "es" : ""}
+                  <Typography variant="caption" sx={{ color: "#15803d", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                    {typeCounts.FIX}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> fix{typeCounts.FIX > 1 ? "es" : ""}</Box>
                   </Typography>
                 </Stack>
               )}
               {typeCounts.BREAKING > 0 && (
-                <Stack direction="row" spacing={0.75} alignItems="center">
+                <Stack direction="row" spacing={0.5} alignItems="center">
                   <Box
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: { xs: 20, sm: 24 },
+                      height: { xs: 20, sm: 24 },
                       borderRadius: 1.5,
                       bgcolor: '#fee2e2',
                       display: 'flex',
@@ -278,10 +283,11 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                       justifyContent: 'center',
                     }}
                   >
-                    <WarningIcon sx={{ fontSize: 14, color: "#dc2626" }} />
+                    <WarningIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#dc2626" }} />
                   </Box>
-                  <Typography variant="caption" sx={{ color: "#dc2626", fontWeight: 600 }}>
-                    {typeCounts.BREAKING} breaking
+                  <Typography variant="caption" sx={{ color: "#dc2626", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                    {typeCounts.BREAKING}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> breaking</Box>
                   </Typography>
                 </Stack>
               )}

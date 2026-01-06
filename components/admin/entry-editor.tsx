@@ -528,17 +528,23 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           backdropFilter: "blur(8px)",
         }}
       >
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 3, py: 2 }}>
-          <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: { xs: 2, sm: 3 }, py: 2 }}>
+          <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center" sx={{ minWidth: 0 }}>
             <Tooltip title="Back to entries">
               <IconButton onClick={() => router.back()} size="small">
                 <ArrowBackIcon sx={{ fontSize: 20 }} />
               </IconButton>
             </Tooltip>
-            <Box>
+            <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center">
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  {entry ? "Edit Version" : "New Version"}
+                <Typography 
+                  variant="subtitle1" 
+                  sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                  }}
+                >
+                  {entry ? "Edit" : "New"}
                 </Typography>
                 {hasChanges && (
                   <Chip
@@ -546,19 +552,29 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                     size="small"
                     sx={{
                       height: 20,
-                      fontSize: "0.7rem",
+                      fontSize: "0.65rem",
                       bgcolor: "warning.light",
                       color: "warning.dark",
                     }}
                   />
                 )}
               </Stack>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+                sx={{
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  maxWidth: { xs: 100, sm: 200 },
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {productName}
               </Typography>
             </Box>
           </Stack>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} alignItems="center">
             {/* Mobile view toggle */}
             <Tooltip title={mobileView === "editor" ? "Show preview" : "Show editor"}>
               <IconButton
@@ -584,29 +600,32 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   href={`/${ownerSlug}/${productSlug}/${slug}`}
                   target="_blank"
                   size="small"
-                  sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
+                  sx={{ opacity: 0.6, "&:hover": { opacity: 1 }, display: { xs: 'none', sm: 'flex' } }}
                 >
                   <OpenInNewIcon sx={{ fontSize: 18 }} />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title="Shortcuts: Ctrl+S save, Ctrl+Shift+F/I/B add items, Alt+Arrow navigate items">
-              <IconButton size="small" sx={{ opacity: 0.5, display: { xs: "none", sm: "flex" } }}>
+              <IconButton size="small" sx={{ opacity: 0.5, display: { xs: "none", md: "flex" } }}>
                 <KeyboardIcon sx={{ fontSize: 18 }} />
               </IconButton>
             </Tooltip>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mr: 1 }}>
+            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ display: { xs: 'none', sm: 'flex' } }}>
               <Switch id="published" checked={published} onCheckedChange={setPublished} />
-              <Label htmlFor="published" style={{ cursor: "pointer" }}>
+              <Label htmlFor="published" style={{ cursor: "pointer", fontSize: '0.875rem' }}>
                 {published ? "Published" : "Draft"}
               </Label>
             </Stack>
             <Button
               onClick={handleSubmit}
               disabled={isLoading || !title || validItemCount === 0}
+              size="sm"
             >
-              <SaveIcon sx={{ fontSize: 18, mr: 1 }} />
-              {isLoading ? "Saving..." : "Save"}
+              <SaveIcon sx={{ fontSize: 16, mr: { xs: 0, sm: 0.5 } }} />
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                {isLoading ? "Saving..." : "Save"}
+              </Box>
             </Button>
           </Stack>
         </Stack>

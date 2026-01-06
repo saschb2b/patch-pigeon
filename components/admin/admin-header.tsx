@@ -33,7 +33,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
         bgcolor: "background.paper",
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
         <Toolbar disableGutters sx={{ py: 1 }}>
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <Link href="/admin" style={{ textDecoration: "none" }}>
@@ -41,25 +41,44 @@ export function AdminHeader({ user }: AdminHeaderProps) {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1.5,
+                  gap: 1,
                   "&:hover svg": {
                     transform: "scale(1.05)",
                   },
                 }}
               >
                 <PigeonLogo size="sm" sx={{ transition: "transform 0.2s" }} />
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "text.primary" }}>
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    fontWeight: 700, 
+                    color: "text.primary",
+                    fontSize: { xs: '1rem', sm: '1.25rem' },
+                  }}
+                >
                   PatchPigeon
                 </Typography>
               </Box>
             </Link>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Typography variant="body2" color="text.secondary">
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                  maxWidth: 200,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {user.email}
               </Typography>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogoutIcon sx={{ fontSize: 18, mr: 1 }} />
-                Sign Out
+                <LogoutIcon sx={{ fontSize: 18, mr: { xs: 0, sm: 1 } }} />
+                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  Sign Out
+                </Box>
               </Button>
             </Stack>
           </Box>

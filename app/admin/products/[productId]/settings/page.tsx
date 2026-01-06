@@ -47,7 +47,7 @@ export default async function ProductSettingsPage({ params }: PageProps) {
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AdminHeader user={user} />
 
-      <Container component="main" maxWidth="lg" sx={{ py: 4 }}>
+      <Container component="main" maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
         <Box sx={{ maxWidth: 672, mx: "auto" }}>
           <Link href={`/admin/products/${productId}`} style={{ textDecoration: "none" }}>
             <Stack
@@ -66,29 +66,29 @@ export default async function ProductSettingsPage({ params }: PageProps) {
             </Stack>
           </Link>
 
-          <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 4 }}>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: { xs: 2, sm: 4 }, fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
             Product Settings
           </Typography>
 
           <Paper
             elevation={0}
             sx={{
-              mb: 4,
-              p: 2,
+              mb: { xs: 2, sm: 4 },
+              p: { xs: 1.5, sm: 2 },
               borderRadius: 2,
               bgcolor: "grey.50",
               border: 1,
               borderColor: "divider",
             }}
           >
-            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: "text.primary", mb: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: "text.primary", mb: 1, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
               Public Changelog URL
             </Typography>
-            <Typography variant="body2" sx={{ fontFamily: "monospace", color: "primary.main" }}>
+            <Typography variant="body2" sx={{ fontFamily: "monospace", color: "primary.main", fontSize: { xs: '0.75rem', sm: '0.875rem' }, wordBreak: 'break-all' }}>
               {publicUrl}
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
-              API: <Box component="span" sx={{ fontFamily: "monospace" }}>/api{publicUrl}/changelog.json</Box>
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block", fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+              API: <Box component="span" sx={{ fontFamily: "monospace", wordBreak: 'break-all' }}>/api{publicUrl}/changelog.json</Box>
             </Typography>
           </Paper>
 

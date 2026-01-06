@@ -12,6 +12,8 @@ import Paper from "@mui/material/Paper"
 import Chip from "@mui/material/Chip"
 import Grid from "@mui/material/Grid"
 import Fade from "@mui/material/Fade"
+import IconButton from "@mui/material/IconButton"
+import Drawer from "@mui/material/Drawer"
 import { Button } from "@/components/ui/button"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
@@ -28,6 +30,8 @@ import GroupsIcon from "@mui/icons-material/Groups"
 import RssFeedIcon from "@mui/icons-material/RssFeed"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import XIcon from "@mui/icons-material/X"
+import MenuIcon from "@mui/icons-material/Menu"
+import CloseIcon from "@mui/icons-material/Close"
 
 // Brand colors
 const colors = {
@@ -48,6 +52,7 @@ const demoEntries = [
 export default function HomePage() {
   const [visibleEntries, setVisibleEntries] = useState(0)
   const [isTyping, setIsTyping] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Animate entries appearing one by one
   useEffect(() => {
@@ -83,22 +88,70 @@ export default function HomePage() {
             alignItems="center"
             sx={{ py: 2 }}
           >
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <PigeonLogo size="sm" />
-              <Typography variant="h6" fontWeight={700} color="text.primary">
+              <Typography 
+                variant="h6" 
+                fontWeight={700} 
+                color="text.primary"
+                sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
+              >
                 PatchPigeon
               </Typography>
             </Link>
-            <Stack direction="row" spacing={1.5}>
+            
+            {/* Desktop nav */}
+            <Stack direction="row" spacing={1.5} sx={{ display: { xs: 'none', sm: 'flex' } }}>
               <Button variant="ghost" asChild>
                 <Link href="/auth/login">Sign in</Link>
               </Button>
               <Button asChild>
+                <Link href="/auth/sign-up">Get started</Link>
+              </Button>
+            </Stack>
+
+            {/* Mobile menu button */}
+            <IconButton 
+              onClick={() => setMobileMenuOpen(true)}
+              sx={{ display: { xs: 'flex', sm: 'none' } }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Stack>
+        </Container>
+
+        {/* Mobile drawer */}
+        <Drawer
+          anchor="right"
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+          PaperProps={{
+            sx: { width: '100%', maxWidth: 320, p: 2 }
+          }}
+        >
+          <Stack spacing={3}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack direction="row" spacing={1} alignItems="center">
+                <PigeonLogo size="sm" />
+                <Typography variant="h6" fontWeight={700}>PatchPigeon</Typography>
+              </Stack>
+              <IconButton onClick={() => setMobileMenuOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Stack>
+            <Stack spacing={2}>
+              <Button variant="outline" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/auth/login">Sign in</Link>
+              </Button>
+              <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/auth/sign-up">Get started free</Link>
+              </Button>
+              <Button variant="ghost" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/demo">View demo</Link>
               </Button>
             </Stack>
           </Stack>
-        </Container>
+        </Drawer>
       </Box>
 
       {/* Hero Section */}
@@ -172,7 +225,7 @@ export default function HomePage() {
                   component="h1"
                   fontWeight={800}
                   sx={{
-                    fontSize: { xs: '2.75rem', md: '3.75rem' },
+                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3.75rem' },
                     lineHeight: 1.1,
                     letterSpacing: '-0.02em',
                   }}
@@ -194,7 +247,7 @@ export default function HomePage() {
                 <Typography
                   variant="h6"
                   color="text.secondary"
-                  sx={{ maxWidth: 500, fontWeight: 400, lineHeight: 1.7, fontSize: '1.125rem' }}
+                  sx={{ maxWidth: 500, fontWeight: 400, lineHeight: 1.7, fontSize: { xs: '1rem', sm: '1.125rem' } }}
                 >
                   Stop burying updates in Discord or Twitter. Give your product a beautiful,
                   public changelog that keeps users excited and informed.
@@ -213,18 +266,30 @@ export default function HomePage() {
                   </Button>
                 </Stack>
 
-                <Stack direction="row" spacing={3} sx={{ pt: 1 }}>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <CheckIcon sx={{ fontSize: 18, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary">Free forever</Typography>
+                <Stack 
+                  direction="row" 
+                  spacing={{ xs: 2, sm: 3 }} 
+                  flexWrap="wrap"
+                  useFlexGap
+                  sx={{ pt: 1 }}
+                >
+                  <Stack direction="row" spacing={0.75} alignItems="center">
+                    <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                      Free forever
+                    </Typography>
                   </Stack>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <CheckIcon sx={{ fontSize: 18, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary">No credit card</Typography>
+                  <Stack direction="row" spacing={0.75} alignItems="center">
+                    <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                      No credit card
+                    </Typography>
                   </Stack>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <CheckIcon sx={{ fontSize: 18, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary">Setup in 2 min</Typography>
+                  <Stack direction="row" spacing={0.75} alignItems="center">
+                    <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                      2 min setup
+                    </Typography>
                   </Stack>
                 </Stack>
               </Stack>

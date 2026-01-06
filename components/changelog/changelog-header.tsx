@@ -121,15 +121,22 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                       </Typography>
                     </Box>
                   )}
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary" }}>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: "text.primary",
+                      display: { xs: 'none', sm: 'block' },
+                    }}
+                  >
                     {product.name}
                   </Typography>
                 </Stack>
               </Link>
             </Stack>
 
-            <Stack direction="row" alignItems="center" spacing={1}>
-              {/* API/RSS buttons */}
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              {/* API/RSS buttons - hidden on very small screens */}
               <Tooltip title="RSS Feed">
                 <IconButton
                   component="a"
@@ -137,6 +144,7 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                   target="_blank"
                   size="small"
                   sx={{ 
+                    display: { xs: 'none', sm: 'flex' },
                     color: "text.secondary",
                     "&:hover": { color: colors.ink, bgcolor: `${colors.butter}40` }
                   }}
@@ -151,6 +159,7 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                   target="_blank"
                   size="small"
                   sx={{ 
+                    display: { xs: 'none', sm: 'flex' },
                     color: "text.secondary",
                     "&:hover": { color: colors.ink, bgcolor: `${colors.mint}40` }
                   }}
@@ -159,13 +168,13 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                 </IconButton>
               </Tooltip>
 
-              <Box sx={{ width: '1px', height: 20, bgcolor: 'divider', mx: 1 }} />
+              <Box sx={{ width: '1px', height: 20, bgcolor: 'divider', mx: 0.5, display: { xs: 'none', sm: 'block' } }} />
 
               <Link href="/" style={{ textDecoration: "none" }}>
                 <Stack
                   direction="row"
                   alignItems="center"
-                  spacing={0.75}
+                  spacing={0.5}
                   sx={{ 
                     color: "text.secondary", 
                     "&:hover": { color: "text.primary" }, 
@@ -229,14 +238,14 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
           }}
         />
 
-        <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 }, position: 'relative' }}>
+        <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, position: 'relative' }}>
           <Stack 
             direction={{ xs: 'column', md: 'row' }} 
-            spacing={3} 
+            spacing={{ xs: 2, md: 3 }}
             alignItems={{ md: 'center' }}
             justifyContent="space-between"
           >
-            <Stack direction="row" spacing={3} alignItems="flex-start">
+            <Stack direction="row" spacing={{ xs: 2, md: 3 }} alignItems="flex-start">
               {/* Product Logo */}
               {product.logo_url ? (
                 <Image
@@ -249,9 +258,9 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
               ) : (
                 <Box
                   sx={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: 4,
+                    width: { xs: 56, md: 72 },
+                    height: { xs: 56, md: 72 },
+                    borderRadius: { xs: 3, md: 4 },
                     background: `linear-gradient(135deg, ${colors.sky}, ${colors.mint})`,
                     display: "flex",
                     alignItems: "center",
@@ -260,15 +269,27 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                     boxShadow: '0 8px 24px -8px rgba(167, 216, 255, 0.5)',
                   }}
                 >
-                  <Typography sx={{ fontWeight: 800, color: colors.ink, fontSize: '1.75rem' }}>
+                  <Typography sx={{ fontWeight: 800, color: colors.ink, fontSize: { xs: '1.25rem', md: '1.75rem' } }}>
                     {product.name.charAt(0)}
                   </Typography>
                 </Box>
               )}
 
-              <Box>
-                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-                  <Typography variant="h4" sx={{ fontWeight: 800, color: "text.primary" }}>
+              <Box sx={{ minWidth: 0 }}>
+                <Stack 
+                  direction={{ xs: 'column', sm: 'row' }} 
+                  spacing={{ xs: 0.5, sm: 1.5 }} 
+                  alignItems={{ sm: 'center' }} 
+                  sx={{ mb: 1 }}
+                >
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 800, 
+                      color: "text.primary",
+                      fontSize: { xs: '1.5rem', md: '2rem' },
+                    }}
+                  >
                     {product.name}
                   </Typography>
                   <Chip
@@ -280,6 +301,7 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                       color: colors.ink,
                       fontWeight: 600,
                       fontSize: '0.75rem',
+                      alignSelf: { xs: 'flex-start', sm: 'center' },
                       '& .MuiChip-icon': { color: colors.ink },
                     }}
                   />
@@ -288,7 +310,15 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                   <Typography 
                     variant="body1" 
                     color="text.secondary" 
-                    sx={{ maxWidth: 500, lineHeight: 1.6 }}
+                    sx={{ 
+                      maxWidth: 500, 
+                      lineHeight: 1.6,
+                      fontSize: { xs: '0.875rem', md: '1rem' },
+                      display: { xs: '-webkit-box', md: 'block' },
+                      WebkitLineClamp: { xs: 2, md: 'unset' },
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
                   >
                     {product.description}
                   </Typography>

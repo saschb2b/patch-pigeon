@@ -37,13 +37,32 @@ export default async function AdminPage() {
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AdminHeader user={user} />
 
-      <Container component="main" maxWidth="lg" sx={{ py: 4 }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
+      <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+        <Stack 
+          direction={{ xs: 'column', sm: 'row' }} 
+          justifyContent="space-between" 
+          alignItems={{ xs: 'flex-start', sm: 'center' }} 
+          spacing={2}
+          sx={{ mb: 4 }}
+        >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>
+            <Typography 
+              variant="h4" 
+              sx={{ 
+                fontWeight: 700, 
+                color: "text.primary",
+                fontSize: { xs: '1.5rem', sm: '2rem' },
+              }}
+            >
               Your Products
             </Typography>
-            <Typography color="text.secondary">
+            <Typography 
+              color="text.secondary"
+              sx={{ 
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                display: { xs: 'none', sm: 'block' },
+              }}
+            >
               Your changelogs live at{" "}
               <Typography component="span" sx={{ fontFamily: "monospace", color: "primary.main" }}>
                 /{profile.owner_slug}/...
@@ -52,7 +71,7 @@ export default async function AdminPage() {
           </Box>
           <Button asChild>
             <Link href="/admin/create-product">
-              <AddIcon sx={{ fontSize: 18, mr: 1 }} />
+              <AddIcon sx={{ fontSize: 18, mr: 0.5 }} />
               New Product
             </Link>
           </Button>

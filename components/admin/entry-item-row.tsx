@@ -7,7 +7,7 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Box, IconButton, Stack, Tooltip } from "@mui/material"
+import { Box, IconButton, Stack, Tooltip, useMediaQuery, useTheme } from "@mui/material"
 import MuiSelect, { SelectChangeEvent } from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator"
@@ -76,6 +76,8 @@ interface EntryItemRowProps {
 export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate, autoFocus }: EntryItemRowProps) {
   const [isExpanded, setIsExpanded] = useState(!!item.description)
   const titleInputRef = useRef<HTMLInputElement>(null)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
 
@@ -136,98 +138,110 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
         },
       }}
     >
-      <Stack direction="row" alignItems="flex-start" spacing={1} sx={{ p: 1.5 }}>
-        {/* Drag Handle */}
-        <Tooltip title="Drag to reorder">
-          <Box
-            component="button"
-            {...attributes}
-            {...listeners}
-            sx={{
-              mt: 1,
-              cursor: "grab",
-              opacity: 0.4,
-              background: "none",
-              border: "none",
-              p: 0,
-              touchAction: "none",
-              display: "flex",
-              "&:hover": { opacity: 0.8 },
-              "&:active": { cursor: "grabbing" },
-            }}
-          >
-            <DragIndicatorIcon sx={{ fontSize: 18, color: "text.secondary" }} />
-          </Box>
-        </Tooltip>
-
-        {/* Type Selector */}
-        <Box sx={{ flexShrink: 0, width: 140 }}>
-          <MuiSelect
-            value={item.type}
-            onChange={handleTypeChange}
-            size="small"
-            fullWidth
-            sx={{
-              fontSize: "0.75rem",
-              fontWeight: 500,
-              color: config.muiColor,
-              bgcolor: `${config.muiColor}10`,
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: `${config.muiColor}40`,
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: config.muiColor,
-              },
-              "& .MuiSelect-select": {
+      {/* Mobile Layout */}
+      {isMobile ? (
+        <Box sx={{ p: 1.5 }}>
+          {/* Top row: Drag handle + Type + Actions */}
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+            <Box
+              component="button"
+              {...attributes}
+              {...listeners}
+              sx={{
+                cursor: "grab",
+                opacity: 0.5,
+                background: "none",
+                border: "none",
+                p: 0.5,
+                touchAction: "none",
                 display: "flex",
-                alignItems: "center",
-                gap: 1,
-                py: 1,
-              },
-            }}
-            renderValue={(value) => {
-              const cfg = changeTypeConfig[value as ChangeType]
-              return (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
-                  {cfg.icon}
-                  {cfg.label}
-                </Box>
-              )
-            }}
-          >
-            {Object.entries(changeTypeConfig).map(([type, cfg]) => (
-              <MenuItem key={type} value={type}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
-                  {cfg.icon}
-                  {cfg.label}
-                </Box>
-              </MenuItem>
-            ))}
-          </MuiSelect>
-        </Box>
+                borderRadius: 1,
+                "&:hover": { opacity: 0.8, bgcolor: "action.hover" },
+                "&:active": { cursor: "grabbing" },
+              }}
+            >
+              <DragIndicatorIcon sx={{ fontSize: 20, color: "text.secondary" }} />
+            </Box>
 
-        {/* Title & Area */}
-        <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 }}>
-          <Stack direction="row" spacing={1}>
-            <Input
-              ref={titleInputRef}
-              value={item.title}
-              onChange={(e) => onUpdate(item.id, { title: e.target.value })}
-              onKeyDown={handleKeyDown}
-              placeholder="What changed?"
-              sx={{ flex: 1 }}
-            />
-            <Tooltip title="Component/area tag">
-              <Box sx={{ width: 100 }}>
-                <Input
-                  value={item.area || ""}
-                  onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
-                  placeholder="Area"
-                  inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
-                />
-              </Box>
-            </Tooltip>
+            <Box sx={{ flex: 1 }}>
+              <MuiSelect
+                value={item.type}
+                onChange={handleTypeChange}
+                size="small"
+                fullWidth
+                sx={{
+                  fontSize: "0.75rem",
+                  fontWeight: 500,
+                  color: config.muiColor,
+                  bgcolor: `${config.muiColor}10`,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `${config.muiColor}40`,
+                  },
+                  "& .MuiSelect-select": {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    py: 0.75,
+                  },
+                }}
+                renderValue={(value) => {
+                  const cfg = changeTypeConfig[value as ChangeType]
+                  return (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: cfg.muiColor }}>
+                      {cfg.icon}
+                      {cfg.label}
+                    </Box>
+                  )
+                }}
+              >
+                {Object.entries(changeTypeConfig).map(([type, cfg]) => (
+                  <MenuItem key={type} value={type}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
+                      {cfg.icon}
+                      {cfg.label}
+                    </Box>
+                  </MenuItem>
+                ))}
+              </MuiSelect>
+            </Box>
+
+            <Stack direction="row" spacing={0}>
+              <IconButton
+                size="small"
+                onClick={() => setIsExpanded(!isExpanded)}
+                sx={{ opacity: 0.6 }}
+              >
+                {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => onDelete(item.id)}
+                sx={{ opacity: 0.6, "&:hover": { color: "error.main" } }}
+              >
+                <DeleteIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Stack>
           </Stack>
+
+          {/* Title input - full width */}
+          <Input
+            ref={titleInputRef}
+            value={item.title}
+            onChange={(e) => onUpdate(item.id, { title: e.target.value })}
+            onKeyDown={handleKeyDown}
+            placeholder="What changed?"
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+
+          {/* Area input - smaller on mobile */}
+          <Input
+            value={item.area || ""}
+            onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
+            placeholder="Area (optional)"
+            fullWidth
+            inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
+          />
 
           {/* Description (expandable) */}
           {isExpanded && (
@@ -237,46 +251,154 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               placeholder="Add more details (optional)..."
               rows={2}
               autoFocus={isExpanded && !item.description}
+              sx={{ mt: 1 }}
             />
           )}
         </Box>
-
-        {/* Actions */}
-        <Stack direction="row" spacing={0.5}>
-          <Tooltip title={isExpanded ? "Hide description" : "Add description (Enter)"}>
-            <IconButton
-              size="small"
-              onClick={() => setIsExpanded(!isExpanded)}
-              sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
-            >
-              {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
-            </IconButton>
-          </Tooltip>
-          {onDuplicate && (
-            <Tooltip title="Duplicate item">
-              <IconButton
-                size="small"
-                onClick={() => onDuplicate(item)}
-                sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
-              >
-                <ContentCopyIcon sx={{ fontSize: 16 }} />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Delete item">
-            <IconButton
-              size="small"
-              onClick={() => onDelete(item.id)}
+      ) : (
+        /* Desktop Layout */
+        <Stack direction="row" alignItems="flex-start" spacing={1} sx={{ p: 1.5 }}>
+          {/* Drag Handle */}
+          <Tooltip title="Drag to reorder">
+            <Box
+              component="button"
+              {...attributes}
+              {...listeners}
               sx={{
-                opacity: 0.6,
-                "&:hover": { opacity: 1, color: "error.main" },
+                mt: 1,
+                cursor: "grab",
+                opacity: 0.4,
+                background: "none",
+                border: "none",
+                p: 0,
+                touchAction: "none",
+                display: "flex",
+                "&:hover": { opacity: 0.8 },
+                "&:active": { cursor: "grabbing" },
               }}
             >
-              <DeleteIcon sx={{ fontSize: 18 }} />
-            </IconButton>
+              <DragIndicatorIcon sx={{ fontSize: 18, color: "text.secondary" }} />
+            </Box>
           </Tooltip>
+
+          {/* Type Selector */}
+          <Box sx={{ flexShrink: 0, width: 140 }}>
+            <MuiSelect
+              value={item.type}
+              onChange={handleTypeChange}
+              size="small"
+              fullWidth
+              sx={{
+                fontSize: "0.75rem",
+                fontWeight: 500,
+                color: config.muiColor,
+                bgcolor: `${config.muiColor}10`,
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `${config.muiColor}40`,
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: config.muiColor,
+                },
+                "& .MuiSelect-select": {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  py: 1,
+                },
+              }}
+              renderValue={(value) => {
+                const cfg = changeTypeConfig[value as ChangeType]
+                return (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
+                    {cfg.icon}
+                    {cfg.label}
+                  </Box>
+                )
+              }}
+            >
+              {Object.entries(changeTypeConfig).map(([type, cfg]) => (
+                <MenuItem key={type} value={type}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
+                    {cfg.icon}
+                    {cfg.label}
+                  </Box>
+                </MenuItem>
+              ))}
+            </MuiSelect>
+          </Box>
+
+          {/* Title & Area */}
+          <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 }}>
+            <Stack direction="row" spacing={1}>
+              <Input
+                ref={titleInputRef}
+                value={item.title}
+                onChange={(e) => onUpdate(item.id, { title: e.target.value })}
+                onKeyDown={handleKeyDown}
+                placeholder="What changed?"
+                sx={{ flex: 1 }}
+              />
+              <Tooltip title="Component/area tag">
+                <Box sx={{ width: 100 }}>
+                  <Input
+                    value={item.area || ""}
+                    onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
+                    placeholder="Area"
+                    inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
+                  />
+                </Box>
+              </Tooltip>
+            </Stack>
+
+            {/* Description (expandable) */}
+            {isExpanded && (
+              <Textarea
+                value={item.description || ""}
+                onChange={(e) => onUpdate(item.id, { description: e.target.value || null })}
+                placeholder="Add more details (optional)..."
+                rows={2}
+                autoFocus={isExpanded && !item.description}
+              />
+            )}
+          </Box>
+
+          {/* Actions */}
+          <Stack direction="row" spacing={0.5}>
+            <Tooltip title={isExpanded ? "Hide description" : "Add description (Enter)"}>
+              <IconButton
+                size="small"
+                onClick={() => setIsExpanded(!isExpanded)}
+                sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
+              >
+                {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
+              </IconButton>
+            </Tooltip>
+            {onDuplicate && (
+              <Tooltip title="Duplicate item">
+                <IconButton
+                  size="small"
+                  onClick={() => onDuplicate(item)}
+                  sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
+                >
+                  <ContentCopyIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Delete item">
+              <IconButton
+                size="small"
+                onClick={() => onDelete(item.id)}
+                sx={{
+                  opacity: 0.6,
+                  "&:hover": { opacity: 1, color: "error.main" },
+                }}
+              >
+                <DeleteIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         </Stack>
-      </Stack>
+      )}
     </Box>
   )
 }

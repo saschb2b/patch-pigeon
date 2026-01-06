@@ -139,11 +139,11 @@ export function ProductForm({ userId, product }: ProductFormProps) {
 
             {error && <Alert severity="error">{error}</Alert>}
 
-            <Stack direction="row" spacing={2}>
-              <Button type="submit" disabled={isLoading}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <Button type="submit" disabled={isLoading} fullWidth sx={{ width: { sm: "auto" } }}>
                 {isLoading ? "Saving..." : product ? "Update Product" : "Create Product"}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button type="button" variant="outline" onClick={() => router.back()} fullWidth sx={{ width: { sm: "auto" } }}>
                 Cancel
               </Button>
             </Stack>
