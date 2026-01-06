@@ -4,6 +4,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
@@ -32,6 +33,7 @@ import GitHubIcon from "@mui/icons-material/GitHub"
 import XIcon from "@mui/icons-material/X"
 import MenuIcon from "@mui/icons-material/Menu"
 import CloseIcon from "@mui/icons-material/Close"
+import DashboardIcon from "@mui/icons-material/Dashboard"
 
 // Brand colors
 const colors = {
@@ -53,6 +55,17 @@ export default function HomePage() {
   const [visibleEntries, setVisibleEntries] = useState(0)
   const [isTyping, setIsTyping] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+
+  // Check auth state on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setIsLoggedIn(!!user)
+    }
+    checkAuth()
+  }, [])
 
   // Animate entries appearing one by one
   useEffect(() => {
@@ -102,12 +115,23 @@ export default function HomePage() {
             
             {/* Desktop nav */}
             <Stack direction="row" spacing={1.5} sx={{ display: { xs: 'none', sm: 'flex' } }}>
-              <Button variant="ghost" asChild>
-                <Link href="/auth/login">Sign in</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/auth/sign-up">Get started</Link>
-              </Button>
+              {isLoggedIn ? (
+                <Button asChild>
+                  <Link href="/admin">
+                    <DashboardIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                    Dashboard
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/auth/login">Sign in</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/auth/sign-up">Get started</Link>
+                  </Button>
+                </>
+              )}
             </Stack>
 
             {/* Mobile menu button */}
@@ -140,12 +164,23 @@ export default function HomePage() {
               </IconButton>
             </Stack>
             <Stack spacing={2}>
-              <Button variant="outline" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/auth/login">Sign in</Link>
-              </Button>
-              <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
-                <Link href="/auth/sign-up">Get started free</Link>
-              </Button>
+              {isLoggedIn ? (
+                <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/admin">
+                    <DashboardIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                    Go to Dashboard
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="outline" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href="/auth/login">Sign in</Link>
+                  </Button>
+                  <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href="/auth/sign-up">Get started free</Link>
+                  </Button>
+                </>
+              )}
               <Button variant="ghost" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
                 <Link href="/demo">View demo</Link>
               </Button>
