@@ -116,6 +116,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   // Mobile view toggle (editor vs preview)
   const [mobileView, setMobileView] = useState<"editor" | "preview">("editor")
 
+  // Client-side mounted state for DndContext (prevents hydration mismatch)
+  const [isMounted, setIsMounted] = useState(false)
+
   // Draft recovery state
   const [hasDraft, setHasDraft] = useState(false)
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null)
@@ -160,6 +163,11 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     window.addEventListener("beforeunload", handleBeforeUnload)
     return () => window.removeEventListener("beforeunload", handleBeforeUnload)
   }, [hasChanges])
+
+  // Mark as mounted for client-side only rendering (DndContext)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Check for existing draft on mount
   useEffect(() => {
@@ -763,23 +771,45 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   </Stack>
                 </Stack>
 
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                  <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                    <Stack spacing={1}>
-                      {items.map((item) => (
-                        <EntryItemRow
-                          key={item.id}
-                          item={item}
-                          onUpdate={handleUpdateItem}
-                          onDelete={handleDeleteItem}
-                          onDuplicate={handleDuplicateItem}
-                          onNavigate={(direction) => handleNavigateItem(item.id, direction)}
-                          autoFocus={item.id === newItemId}
-                        />
-                      ))}
-                    </Stack>
-                  </SortableContext>
-                </DndContext>
+                {isMounted ? (
+                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                      <Stack spacing={1}>
+                        {items.map((item) => (
+                          <EntryItemRow
+                            key={item.id}
+                            item={item}
+                            onUpdate={handleUpdateItem}
+                            onDelete={handleDeleteItem}
+                            onDuplicate={handleDuplicateItem}
+                            onNavigate={(direction) => handleNavigateItem(item.id, direction)}
+                            autoFocus={item.id === newItemId}
+                          />
+                        ))}
+                      </Stack>
+                    </SortableContext>
+                  </DndContext>
+                ) : (
+                  <Stack spacing={1}>
+                    {items.map((item) => (
+                      <Paper
+                        key={item.id}
+                        elevation={0}
+                        sx={{
+                          p: 2,
+                          borderRadius: 2,
+                          border: 1,
+                          borderColor: 'divider',
+                          bgcolor: 'background.paper',
+                        }}
+                      >
+                        <Typography variant="body2" color="text.secondary">
+                          {item.title || 'Loading...'}
+                        </Typography>
+                      </Paper>
+                    ))}
+                  </Stack>
+                )}
 
                 {items.length === 0 && (
                   <Paper
