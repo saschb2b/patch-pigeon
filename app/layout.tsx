@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | PatchPigeon",
   },
   description:
-    "Create beautiful, public changelogs in minutes. Keep your users informed with a dedicated changelog page. Free forever for indie developers.",
+      "Create beautiful, public changelogs in minutes. Keep your users informed with a dedicated changelog page. Open source and community funded.",
   keywords: [
     "changelog",
     "release notes",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "PatchPigeon",
     title: "PatchPigeon - Beautiful Changelogs for Indie Developers",
     description:
-      "Create beautiful, public changelogs in minutes. Keep your users informed with a dedicated changelog page. Free forever for indie developers.",
+    "Create beautiful, public changelogs in minutes. Keep your users informed with a dedicated changelog page. Open source and community funded.",
     images: [
       {
         url: "/og-image.png",

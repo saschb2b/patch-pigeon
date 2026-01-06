@@ -1,14 +1,17 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Box, Container, Typography, Stack, Grid, Tooltip } from "@mui/material"
+import { Box, Container, Typography, Stack, Grid, Tooltip, Paper } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 import SettingsIcon from "@mui/icons-material/Settings"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import GitHubIcon from "@mui/icons-material/GitHub"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Product } from "@/lib/types"
 import { AdminHeader } from "@/components/admin/admin-header"
+import { AdminFooter } from "@/components/admin/admin-footer"
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -34,7 +37,7 @@ export default async function AdminPage() {
     .order("created_at", { ascending: false })
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
       <AdminHeader user={user} />
 
       <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 } }}>
@@ -153,7 +156,60 @@ export default async function AdminPage() {
             ))}
           </Grid>
         )}
+
+        {/* Sponsor hint */}
+        <Paper
+          elevation={0}
+          component="a"
+          href="https://github.com/sponsors/saschb2b"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            mt: 6,
+            p: 2.5,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1.5,
+            borderRadius: 3,
+            border: 1,
+            borderColor: 'divider',
+            bgcolor: 'transparent',
+            textDecoration: 'none',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              borderColor: '#ffb8a1',
+              bgcolor: 'rgba(255, 184, 161, 0.05)',
+              '& .sponsor-heart': {
+                transform: 'scale(1.2)',
+                color: '#ff6b6b',
+              },
+            },
+          }}
+        >
+          <FavoriteIcon 
+            className="sponsor-heart"
+            sx={{ 
+              fontSize: 18, 
+              color: '#ffb8a1',
+              transition: 'all 0.2s ease',
+            }} 
+          />
+          <Typography variant="body2" color="text.secondary">
+            Enjoying PatchPigeon? Consider{' '}
+            <Typography 
+              component="span" 
+              variant="body2" 
+              sx={{ fontWeight: 600, color: 'text.primary' }}
+            >
+              supporting its development
+            </Typography>
+          </Typography>
+          <GitHubIcon sx={{ fontSize: 16, color: 'text.secondary', ml: 0.5 }} />
+        </Paper>
       </Container>
+
+      <AdminFooter />
     </Box>
   )
 }

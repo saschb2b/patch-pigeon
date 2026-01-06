@@ -173,12 +173,12 @@ export default function HomePage() {
                 </Button>
               ) : (
                 <>
-                  <Button variant="outline" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
-                    <Link href="/auth/login">Sign in</Link>
-                  </Button>
-                  <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
-                    <Link href="/auth/sign-up">Get started free</Link>
-                  </Button>
+              <Button variant="outline" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/auth/login">Sign in</Link>
+              </Button>
+              <Button asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/auth/sign-up">Get started</Link>
+              </Button>
                 </>
               )}
               <Button variant="ghost" asChild size="lg" onClick={() => setMobileMenuOpen(false)}>
@@ -311,13 +311,13 @@ export default function HomePage() {
                   <Stack direction="row" spacing={0.75} alignItems="center">
                     <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                      Free forever
+                      Open source
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={0.75} alignItems="center">
                     <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                      No credit card
+                      Community funded
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={0.75} alignItems="center">
@@ -516,7 +516,7 @@ export default function HomePage() {
           >
             {[
               { value: "2 min", label: "Setup time", icon: <AccessTimeIcon /> },
-              { value: "100%", label: "Free forever", icon: <FavoriteIcon /> },
+              { value: "Open", label: "Source & free", icon: <FavoriteIcon /> },
               { value: "REST + RSS", label: "API included", icon: <RssFeedIcon /> },
             ].map((stat, i) => (
               <Stack key={i} alignItems="center" spacing={1} sx={{ flex: 1, py: { xs: 2, md: 0 } }}>
@@ -954,7 +954,7 @@ export default function HomePage() {
                   '&:hover': { bgcolor: '#ffa78a' },
                 }}
               >
-                <Link href="/auth/sign-up">Start for free</Link>
+                <Link href="/auth/sign-up">Get started</Link>
               </Button>
               <Button
                 variant="outline"
@@ -1003,15 +1003,34 @@ export default function HomePage() {
               <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280 }}>
                 Beautiful changelogs for indie developers and small teams.
               </Typography>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <FavoriteIcon sx={{ fontSize: 14, color: colors.peach }} />
-                <Typography variant="caption" color="text.secondary">
-                  Made with love for indie devs
-                </Typography>
-              </Stack>
+              <Box
+                component="a"
+                href="https://www.saschb2b.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ 
+                  textDecoration: 'none',
+                  '&:hover .author-name': { color: colors.peach },
+                }}
+              >
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <FavoriteIcon sx={{ fontSize: 14, color: colors.peach }} />
+                  <Typography variant="caption" color="text.secondary">
+                    Made with love by{' '}
+                    <Typography 
+                      component="span" 
+                      variant="caption" 
+                      className="author-name"
+                      sx={{ fontWeight: 600, color: 'text.primary', transition: 'color 0.2s' }}
+                    >
+                      Sascha
+                    </Typography>
+                  </Typography>
+                </Stack>
+              </Box>
             </Stack>
 
-            <Stack direction="row" spacing={6}>
+            <Stack direction="row" spacing={{ xs: 4, sm: 6 }}>
               <Stack spacing={1.5}>
                 <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
                   Product
@@ -1030,12 +1049,29 @@ export default function HomePage() {
 
               <Stack spacing={1.5}>
                 <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
+                  Legal
+                </Typography>
+                <Box
+                  component="a"
+                  href="https://www.saschb2b.com/impressum"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                    Impressum
+                  </Typography>
+                </Box>
+              </Stack>
+
+              <Stack spacing={1.5}>
+                <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
                   Connect
                 </Typography>
                 <Stack direction="row" spacing={1}>
                   <Box
                     component="a"
-                    href="https://github.com"
+                    href="https://github.com/saschb2b"
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{

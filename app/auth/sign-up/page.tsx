@@ -56,7 +56,7 @@ export default function SignUpPage() {
     "Unlimited changelog entries",
     "Beautiful public pages",
     "RSS & JSON API included",
-    "Free forever for indie devs",
+    "Open source & community funded",
   ]
 
   return (
@@ -298,7 +298,7 @@ export default function SignUpPage() {
             {[
               { value: "500+", label: "Developers" },
               { value: "10k+", label: "Changelogs" },
-              { value: "Free", label: "Forever" },
+              { value: "100%", label: "Open source" },
             ].map((stat, index) => (
               <Paper
                 key={index}

@@ -4,6 +4,7 @@ import { Box, Container, Typography, Stack, Paper } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { createClient } from "@/lib/supabase/server"
 import { AdminHeader } from "@/components/admin/admin-header"
+import { AdminFooter } from "@/components/admin/admin-footer"
 import { ProductForm } from "@/components/admin/product-form"
 import { DeleteProductButton } from "@/components/admin/delete-product-button"
 import type { Product, Profile } from "@/lib/types"
@@ -44,10 +45,10 @@ export default async function ProductSettingsPage({ params }: PageProps) {
   const publicUrl = `/${(profile as Profile).owner_slug}/${(product as Product).slug}`
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
       <AdminHeader user={user} />
 
-      <Container component="main" maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+      <Container component="main" maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 }, flex: 1 }}>
         <Box sx={{ maxWidth: 672, mx: "auto" }}>
           <Link href={`/admin/products/${productId}`} style={{ textDecoration: "none" }}>
             <Stack
@@ -105,6 +106,8 @@ export default async function ProductSettingsPage({ params }: PageProps) {
           </Box>
         </Box>
       </Container>
+
+      <AdminFooter />
     </Box>
   )
 }

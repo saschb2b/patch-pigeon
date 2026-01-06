@@ -70,7 +70,7 @@ export default function DemoProductPage() {
               "&:hover": { textDecoration: "none" },
             }}
           >
-            Sign up for free →
+            Create your changelog →
           </MuiLink>
         </Stack>
       </Box>

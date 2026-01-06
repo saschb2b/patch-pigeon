@@ -97,7 +97,7 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
               "&:hover": { textDecoration: "none" },
             }}
           >
-            Sign up for free →
+            Create your changelog →
           </MuiLink>
         </Stack>
       </Box>
