@@ -10,7 +10,7 @@ A beautiful changelog management system for indie devs and small companies. Crea
 - **Admin Dashboard** - Create/edit/delete entries with live preview editor
 - **Public REST API** - JSON and RSS endpoints for integrations
 - **Entry Types** - Feature, Improvement, Fix, Breaking Change badges
-- **Markdown Support** - Write rich content with markdown formatting
+- **Drag & Drop** - Reorder entry items with dnd-kit
 - **Authentication** - Secure admin access with Supabase Auth
 - **Row Level Security** - Data protection with Supabase RLS
 
@@ -61,17 +61,26 @@ A beautiful changelog management system for indie devs and small companies. Crea
 - `product_id` - Product reference
 - `title` - Entry title
 - `slug` - URL-friendly identifier
-- `content` - Markdown content
-- `type` - feature | improvement | fix | breaking
+- `summary` - Optional summary text
 - `version` - Optional version number
 - `published` - Publication status
 - `publish_date` - Publication date
+
+### Entry Items Table
+- `id` - UUID primary key
+- `entry_id` - Entry reference
+- `type` - FEATURE | IMPROVEMENT | FIX | BREAKING | REMOVED | KNOWNISSUE | NOTE
+- `title` - Item title
+- `description` - Optional description
+- `area` - Optional area tag (e.g., "API", "Editor")
+- `sort_order` - Order within entry
 
 ## Getting Started
 
 1. Run the database migrations:
    - `scripts/001_create_tables.sql`
    - `scripts/002_add_profiles.sql`
+   - `scripts/003_add_entry_items.sql`
 2. Sign up for an account at `/auth/sign-up`
 3. Complete onboarding to claim your unique handle
 4. Create your first product in the admin dashboard
@@ -80,8 +89,9 @@ A beautiful changelog management system for indie devs and small companies. Crea
 
 ## Tech Stack
 
-- Next.js 16 App Router
+- Next.js 16 (App Router)
 - Supabase (Database + Auth)
-- Tailwind CSS v4
-- shadcn/ui Components
+- Material UI (MUI) v7
+- Emotion (CSS-in-JS)
+- dnd-kit (Drag and Drop)
 - DM Sans font

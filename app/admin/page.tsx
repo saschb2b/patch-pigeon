@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Plus, ExternalLink, Settings } from "lucide-react"
+import { Box, Container, Typography, Stack, Grid } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
+import OpenInNewIcon from "@mui/icons-material/OpenInNew"
+import SettingsIcon from "@mui/icons-material/Settings"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,78 +34,109 @@ export default async function AdminPage() {
     .order("created_at", { ascending: false })
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AdminHeader user={user} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Your Products</h1>
-            <p className="text-muted-foreground">
-              Your changelogs live at <span className="font-mono text-primary">/{profile.owner_slug}/...</span>
-            </p>
-          </div>
+      <Container component="main" maxWidth="lg" sx={{ py: 4 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>
+              Your Products
+            </Typography>
+            <Typography color="text.secondary">
+              Your changelogs live at{" "}
+              <Typography component="span" sx={{ fontFamily: "monospace", color: "primary.main" }}>
+                /{profile.owner_slug}/...
+              </Typography>
+            </Typography>
+          </Box>
           <Button asChild>
             <Link href="/admin/create-product">
-              <Plus className="w-4 h-4 mr-2" />
+              <AddIcon sx={{ fontSize: 18, mr: 1 }} />
               New Product
             </Link>
           </Button>
-        </div>
+        </Stack>
 
         {!products || products.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16">
-              <p className="text-muted-foreground mb-4">No products yet. Create your first one to get started.</p>
+            <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", py: 8 }}>
+              <Typography color="text.secondary" sx={{ mb: 2 }}>
+                No products yet. Create your first one to get started.
+              </Typography>
               <Button asChild>
                 <Link href="/admin/create-product">
-                  <Plus className="w-4 h-4 mr-2" />
+                  <AddIcon sx={{ fontSize: 18, mr: 1 }} />
                   Create Product
                 </Link>
               </Button>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Grid container spacing={2}>
             {products.map((product: Product) => (
-              <Card key={product.id} className="group hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-xl">{product.name}</CardTitle>
-                      <CardDescription className="font-mono text-xs">
-                        /{profile.owner_slug}/{product.slug}
-                      </CardDescription>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/${profile.owner_slug}/${product.slug}`} target="_blank">
-                          <ExternalLink className="w-4 h-4" />
-                          <span className="sr-only">View public changelog</span>
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/products/${product.id}/settings`}>
-                          <Settings className="w-4 h-4" />
-                          <span className="sr-only">Product settings</span>
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                    {product.description || "No description"}
-                  </p>
-                  <Button asChild className="w-full">
-                    <Link href={`/admin/products/${product.id}`}>Manage Entries</Link>
-                  </Button>
-                </CardContent>
-              </Card>
+              <Grid size={{ xs: 12, md: 6, lg: 4 }} key={product.id}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    transition: "border-color 0.2s",
+                    "&:hover": {
+                      borderColor: "#cbd5e1",
+                    },
+                  }}
+                >
+                  <CardHeader>
+                    <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                      <Box>
+                        <CardTitle>{product.name}</CardTitle>
+                        <CardDescription sx={{ fontFamily: "monospace", fontSize: "0.75rem" }}>
+                          /{profile.owner_slug}/{product.slug}
+                        </CardDescription>
+                      </Box>
+                      <Stack direction="row" spacing={0.5}>
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link href={`/${profile.owner_slug}/${product.slug}`} target="_blank">
+                            <OpenInNewIcon sx={{ fontSize: 18 }} />
+                            <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
+                              View public changelog
+                            </Box>
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link href={`/admin/products/${product.id}/settings`}>
+                            <SettingsIcon sx={{ fontSize: 18 }} />
+                            <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
+                              Product settings
+                            </Box>
+                          </Link>
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </CardHeader>
+                  <CardContent>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        mb: 2,
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {product.description || "No description"}
+                    </Typography>
+                    <Button asChild sx={{ width: "100%" }}>
+                      <Link href={`/admin/products/${product.id}`}>Manage Entries</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
             ))}
-          </div>
+          </Grid>
         )}
-      </main>
-    </div>
+      </Container>
+    </Box>
   )
 }

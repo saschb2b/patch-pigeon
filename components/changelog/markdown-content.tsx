@@ -1,33 +1,51 @@
 import type React from "react"
-import { cn } from "@/lib/utils"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import type { SxProps, Theme } from "@mui/material/styles"
 
 interface MarkdownContentProps {
   content: string
-  className?: string
+  sx?: SxProps<Theme>
 }
 
-export function MarkdownContent({ content, className }: MarkdownContentProps) {
+export function MarkdownContent({ content, sx }: MarkdownContentProps) {
   // Simple markdown-like rendering (basic support)
   const renderContent = (text: string) => {
     const lines = text.split("\n")
     const elements: React.ReactNode[] = []
     let inCodeBlock = false
     let codeContent: string[] = []
-    let codeLanguage = ""
 
     lines.forEach((line, index) => {
       // Code block start/end
       if (line.startsWith("```")) {
         if (!inCodeBlock) {
           inCodeBlock = true
-          codeLanguage = line.slice(3).trim()
           codeContent = []
         } else {
           inCodeBlock = false
           elements.push(
-            <pre key={index} className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-              <code className="text-sm font-mono">{codeContent.join("\n")}</code>
-            </pre>,
+            <Box
+              component="pre"
+              key={index}
+              sx={{
+                bgcolor: "action.hover",
+                borderRadius: 2,
+                p: 2,
+                overflowX: "auto",
+                my: 2,
+              }}
+            >
+              <Box
+                component="code"
+                sx={{
+                  fontSize: "0.875rem",
+                  fontFamily: "monospace",
+                }}
+              >
+                {codeContent.join("\n")}
+              </Box>
+            </Box>,
           )
         }
         return
@@ -41,51 +59,81 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
       // Headers
       if (line.startsWith("### ")) {
         elements.push(
-          <h3 key={index} className="text-lg font-semibold mt-6 mb-3">
+          <Typography
+            key={index}
+            variant="h6"
+            component="h3"
+            sx={{ fontWeight: 600, mt: 3, mb: 1.5 }}
+          >
             {line.slice(4)}
-          </h3>,
+          </Typography>,
         )
         return
       }
       if (line.startsWith("## ")) {
         elements.push(
-          <h2 key={index} className="text-xl font-semibold mt-8 mb-4">
+          <Typography
+            key={index}
+            variant="h5"
+            component="h2"
+            sx={{ fontWeight: 600, mt: 4, mb: 2 }}
+          >
             {line.slice(3)}
-          </h2>,
+          </Typography>,
         )
         return
       }
       if (line.startsWith("# ")) {
         elements.push(
-          <h1 key={index} className="text-2xl font-bold mt-8 mb-4">
+          <Typography
+            key={index}
+            variant="h4"
+            component="h1"
+            sx={{ fontWeight: 700, mt: 4, mb: 2 }}
+          >
             {line.slice(2)}
-          </h1>,
+          </Typography>,
         )
         return
       }
 
       // List items
       if (line.startsWith("- ") || line.startsWith("* ")) {
-        const content = line.slice(2)
+        const itemContent = line.slice(2)
         elements.push(
-          <li key={index} className="ml-4 list-disc text-muted-foreground">
-            {renderInlineFormatting(content)}
-          </li>,
+          <Box
+            component="li"
+            key={index}
+            sx={{
+              ml: 2,
+              listStyleType: "disc",
+              color: "text.secondary",
+            }}
+          >
+            {renderInlineFormatting(itemContent)}
+          </Box>,
         )
         return
       }
 
       // Empty lines
       if (line.trim() === "") {
-        elements.push(<br key={index} />)
+        elements.push(<Box component="br" key={index} />)
         return
       }
 
       // Regular paragraphs
       elements.push(
-        <p key={index} className="text-muted-foreground leading-relaxed mb-4">
+        <Typography
+          key={index}
+          sx={{
+            color: "text.secondary",
+            lineHeight: 1.7,
+            mb: 2,
+          }}
+        >
           {renderInlineFormatting(line)}
-        </p>,
+        </Typography>,
       )
     })
 
@@ -94,19 +142,33 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
   const renderInlineFormatting = (text: string) => {
     // Bold
-    text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    let processedText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     // Inline code
-    text = text.replace(/`(.*?)`/g, '<code class="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
+    processedText = processedText.replace(
+      /`(.*?)`/g,
+      '<code style="background-color: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.875rem; font-family: monospace;">$1</code>',
+    )
     // Links
-    text = text.replace(
+    processedText = processedText.replace(
       /\[(.*?)\]$$(.*?)$$/g,
-      '<a href="$2" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">$1</a>',
+      '<a href="$2" style="color: #1f2937; text-decoration: underline;" target="_blank" rel="noopener noreferrer">$1</a>',
     )
 
-    return <span dangerouslySetInnerHTML={{ __html: text }} />
+    return <span dangerouslySetInnerHTML={{ __html: processedText }} />
   }
 
   return (
-    <div className={cn("prose prose-neutral dark:prose-invert max-w-none", className)}>{renderContent(content)}</div>
+    <Box
+      sx={{
+        maxWidth: "none",
+        "& ul, & ol": {
+          pl: 2,
+          mb: 2,
+        },
+        ...sx,
+      }}
+    >
+      {renderContent(content)}
+    </Box>
   )
 }

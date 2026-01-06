@@ -8,66 +8,59 @@ import { CSS } from "@dnd-kit/utilities"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  GripVertical,
-  Trash2,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
-  Bug,
-  Zap,
-  AlertTriangle,
-  Minus,
-  MessageSquare,
-} from "lucide-react"
+import { Box, IconButton, Stack } from "@mui/material"
+import MuiSelect, { SelectChangeEvent } from "@mui/material/Select"
+import MenuItem from "@mui/material/MenuItem"
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator"
+import DeleteIcon from "@mui/icons-material/Delete"
+import ExpandLessIcon from "@mui/icons-material/ExpandLess"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import BugReportIcon from "@mui/icons-material/BugReport"
+import BoltIcon from "@mui/icons-material/Bolt"
+import WarningIcon from "@mui/icons-material/Warning"
+import RemoveIcon from "@mui/icons-material/Remove"
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"
 import type { ChangeType, EntryItem } from "@/lib/types"
 
 export const changeTypeConfig: Record<
   ChangeType,
-  { label: string; icon: React.ReactNode; color: string; bgColor: string }
+  { label: string; icon: React.ReactNode; muiColor: string }
 > = {
   FEATURE: {
     label: "Feature",
-    icon: <Sparkles className="w-3.5 h-3.5" />,
-    color: "text-sky-600 dark:text-sky-400",
-    bgColor: "bg-sky-500/10 border-sky-500/20",
+    icon: <AutoAwesomeIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#0ea5e9",
   },
   FIX: {
     label: "Fix",
-    icon: <Bug className="w-3.5 h-3.5" />,
-    color: "text-mint-600 dark:text-mint-400",
-    bgColor: "bg-mint-500/10 border-mint-500/20",
+    icon: <BugReportIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#10b981",
   },
   IMPROVEMENT: {
     label: "Improvement",
-    icon: <Zap className="w-3.5 h-3.5" />,
-    color: "text-peach-600 dark:text-peach-400",
-    bgColor: "bg-peach-500/10 border-peach-500/20",
+    icon: <BoltIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#f97316",
   },
   KNOWNISSUE: {
     label: "Known Issue",
-    icon: <AlertTriangle className="w-3.5 h-3.5" />,
-    color: "text-butter-600 dark:text-butter-400",
-    bgColor: "bg-butter-500/10 border-butter-500/20",
+    icon: <WarningIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#eab308",
   },
   BREAKING: {
     label: "Breaking",
-    icon: <AlertTriangle className="w-3.5 h-3.5" />,
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-500/10 border-red-500/20",
+    icon: <WarningIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#ef4444",
   },
   REMOVED: {
     label: "Removed",
-    icon: <Minus className="w-3.5 h-3.5" />,
-    color: "text-muted-foreground",
-    bgColor: "bg-muted border-border",
+    icon: <RemoveIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#6b7280",
   },
   NOTE: {
     label: "Note",
-    icon: <MessageSquare className="w-3.5 h-3.5" />,
-    color: "text-muted-foreground",
-    bgColor: "bg-muted border-border",
+    icon: <ChatBubbleOutlineIcon sx={{ fontSize: 14 }} />,
+    muiColor: "#6b7280",
   },
 }
 
@@ -89,59 +82,109 @@ export function EntryItemRow({ item, onUpdate, onDelete }: EntryItemRowProps) {
 
   const config = changeTypeConfig[item.type]
 
+  const handleTypeChange = (event: SelectChangeEvent<string>) => {
+    onUpdate(item.id, { type: event.target.value as ChangeType })
+  }
+
   return (
-    <div
+    <Box
       ref={setNodeRef}
       style={style}
-      className={`group relative rounded-lg border bg-card transition-all ${
-        isDragging ? "opacity-50 shadow-lg ring-2 ring-primary" : ""
-      }`}
+      sx={{
+        position: "relative",
+        borderRadius: 2,
+        border: 1,
+        borderColor: "divider",
+        bgcolor: "background.paper",
+        transition: "all 0.2s",
+        opacity: isDragging ? 0.5 : 1,
+        boxShadow: isDragging ? 3 : 0,
+      }}
     >
-      <div className="flex items-start gap-2 p-3">
+      <Stack direction="row" alignItems="flex-start" spacing={1} sx={{ p: 1.5 }}>
         {/* Drag Handle */}
-        <button
+        <Box
+          component="button"
           {...attributes}
           {...listeners}
-          className="mt-2.5 cursor-grab opacity-40 hover:opacity-100 transition-opacity touch-none"
+          sx={{
+            mt: 1,
+            cursor: "grab",
+            opacity: 0.4,
+            background: "none",
+            border: "none",
+            p: 0,
+            touchAction: "none",
+            display: "flex",
+            "&:hover": { opacity: 0.8 },
+          }}
         >
-          <GripVertical className="w-4 h-4 text-muted-foreground" />
-        </button>
+          <DragIndicatorIcon sx={{ fontSize: 18, color: "text.secondary" }} />
+        </Box>
 
         {/* Type Selector */}
-        <div className="shrink-0 w-32">
-          <Select value={item.type} onValueChange={(v) => onUpdate(item.id, { type: v as ChangeType })}>
-            <SelectTrigger className={`h-9 text-xs font-medium border ${config.bgColor} ${config.color}`}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(changeTypeConfig).map(([type, cfg]) => (
-                <SelectItem key={type} value={type}>
-                  <div className={`flex items-center gap-2 ${cfg.color}`}>
-                    {cfg.icon}
-                    {cfg.label}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Box sx={{ flexShrink: 0, width: 140 }}>
+          <MuiSelect
+            value={item.type}
+            onChange={handleTypeChange}
+            size="small"
+            fullWidth
+            sx={{
+              fontSize: "0.75rem",
+              fontWeight: 500,
+              color: config.muiColor,
+              bgcolor: `${config.muiColor}10`,
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: `${config.muiColor}40`,
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: config.muiColor,
+              },
+              "& .MuiSelect-select": {
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                py: 1,
+              },
+            }}
+            renderValue={(value) => {
+              const cfg = changeTypeConfig[value as ChangeType]
+              return (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
+                  {cfg.icon}
+                  {cfg.label}
+                </Box>
+              )
+            }}
+          >
+            {Object.entries(changeTypeConfig).map(([type, cfg]) => (
+              <MenuItem key={type} value={type}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
+                  {cfg.icon}
+                  {cfg.label}
+                </Box>
+              </MenuItem>
+            ))}
+          </MuiSelect>
+        </Box>
 
         {/* Title & Area */}
-        <div className="flex-1 min-w-0 space-y-2">
-          <div className="flex gap-2">
+        <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 }}>
+          <Stack direction="row" spacing={1}>
             <Input
               value={item.title}
               onChange={(e) => onUpdate(item.id, { title: e.target.value })}
               placeholder="What changed?"
-              className="h-9 flex-1"
+              sx={{ flex: 1 }}
             />
             <Input
               value={item.area || ""}
               onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
-              placeholder="Area (optional)"
-              className="h-9 w-28 text-xs font-mono"
+              placeholder="Area"
+              sx={{ width: 100 }}
+              inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
             />
-          </div>
+          </Stack>
 
           {/* Description (expandable) */}
           {isExpanded && (
@@ -149,34 +192,32 @@ export function EntryItemRow({ item, onUpdate, onDelete }: EntryItemRowProps) {
               value={item.description || ""}
               onChange={(e) => onUpdate(item.id, { description: e.target.value || null })}
               placeholder="Add more details (optional)..."
-              className="min-h-[60px] text-sm resize-none"
               rows={2}
             />
           )}
-        </div>
+        </Box>
 
         {/* Actions */}
-        <div className="flex items-center gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 opacity-60 hover:opacity-100"
+        <Stack direction="row" spacing={0.5}>
+          <IconButton
+            size="small"
             onClick={() => setIsExpanded(!isExpanded)}
+            sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
           >
-            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive opacity-60 hover:opacity-100"
+            {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
+          </IconButton>
+          <IconButton
+            size="small"
             onClick={() => onDelete(item.id)}
+            sx={{
+              opacity: 0.6,
+              "&:hover": { opacity: 1, color: "error.main" },
+            }}
           >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
+            <DeleteIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }

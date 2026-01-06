@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Box, Alert, CircularProgress, InputAdornment } from "@mui/material"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import ErrorIcon from "@mui/icons-material/Error"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import { generateSlug } from "@/lib/utils/slug"
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -116,81 +117,113 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <PigeonLogo className="w-16 h-16" />
-          </div>
-          <CardTitle className="text-2xl">Welcome to PatchPigeon</CardTitle>
-          <CardDescription>Choose your unique handle. This will be your namespace for all changelogs.</CardDescription>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+      }}
+    >
+      <Card sx={{ width: "100%", maxWidth: 448 }}>
+        <CardHeader sx={{ textAlign: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+            <PigeonLogo size="lg" />
+          </Box>
+          <CardTitle>Welcome to PatchPigeon</CardTitle>
+          <CardDescription>
+            Choose your unique handle. This will be your namespace for all changelogs.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          <Box component="form" onSubmit={handleSubmit}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              {error && (
+                <Alert severity="error" icon={<ErrorIcon />}>
+                  {error}
+                </Alert>
+              )}
 
-            <div className="space-y-2">
-              <Label htmlFor="displayName">Display Name</Label>
-              <Input
-                id="displayName"
-                placeholder="Acme Inc. or John Doe"
-                value={displayName}
-                onChange={(e) => handleDisplayNameChange(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">Your company or personal name (optional)</p>
-            </div>
+              <Box>
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input
+                  id="displayName"
+                  placeholder="Acme Inc. or John Doe"
+                  value={displayName}
+                  onChange={(e) => handleDisplayNameChange(e.target.value)}
+                />
+                <Box component="p" sx={{ fontSize: "0.75rem", color: "text.secondary", mt: 0.5 }}>
+                  Your company or personal name (optional)
+                </Box>
+              </Box>
 
-            <div className="space-y-2">
-              <Label htmlFor="ownerSlug">Your Handle</Label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-3 flex items-center text-muted-foreground">
-                  patchpigeon.com/
-                </div>
+              <Box>
+                <Label htmlFor="ownerSlug">Your Handle</Label>
                 <Input
                   id="ownerSlug"
-                  className="pl-[140px] pr-10"
                   placeholder="acme"
                   value={ownerSlug}
                   onChange={(e) => handleSlugChange(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start" sx={{ color: "text.secondary" }}>
+                        patchpigeon.com/
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {isChecking && <CircularProgress size={16} />}
+                        {!isChecking && isAvailable === true && (
+                          <CheckCircleIcon sx={{ fontSize: 18, color: "success.main" }} />
+                        )}
+                        {!isChecking && isAvailable === false && (
+                          <ErrorIcon sx={{ fontSize: 18, color: "error.main" }} />
+                        )}
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center">
-                  {isChecking && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
-                  {!isChecking && isAvailable === true && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
-                  {!isChecking && isAvailable === false && <AlertCircle className="w-4 h-4 text-destructive" />}
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {isAvailable === false
-                  ? "This handle is not available"
-                  : "This is your unique URL namespace for all products"}
-              </p>
-            </div>
+                <Box component="p" sx={{ fontSize: "0.75rem", color: "text.secondary", mt: 0.5 }}>
+                  {isAvailable === false
+                    ? "This handle is not available"
+                    : "This is your unique URL namespace for all products"}
+                </Box>
+              </Box>
 
-            <div className="rounded-lg bg-muted/50 p-4 space-y-1">
-              <p className="text-sm font-medium">Your changelog URLs will look like:</p>
-              <p className="text-sm font-mono text-primary">
-                patchpigeon.com/{ownerSlug || "your-handle"}/your-product
-              </p>
-            </div>
+              <Box
+                sx={{
+                  borderRadius: 2,
+                  bgcolor: "grey.100",
+                  p: 2,
+                }}
+              >
+                <Box component="p" sx={{ fontSize: "0.875rem", fontWeight: 500, mb: 0.5 }}>
+                  Your changelog URLs will look like:
+                </Box>
+                <Box
+                  component="p"
+                  sx={{ fontSize: "0.875rem", fontFamily: "monospace", color: "primary.main" }}
+                >
+                  patchpigeon.com/{ownerSlug || "your-handle"}/your-product
+                </Box>
+              </Box>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting || !isAvailable}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating profile...
-                </>
-              ) : (
-                "Continue to Dashboard"
-              )}
-            </Button>
-          </form>
+              <Button type="submit" disabled={isSubmitting || !isAvailable}>
+                {isSubmitting ? (
+                  <>
+                    <CircularProgress size={16} sx={{ mr: 1 }} />
+                    Creating profile...
+                  </>
+                ) : (
+                  "Continue to Dashboard"
+                )}
+              </Button>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
-    </div>
+    </Box>
   )
 }

@@ -1,5 +1,9 @@
 import Link from "next/link"
-import { Sparkles, Bug, Zap, AlertTriangle } from "lucide-react"
+import { Box, Typography, Stack, Paper, Chip } from "@mui/material"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import BugReportIcon from "@mui/icons-material/BugReport"
+import BoltIcon from "@mui/icons-material/Bolt"
+import WarningIcon from "@mui/icons-material/Warning"
 import type { EntryWithItems, ChangeType } from "@/lib/types"
 
 interface EntryCardProps {
@@ -36,55 +40,121 @@ export function EntryCard({ entry, ownerSlug, productSlug }: EntryCardProps) {
       .join(" • ")
 
   return (
-    <article className="group relative">
-      <Link href={`/${ownerSlug}/${productSlug}/${entry.slug}`} className="block">
-        <div className="flex flex-col gap-3 p-6 rounded-xl border border-border/50 bg-card hover:border-primary/30 hover:shadow-md transition-all duration-200">
-          <div className="flex items-center gap-3 flex-wrap">
+    <Box component="article" sx={{ position: "relative" }}>
+      <Link href={`/${ownerSlug}/${productSlug}/${entry.slug}`} style={{ textDecoration: "none" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1.5,
+            p: 3,
+            borderRadius: 3,
+            border: 1,
+            borderColor: "divider",
+            bgcolor: "background.paper",
+            transition: "all 0.2s",
+            "&:hover": {
+              borderColor: "#cbd5e1",
+              boxShadow: 2,
+              "& .entry-title": {
+                color: "primary.main",
+              },
+            },
+          }}
+        >
+          <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
             {entry.version && (
-              <span className="text-xs font-mono font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                v{entry.version}
-              </span>
+              <Chip
+                label={`v${entry.version}`}
+                size="small"
+                sx={{
+                  fontFamily: "monospace",
+                  fontSize: "0.75rem",
+                  fontWeight: 500,
+                  bgcolor: "#f1f5f9",
+                  color: "#475569",
+                }}
+              />
             )}
-            {publishDate && <span className="text-xs text-muted-foreground">{publishDate}</span>}
-          </div>
+            {publishDate && (
+              <Typography variant="caption" color="text.secondary">
+                {publishDate}
+              </Typography>
+            )}
+          </Stack>
 
-          <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          <Typography
+            variant="h6"
+            className="entry-title"
+            sx={{
+              fontWeight: 600,
+              color: "text.primary",
+              transition: "color 0.2s",
+            }}
+          >
             {entry.title}
-          </h3>
+          </Typography>
 
-          {summaryText && <p className="text-sm text-muted-foreground line-clamp-2">{summaryText}</p>}
+          {summaryText && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
+              {summaryText}
+            </Typography>
+          )}
 
           {/* Change counts */}
           {items.length > 0 && (
-            <div className="flex flex-wrap gap-3 pt-2 border-t border-border/50">
+            <Stack
+              direction="row"
+              spacing={1.5}
+              flexWrap="wrap"
+              sx={{ pt: 1, borderTop: 1, borderColor: "divider" }}
+            >
               {typeCounts.FEATURE > 0 && (
-                <span className="text-xs flex items-center gap-1 text-sky-600 dark:text-sky-400">
-                  <Sparkles className="w-3 h-3" />
-                  {typeCounts.FEATURE} feature{typeCounts.FEATURE > 1 ? "s" : ""}
-                </span>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <AutoAwesomeIcon sx={{ fontSize: 14, color: "#0284c7" }} />
+                  <Typography variant="caption" sx={{ color: "#0284c7" }}>
+                    {typeCounts.FEATURE} feature{typeCounts.FEATURE > 1 ? "s" : ""}
+                  </Typography>
+                </Stack>
               )}
               {typeCounts.IMPROVEMENT > 0 && (
-                <span className="text-xs flex items-center gap-1 text-peach-600 dark:text-peach-400">
-                  <Zap className="w-3 h-3" />
-                  {typeCounts.IMPROVEMENT} improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}
-                </span>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <BoltIcon sx={{ fontSize: 14, color: "#c2410c" }} />
+                  <Typography variant="caption" sx={{ color: "#c2410c" }}>
+                    {typeCounts.IMPROVEMENT} improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}
+                  </Typography>
+                </Stack>
               )}
               {typeCounts.FIX > 0 && (
-                <span className="text-xs flex items-center gap-1 text-mint-600 dark:text-mint-400">
-                  <Bug className="w-3 h-3" />
-                  {typeCounts.FIX} fix{typeCounts.FIX > 1 ? "es" : ""}
-                </span>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <BugReportIcon sx={{ fontSize: 14, color: "#15803d" }} />
+                  <Typography variant="caption" sx={{ color: "#15803d" }}>
+                    {typeCounts.FIX} fix{typeCounts.FIX > 1 ? "es" : ""}
+                  </Typography>
+                </Stack>
               )}
               {typeCounts.BREAKING > 0 && (
-                <span className="text-xs flex items-center gap-1 text-red-600 dark:text-red-400">
-                  <AlertTriangle className="w-3 h-3" />
-                  {typeCounts.BREAKING} breaking
-                </span>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <WarningIcon sx={{ fontSize: 14, color: "#dc2626" }} />
+                  <Typography variant="caption" sx={{ color: "#dc2626" }}>
+                    {typeCounts.BREAKING} breaking
+                  </Typography>
+                </Stack>
               )}
-            </div>
+            </Stack>
           )}
-        </div>
+        </Paper>
       </Link>
-    </article>
+    </Box>
   )
 }

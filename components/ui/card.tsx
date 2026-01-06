@@ -1,83 +1,133 @@
+'use client'
+
 import * as React from 'react'
+import MuiCard from '@mui/material/Card'
+import MuiCardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 
-import { cn } from '@/lib/utils'
+interface CardProps extends React.ComponentProps<typeof MuiCard> {}
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
+function Card({ children, sx, ...props }: CardProps) {
   return (
-    <div
-      data-slot="card"
-      className={cn(
-        'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm',
-        className,
-      )}
-      {...props}
-    />
+    <MuiCard sx={sx} {...props}>
+      {children}
+    </MuiCard>
   )
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardHeaderProps {
+  children?: React.ReactNode
+  sx?: React.ComponentProps<typeof Box>['sx']
+}
+
+function CardHeader({ children, sx, ...props }: CardHeaderProps) {
   return (
-    <div
-      data-slot="card-header"
-      className={cn(
-        '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
-        className,
-      )}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0.5,
+        p: 3,
+        pb: 0,
+        ...sx,
+      }}
       {...props}
-    />
+    >
+      {children}
+    </Box>
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardTitleProps {
+  children?: React.ReactNode
+  sx?: React.ComponentProps<typeof Typography>['sx']
+}
+
+function CardTitle({ children, sx, ...props }: CardTitleProps) {
   return (
-    <div
-      data-slot="card-title"
-      className={cn('leading-none font-semibold', className)}
+    <Typography
+      variant="h6"
+      component="h3"
+      sx={{ fontWeight: 600, lineHeight: 1.2, ...sx }}
       {...props}
-    />
+    >
+      {children}
+    </Typography>
   )
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardDescriptionProps {
+  children?: React.ReactNode
+  sx?: React.ComponentProps<typeof Typography>['sx']
+}
+
+function CardDescription({ children, sx, ...props }: CardDescriptionProps) {
   return (
-    <div
-      data-slot="card-description"
-      className={cn('text-muted-foreground text-sm', className)}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={sx}
       {...props}
-    />
+    >
+      {children}
+    </Typography>
   )
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardActionProps {
+  children?: React.ReactNode
+  sx?: React.ComponentProps<typeof Box>['sx']
+}
+
+function CardAction({ children, sx, ...props }: CardActionProps) {
   return (
-    <div
-      data-slot="card-action"
-      className={cn(
-        'col-start-2 row-span-2 row-start-1 self-start justify-self-end',
-        className,
-      )}
+    <Box
+      sx={{
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        ...sx,
+      }}
       {...props}
-    />
+    >
+      {children}
+    </Box>
   )
 }
 
-function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardContentProps extends React.ComponentProps<typeof MuiCardContent> {}
+
+function CardContent({ children, sx, ...props }: CardContentProps) {
   return (
-    <div
-      data-slot="card-content"
-      className={cn('px-6', className)}
+    <MuiCardContent
+      sx={{ p: 3, '&:last-child': { pb: 3 }, ...sx }}
       {...props}
-    />
+    >
+      {children}
+    </MuiCardContent>
   )
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardFooterProps {
+  children?: React.ReactNode
+  sx?: React.ComponentProps<typeof Box>['sx']
+}
+
+function CardFooter({ children, sx, ...props }: CardFooterProps) {
   return (
-    <div
-      data-slot="card-footer"
-      className={cn('flex items-center px-6 [.border-t]:pt-6', className)}
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        p: 3,
+        pt: 0,
+        ...sx,
+      }}
       {...props}
-    />
+    >
+      {children}
+    </Box>
   )
 }
 

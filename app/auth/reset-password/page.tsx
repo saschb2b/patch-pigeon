@@ -9,7 +9,11 @@ import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { Lock, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react"
+import { Box, Typography, Stack, Paper, Alert, InputAdornment } from "@mui/material"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import ShieldIcon from "@mui/icons-material/Shield"
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
@@ -66,56 +70,132 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6 bg-gradient-to-br from-[var(--mint)]/10 via-background to-[var(--sky)]/10">
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 3,
+        background: "linear-gradient(135deg, rgba(191, 235, 214, 0.1) 0%, rgba(255, 255, 255, 1) 50%, rgba(167, 216, 255, 0.1) 100%)",
+      }}
+    >
       {/* Floating shapes */}
-      <div className="fixed top-20 right-20 w-64 h-64 rounded-full bg-[var(--mint)]/20 blur-3xl pointer-events-none" />
-      <div className="fixed bottom-20 left-20 w-64 h-64 rounded-full bg-[var(--sky)]/20 blur-3xl pointer-events-none" />
+      <Box
+        sx={{
+          position: "fixed",
+          top: 80,
+          right: 80,
+          width: 256,
+          height: 256,
+          borderRadius: "50%",
+          bgcolor: "rgba(191, 235, 214, 0.2)",
+          filter: "blur(48px)",
+          pointerEvents: "none",
+        }}
+      />
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 80,
+          left: 80,
+          width: 256,
+          height: 256,
+          borderRadius: "50%",
+          bgcolor: "rgba(167, 216, 255, 0.2)",
+          filter: "blur(48px)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div className="w-full max-w-md relative z-10">
+      <Box sx={{ width: "100%", maxWidth: 448, position: "relative", zIndex: 1 }}>
         {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <PigeonLogo size="lg" />
-            <span className="text-2xl font-bold text-foreground">PatchPigeon</span>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <PigeonLogo size="lg" />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                PatchPigeon
+              </Typography>
+            </Stack>
           </Link>
-        </div>
+        </Box>
 
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-8 border border-border/50 shadow-xl">
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            borderRadius: 4,
+            bgcolor: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(8px)",
+            border: 1,
+            borderColor: "divider",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           {isSuccess ? (
             // Success state
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--mint)]/30 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-8 h-8 text-[var(--mint)]" />
-              </div>
-              <h1 className="text-2xl font-bold text-foreground mb-2">Password updated!</h1>
-              <p className="text-muted-foreground mb-6">
+            <Box sx={{ textAlign: "center" }}>
+              <Box
+                sx={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(191, 235, 214, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                  mb: 3,
+                }}
+              >
+                <CheckCircleIcon sx={{ fontSize: 32, color: "#bfebd6" }} />
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+                Password updated!
+              </Typography>
+              <Typography color="text.secondary" sx={{ mb: 3 }}>
                 Your password has been successfully reset. You can now sign in with your new password.
-              </p>
-              <Link href="/auth/login">
-                <Button className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-semibold gap-2">
+              </Typography>
+              <Button asChild sx={{ height: 48 }}>
+                <Link href="/auth/login">
                   Sign in now
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
+                  <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
+                </Link>
+              </Button>
+            </Box>
           ) : (
             // Form state
             <>
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 rounded-full bg-[var(--sky)]/30 flex items-center justify-center mx-auto mb-6">
-                  <ShieldCheck className="w-8 h-8 text-[var(--sky)]" />
-                </div>
-                <h1 className="text-2xl font-bold text-foreground mb-2">Create new password</h1>
-                <p className="text-muted-foreground">Choose a strong password to keep your account secure.</p>
-              </div>
+              <Box sx={{ textAlign: "center", mb: 4 }}>
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: "50%",
+                    bgcolor: "rgba(167, 216, 255, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mx: "auto",
+                    mb: 3,
+                  }}
+                >
+                  <ShieldIcon sx={{ fontSize: 32, color: "#a7d8ff" }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+                  Create new password
+                </Typography>
+                <Typography color="text.secondary">
+                  Choose a strong password to keep your account secure.
+                </Typography>
+              </Box>
 
-              <form onSubmit={handleResetPassword} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-foreground font-medium">
-                    New password
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Box component="form" onSubmit={handleResetPassword}>
+                <Stack spacing={2.5}>
+                  <Box>
+                    <Label htmlFor="password">New password</Label>
                     <Input
                       id="password"
                       type="password"
@@ -123,17 +203,18 @@ export default function ResetPasswordPage() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                  </div>
-                </div>
+                  </Box>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password" className="text-foreground font-medium">
-                    Confirm password
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Box>
+                    <Label htmlFor="confirm-password">Confirm password</Label>
                     <Input
                       id="confirm-password"
                       type="password"
@@ -141,36 +222,38 @@ export default function ResetPasswordPage() {
                       required
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                  </div>
-                </div>
+                  </Box>
 
-                {error && (
-                  <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg border border-destructive/20">
-                    {error}
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-semibold text-base gap-2 group"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    "Updating..."
-                  ) : (
-                    <>
-                      Update Password
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
+                  {error && (
+                    <Alert severity="error" sx={{ borderRadius: 2 }}>
+                      {error}
+                    </Alert>
                   )}
-                </Button>
-              </form>
+
+                  <Button type="submit" disabled={isLoading} sx={{ height: 48 }}>
+                    {isLoading ? (
+                      "Updating..."
+                    ) : (
+                      <>
+                        Update Password
+                        <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
+                      </>
+                    )}
+                  </Button>
+                </Stack>
+              </Box>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </Paper>
+      </Box>
+    </Box>
   )
 }

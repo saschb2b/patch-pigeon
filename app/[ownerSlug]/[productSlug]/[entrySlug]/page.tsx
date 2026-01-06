@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { Box, Container, Typography, Stack, Paper, Chip } from "@mui/material"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { createClient } from "@/lib/supabase/server"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
@@ -104,46 +105,85 @@ export default async function EntryDetailPage({ params }: PageProps) {
   const items = entryWithItems.entry_items || []
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <ChangelogHeader product={product as Product} profile={profile as Profile} />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <Link
-            href={`/${ownerSlug}/${productSlug}`}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to changelog
+      <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
+        <Box sx={{ maxWidth: 768, mx: "auto" }}>
+          <Link href={`/${ownerSlug}/${productSlug}`} style={{ textDecoration: "none" }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                color: "text.secondary",
+                "&:hover": { color: "text.primary" },
+                transition: "color 0.2s",
+                mb: 4,
+              }}
+            >
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
+              <Typography variant="body2">Back to changelog</Typography>
+            </Stack>
           </Link>
 
-          <article>
-            <header className="mb-8">
-              <div className="flex items-center gap-3 flex-wrap mb-4">
+          <Box component="article">
+            <Box component="header" sx={{ mb: 4 }}>
+              <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
                 {entry.version && (
-                  <span className="text-sm font-mono font-medium text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                    v{entry.version}
-                  </span>
+                  <Chip
+                    label={`v${entry.version}`}
+                    size="small"
+                    sx={{
+                      fontFamily: "monospace",
+                      fontWeight: 500,
+                      bgcolor: "#f1f5f9",
+                      color: "#475569",
+                    }}
+                  />
                 )}
-                {publishDate && <span className="text-sm text-muted-foreground">{publishDate}</span>}
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground text-balance mb-4">{entry.title}</h1>
-              {entry.summary && <p className="text-lg text-muted-foreground">{entry.summary}</p>}
-            </header>
+                {publishDate && (
+                  <Typography variant="body2" color="text.secondary">
+                    {publishDate}
+                  </Typography>
+                )}
+              </Stack>
+              <Typography
+                variant="h3"
+                sx={{
+                  fontWeight: 700,
+                  color: "text.primary",
+                  textWrap: "balance",
+                  mb: 2,
+                  fontSize: { xs: "1.875rem", md: "2.25rem" },
+                }}
+              >
+                {entry.title}
+              </Typography>
+              {entry.summary && (
+                <Typography variant="body1" color="text.secondary" sx={{ fontSize: "1.125rem" }}>
+                  {entry.summary}
+                </Typography>
+              )}
+            </Box>
 
-            <div className="border-t border-border pt-8">
+            <Box sx={{ borderTop: 1, borderColor: "divider", pt: 4 }}>
               {items.length > 0 ? (
                 <EntryItemsList items={items} />
               ) : (
-                <p className="text-muted-foreground text-center py-8">No changes documented for this version.</p>
+                <Typography color="text.secondary" sx={{ textAlign: "center", py: 4 }}>
+                  No changes documented for this version.
+                </Typography>
               )}
-            </div>
-          </article>
+            </Box>
+          </Box>
 
           {relatedEntries && relatedEntries.length > 0 && (
-            <section className="mt-16 pt-8 border-t border-border">
-              <h2 className="text-xl font-semibold text-foreground mb-6">More Updates</h2>
-              <div className="space-y-4">
+            <Box component="section" sx={{ mt: 8, pt: 4, borderTop: 1, borderColor: "divider" }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}>
+                More Updates
+              </Typography>
+              <Stack spacing={2}>
                 {relatedEntries.map((related) => (
                   <EntryCard
                     key={related.id}
@@ -152,11 +192,11 @@ export default async function EntryDetailPage({ params }: PageProps) {
                     productSlug={productSlug}
                   />
                 ))}
-              </div>
-            </section>
+              </Stack>
+            </Box>
           )}
-        </div>
-      </main>
-    </div>
+        </Box>
+      </Container>
+    </Box>
   )
 }

@@ -1,21 +1,32 @@
+import { Box, Container, Typography } from "@mui/material"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function SignUpSuccessPage() {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6 bg-background">
-      <div className="w-full max-w-sm">
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 3,
+        bgcolor: "background.default",
+      }}
+    >
+      <Container maxWidth="xs">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <CardTitle>Check your email</CardTitle>
             <CardDescription>We sent you a confirmation link</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <Typography variant="body2" color="text.secondary">
               Please check your email and click the confirmation link to activate your account.
-            </p>
+            </Typography>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </Container>
+    </Box>
   )
 }

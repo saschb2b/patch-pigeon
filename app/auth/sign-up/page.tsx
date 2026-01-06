@@ -9,7 +9,11 @@ import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Mail, Lock, ArrowRight, Check } from "lucide-react"
+import { Box, Container, Typography, Stack, Paper, Alert, InputAdornment } from "@mui/material"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import CheckIcon from "@mui/icons-material/Check"
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("")
@@ -56,30 +60,44 @@ export default function SignUpPage() {
   ]
 
   return (
-    <div className="flex min-h-screen w-full">
+    <Box sx={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       {/* Left side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-background">
-        <div className="w-full max-w-md">
+      <Box
+        sx={{
+          width: { xs: "100%", lg: "50%" },
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: { xs: 3, md: 6 },
+          bgcolor: "background.paper",
+        }}
+      >
+        <Container maxWidth="sm">
           {/* Mobile logo */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/" className="flex items-center gap-3">
-              <PigeonLogo size="md" />
-              <span className="text-2xl font-bold text-foreground">PatchPigeon</span>
+          <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center", mb: 4 }}>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Stack direction="row" spacing={1.5} alignItems="center">
+                <PigeonLogo size="md" />
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  PatchPigeon
+                </Typography>
+              </Stack>
             </Link>
-          </div>
+          </Box>
 
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Start your journey</h1>
-            <p className="text-muted-foreground">Create your account and ship your first changelog in minutes.</p>
-          </div>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+              Start your journey
+            </Typography>
+            <Typography color="text.secondary">
+              Create your account and ship your first changelog in minutes.
+            </Typography>
+          </Box>
 
-          <form onSubmit={handleSignUp} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-medium">
-                Email
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <Box component="form" onSubmit={handleSignUp}>
+            <Stack spacing={2.5}>
+              <Box>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -87,17 +105,18 @@ export default function SignUpPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlineIcon sx={{ color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-            </div>
+              </Box>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-medium">
-                Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Box>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -105,17 +124,18 @@ export default function SignUpPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-            </div>
+              </Box>
 
-            <div className="space-y-2">
-              <Label htmlFor="repeat-password" className="text-foreground font-medium">
-                Confirm Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Box>
+                <Label htmlFor="repeat-password">Confirm Password</Label>
                 <Input
                   id="repeat-password"
                   type="password"
@@ -123,101 +143,187 @@ export default function SignUpPage() {
                   required
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-            </div>
+              </Box>
 
-            {error && (
-              <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg border border-destructive/20">
-                {error}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-semibold text-base gap-2 group"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                "Creating account..."
-              ) : (
-                <>
-                  Create Account
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </>
+              {error && (
+                <Alert severity="error" sx={{ borderRadius: 2 }}>
+                  {error}
+                </Alert>
               )}
-            </Button>
-          </form>
 
-          <p className="mt-4 text-xs text-muted-foreground text-center">
+              <Button type="submit" disabled={isLoading} sx={{ height: 48 }}>
+                {isLoading ? (
+                  "Creating account..."
+                ) : (
+                  <>
+                    Create Account
+                    <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
+                  </>
+                )}
+              </Button>
+            </Stack>
+          </Box>
+
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "center", mt: 2 }}>
             By signing up, you agree to our Terms of Service and Privacy Policy.
-          </p>
+          </Typography>
 
-          <div className="mt-8 text-center">
-            <p className="text-muted-foreground">
+          <Box sx={{ mt: 4, textAlign: "center" }}>
+            <Typography color="text.secondary">
               {"Already have an account? "}
-              <Link
-                href="/auth/login"
-                className="text-foreground font-semibold hover:text-[var(--sky)] transition-colors"
-              >
-                Sign in
+              <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                <Typography
+                  component="span"
+                  sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}
+                >
+                  Sign in
+                </Typography>
               </Link>
-            </p>
-          </div>
+            </Typography>
+          </Box>
 
           {/* Back to home */}
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              ← Back to home
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Typography variant="body2" sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+                Back to home
+              </Typography>
             </Link>
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Container>
+      </Box>
 
       {/* Right side - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-bl from-[var(--mint)]/30 via-[var(--butter)]/20 to-[var(--sky)]/30 items-center justify-center p-12 relative overflow-hidden">
+      <Box
+        sx={{
+          display: { xs: "none", lg: "flex" },
+          width: "50%",
+          background: "linear-gradient(225deg, rgba(191, 235, 214, 0.3) 0%, rgba(255, 231, 163, 0.2) 50%, rgba(167, 216, 255, 0.3) 100%)",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 6,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         {/* Floating shapes */}
-        <div className="absolute top-32 right-20 w-32 h-32 rounded-full bg-[var(--mint)]/40 blur-2xl" />
-        <div className="absolute bottom-20 left-20 w-40 h-40 rounded-full bg-[var(--butter)]/40 blur-2xl" />
-        <div className="absolute top-1/3 right-1/3 w-24 h-24 rounded-full bg-[var(--sky)]/40 blur-2xl" />
+        <Box
+          sx={{
+            position: "absolute",
+            top: 128,
+            right: 80,
+            width: 128,
+            height: 128,
+            borderRadius: "50%",
+            bgcolor: "rgba(191, 235, 214, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 80,
+            left: 80,
+            width: 160,
+            height: 160,
+            borderRadius: "50%",
+            bgcolor: "rgba(255, 231, 163, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            top: "33%",
+            right: "33%",
+            width: 96,
+            height: 96,
+            borderRadius: "50%",
+            bgcolor: "rgba(167, 216, 255, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
 
-        <div className="relative z-10 max-w-md">
-          <div className="flex items-center gap-3 mb-8">
+        <Box sx={{ position: "relative", zIndex: 1, maxWidth: 400 }}>
+          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
             <PigeonLogo size="lg" />
-            <span className="text-3xl font-bold text-foreground">PatchPigeon</span>
-          </div>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>
+              PatchPigeon
+            </Typography>
+          </Stack>
 
-          <h2 className="text-2xl font-bold text-foreground mb-6">Everything you need to keep users in the loop</h2>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 3 }}>
+            Everything you need to keep users in the loop
+          </Typography>
 
-          <ul className="space-y-4">
+          <Stack spacing={2}>
             {benefits.map((benefit, index) => (
-              <li key={index} className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-[var(--mint)] flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-foreground" />
-                </div>
-                <span className="text-foreground font-medium">{benefit}</span>
-              </li>
+              <Stack key={index} direction="row" spacing={1.5} alignItems="center">
+                <Box
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: "50%",
+                    bgcolor: "#bfebd6",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <CheckIcon sx={{ fontSize: 16, color: "text.primary" }} />
+                </Box>
+                <Typography sx={{ fontWeight: 500, color: "text.primary" }}>{benefit}</Typography>
+              </Stack>
             ))}
-          </ul>
+          </Stack>
 
           {/* Stats */}
-          <div className="mt-10 grid grid-cols-3 gap-4">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-4 border border-border/50 text-center">
-              <p className="text-2xl font-bold text-foreground">500+</p>
-              <p className="text-sm text-muted-foreground">Developers</p>
-            </div>
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-4 border border-border/50 text-center">
-              <p className="text-2xl font-bold text-foreground">10k+</p>
-              <p className="text-sm text-muted-foreground">Changelogs</p>
-            </div>
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-4 border border-border/50 text-center">
-              <p className="text-2xl font-bold text-foreground">Free</p>
-              <p className="text-sm text-muted-foreground">Forever</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          <Box
+            sx={{
+              mt: 5,
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 2,
+            }}
+          >
+            {[
+              { value: "500+", label: "Developers" },
+              { value: "10k+", label: "Changelogs" },
+              { value: "Free", label: "Forever" },
+            ].map((stat, index) => (
+              <Paper
+                key={index}
+                elevation={0}
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  borderRadius: 3,
+                  bgcolor: "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(8px)",
+                  border: 1,
+                  borderColor: "divider",
+                }}
+              >
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  {stat.value}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {stat.label}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   )
 }

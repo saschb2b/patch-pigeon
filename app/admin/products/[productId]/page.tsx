@@ -1,6 +1,12 @@
 import { redirect, notFound } from "next/navigation"
-import Link from "next/link"
-import { Plus, ExternalLink, ArrowLeft, Pencil, Eye, EyeOff } from "lucide-react"
+import Link from "@/components/link"
+import { Box, Container, Typography, Stack, IconButton } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
+import OpenInNewIcon from "@mui/icons-material/OpenInNew"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import EditIcon from "@mui/icons-material/Edit"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -53,96 +59,123 @@ export default async function ProductEntriesPage({ params }: PageProps) {
   const publicUrl = `/${(profile as Profile).owner_slug}/${(product as Product).slug}`
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AdminHeader user={user} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to products
+      <Container component="main" maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <Link href="/admin" style={{ textDecoration: "none" }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                color: "text.secondary",
+                "&:hover": { color: "text.primary" },
+                transition: "color 0.2s",
+                mb: 2,
+              }}
+            >
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
+              <Typography variant="body2">Back to products</Typography>
+            </Stack>
           </Link>
 
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{(product as Product).name}</h1>
-              <p className="text-muted-foreground">
-                <Link href={publicUrl} target="_blank" className="hover:underline inline-flex items-center gap-1">
-                  {publicUrl}
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </p>
-            </div>
+          <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>
+                {(product as Product).name}
+              </Typography>
+              <Link href={publicUrl} target="_blank" style={{ textDecoration: "none" }}>
+                <Stack
+                  direction="row"
+                  spacing={0.5}
+                  alignItems="center"
+                  sx={{ color: "text.secondary", "&:hover": { textDecoration: "underline" } }}
+                >
+                  <Typography variant="body2">{publicUrl}</Typography>
+                  <OpenInNewIcon sx={{ fontSize: 14 }} />
+                </Stack>
+              </Link>
+            </Box>
             <Button asChild>
               <Link href={`/admin/products/${productId}/create-entry`}>
-                <Plus className="w-4 h-4 mr-2" />
+                <AddIcon sx={{ fontSize: 18, mr: 1 }} />
                 New Entry
               </Link>
             </Button>
-          </div>
-        </div>
+          </Stack>
+        </Box>
 
         {!entries || entries.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16">
-              <p className="text-muted-foreground mb-4">No changelog entries yet.</p>
+            <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", py: 8 }}>
+              <Typography color="text.secondary" sx={{ mb: 2 }}>
+                No changelog entries yet.
+              </Typography>
               <Button asChild>
                 <Link href={`/admin/products/${productId}/create-entry`}>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <AddIcon sx={{ fontSize: 18, mr: 1 }} />
                   Create Entry
                 </Link>
               </Button>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <Stack spacing={2}>
             {entries.map((entry: Entry) => (
-              <Card key={entry.id} className="group">
-                <CardContent className="py-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
+              <Card key={entry.id}>
+                <CardContent sx={{ py: 2 }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
+                      <Box>
                         {entry.published ? (
-                          <Eye className="w-4 h-4 text-emerald-500" />
+                          <VisibilityIcon sx={{ fontSize: 18, color: "success.main" }} />
                         ) : (
-                          <EyeOff className="w-4 h-4 text-muted-foreground" />
+                          <VisibilityOffIcon sx={{ fontSize: 18, color: "text.secondary" }} />
                         )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <EntryTypeBadge type={entry.type} />
+                      </Box>
+                      <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                          {entry.type && <EntryTypeBadge type={entry.type} />}
                           {entry.version && (
-                            <span className="text-xs font-mono text-muted-foreground">v{entry.version}</span>
+                            <Typography variant="caption" sx={{ fontFamily: "monospace", color: "text.secondary" }}>
+                              v{entry.version}
+                            </Typography>
                           )}
                           {entry.publish_date && (
-                            <span className="text-xs text-muted-foreground">
+                            <Typography variant="caption" color="text.secondary">
                               {new Date(entry.publish_date).toLocaleDateString()}
-                            </span>
+                            </Typography>
                           )}
-                        </div>
-                        <h3 className="font-medium text-foreground truncate">{entry.title}</h3>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
+                        </Stack>
+                        <Typography
+                          sx={{
+                            fontWeight: 500,
+                            color: "text.primary",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {entry.title}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                    <Stack direction="row" spacing={0.5}>
                       <TogglePublishButton entry={entry} />
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/products/${productId}/entries/${entry.id}/edit`}>
-                          <Pencil className="w-4 h-4" />
-                          <span className="sr-only">Edit</span>
-                        </Link>
-                      </Button>
+                      <IconButton size="small" component={Link} href={`/admin/products/${productId}/entries/${entry.id}/edit`}>
+                        <EditIcon sx={{ fontSize: 18 }} />
+                      </IconButton>
                       <DeleteEntryButton entryId={entry.id} entryTitle={entry.title} />
-                    </div>
-                  </div>
+                    </Stack>
+                  </Stack>
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </Stack>
         )}
-      </main>
-    </div>
+      </Container>
+    </Box>
   )
 }

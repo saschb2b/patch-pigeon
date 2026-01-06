@@ -1,66 +1,100 @@
 import type React from "react"
-import { cn } from "@/lib/utils"
-import { Sparkles, Bug, Zap, AlertTriangle, Minus, MessageSquare } from "lucide-react"
+import { Chip } from "@mui/material"
+import AutoAwesome from "@mui/icons-material/AutoAwesome"
+import BugReport from "@mui/icons-material/BugReport"
+import Bolt from "@mui/icons-material/Bolt"
+import Warning from "@mui/icons-material/Warning"
+import Remove from "@mui/icons-material/Remove"
+import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline"
 import type { ChangeType } from "@/lib/types"
 
-const typeConfig: Record<ChangeType, { label: string; icon: React.ReactNode; className: string }> = {
+interface TypeConfigItem {
+  label: string
+  icon: React.ReactElement
+  bgcolor: string
+  color: string
+  borderColor: string
+}
+
+const typeConfig: Record<ChangeType, TypeConfigItem> = {
   FEATURE: {
     label: "Feature",
-    icon: <Sparkles className="w-3 h-3" />,
-    className: "bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/20",
+    icon: <AutoAwesome sx={{ fontSize: 14 }} />,
+    bgcolor: "rgba(167, 216, 255, 0.15)",
+    color: "#0284c7",
+    borderColor: "rgba(167, 216, 255, 0.3)",
   },
   IMPROVEMENT: {
     label: "Improvement",
-    icon: <Zap className="w-3 h-3" />,
-    className: "bg-peach-500/10 text-peach-700 dark:text-peach-300 border-peach-500/20",
+    icon: <Bolt sx={{ fontSize: 14 }} />,
+    bgcolor: "rgba(255, 184, 161, 0.15)",
+    color: "#c2410c",
+    borderColor: "rgba(255, 184, 161, 0.3)",
   },
   FIX: {
     label: "Fix",
-    icon: <Bug className="w-3 h-3" />,
-    className: "bg-mint-500/10 text-mint-700 dark:text-mint-300 border-mint-500/20",
+    icon: <BugReport sx={{ fontSize: 14 }} />,
+    bgcolor: "rgba(191, 235, 214, 0.15)",
+    color: "#15803d",
+    borderColor: "rgba(191, 235, 214, 0.3)",
   },
   KNOWNISSUE: {
     label: "Known Issue",
-    icon: <AlertTriangle className="w-3 h-3" />,
-    className: "bg-butter-500/10 text-butter-700 dark:text-butter-300 border-butter-500/20",
+    icon: <Warning sx={{ fontSize: 14 }} />,
+    bgcolor: "rgba(255, 231, 163, 0.15)",
+    color: "#a16207",
+    borderColor: "rgba(255, 231, 163, 0.3)",
   },
   BREAKING: {
     label: "Breaking",
-    icon: <AlertTriangle className="w-3 h-3" />,
-    className: "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20",
+    icon: <Warning sx={{ fontSize: 14 }} />,
+    bgcolor: "rgba(239, 68, 68, 0.1)",
+    color: "#dc2626",
+    borderColor: "rgba(239, 68, 68, 0.2)",
   },
   REMOVED: {
     label: "Removed",
-    icon: <Minus className="w-3 h-3" />,
-    className: "bg-muted text-muted-foreground border-border",
+    icon: <Remove sx={{ fontSize: 14 }} />,
+    bgcolor: "#f5f5f5",
+    color: "#757575",
+    borderColor: "#e0e0e0",
   },
   NOTE: {
     label: "Note",
-    icon: <MessageSquare className="w-3 h-3" />,
-    className: "bg-muted text-muted-foreground border-border",
+    icon: <ChatBubbleOutline sx={{ fontSize: 14 }} />,
+    bgcolor: "#f5f5f5",
+    color: "#757575",
+    borderColor: "#e0e0e0",
   },
 }
 
 interface ChangeTypeBadgeProps {
   type: ChangeType
-  className?: string
   showIcon?: boolean
 }
 
-export function ChangeTypeBadge({ type, className, showIcon = true }: ChangeTypeBadgeProps) {
+export function ChangeTypeBadge({ type, showIcon = true }: ChangeTypeBadgeProps) {
   const config = typeConfig[type]
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border",
-        config.className,
-        className,
-      )}
-    >
-      {showIcon && config.icon}
-      {config.label}
-    </span>
+    <Chip
+      label={config.label}
+      icon={showIcon ? config.icon : undefined}
+      size="small"
+      variant="outlined"
+      sx={{
+        height: 24,
+        fontSize: "0.75rem",
+        fontWeight: 500,
+        bgcolor: config.bgcolor,
+        color: config.color,
+        borderColor: config.borderColor,
+        "& .MuiChip-icon": {
+          ml: 0.5,
+          color: config.color,
+        },
+      }}
+    />
   )
 }
 

@@ -9,13 +9,13 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 **Tech Stack:**
 - Next.js 16 (App Router)
 - Supabase (Auth + PostgreSQL)
-- Tailwind CSS v4
-- shadcn/ui components
+- Material UI (MUI) v7
+- Emotion (CSS-in-JS)
 - dnd-kit (drag and drop)
 
 ## Project Structure
 
-\`\`\`
+```
 ├── app/
 │   ├── [ownerSlug]/                    # Public pages (namespaced by owner)
 │   │   ├── page.tsx                    # Owner profile - lists all products
@@ -40,6 +40,7 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 │   │   ├── changelog.json/
 │   │   ├── changelog.rss/
 │   │   └── entries/[entrySlug]/
+│   ├── globals.css                     # Minimal global styles
 │   └── page.tsx                        # Landing page
 ├── components/
 │   ├── admin/                          # Admin-specific components
@@ -56,8 +57,18 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 │   ├── brand/                          # Branding components
 │   │   ├── pigeon-logo.tsx
 │   │   └── brand-header.tsx
-│   └── ui/                             # shadcn/ui primitives
+│   ├── ui/                             # MUI wrapper components
+│   │   ├── button.tsx                  # Button with variant mapping
+│   │   ├── card.tsx                    # Card compound components
+│   │   ├── input.tsx                   # TextField wrapper
+│   │   ├── textarea.tsx                # Multiline TextField
+│   │   ├── label.tsx                   # FormLabel wrapper
+│   │   ├── switch.tsx                  # Switch with onCheckedChange
+│   │   └── alert-dialog.tsx            # Dialog compound components
+│   ├── link.tsx                        # Next.js Link wrapper for MUI
+│   └── theme-registry.tsx              # MUI ThemeProvider setup
 ├── lib/
+│   ├── theme.ts                        # MUI theme configuration
 │   ├── supabase/                       # Supabase clients
 │   │   ├── client.ts                   # Browser client (singleton)
 │   │   ├── server.ts                   # Server client
@@ -72,7 +83,71 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 │   ├── 002_add_profiles.sql
 │   └── 003_add_entry_items.sql
 └── proxy.ts                            # Next.js middleware
-\`\`\`
+```
+
+## Styling with MUI
+
+### Theme Configuration
+
+The MUI theme is defined in `lib/theme.ts` with PatchPigeon brand colors:
+
+```typescript
+const brandColors = {
+  sky: '#a7d8ff',      // Features
+  peach: '#ffb8a1',    // Improvements
+  mint: '#bfebd6',     // Fixes
+  butter: '#ffe7a3',   // Known issues
+  ink: '#1f2937',      // Primary text/buttons
+  surface: '#ffffff',  // Backgrounds
+}
+```
+
+### Using the `sx` Prop
+
+All styling is done via MUI's `sx` prop:
+
+```typescript
+<Box sx={{ 
+  p: 2,                    // padding: 16px (8px * 2)
+  mb: 3,                   // marginBottom: 24px
+  bgcolor: 'background.paper',
+  borderRadius: 2,         // 16px
+  '&:hover': {
+    boxShadow: 2,
+  },
+}}>
+```
+
+**Important:** Numeric values in `sx` are multiplied by 8px. Use string values for exact pixels:
+- `width: 2` = 16px
+- `width: "2px"` = 2px
+
+### Next.js 16 Link Integration
+
+Due to Next.js 16 restrictions on passing functions to Client Components, use the wrapper:
+
+```typescript
+// Use this for MUI component prop
+import Link from '@/components/link'
+
+<Button component={Link} href="/path">Click</Button>
+<IconButton component={Link} href="/path">...</IconButton>
+```
+
+### ThemeRegistry Setup
+
+The theme is applied in `app/layout.tsx` via `ThemeRegistry`:
+
+```typescript
+<ThemeRegistry>
+  {children}
+</ThemeRegistry>
+```
+
+`ThemeRegistry` wraps children with:
+- `AppRouterCacheProvider` (Emotion cache for Next.js App Router)
+- `ThemeProvider` (MUI theme)
+- `CssBaseline` (CSS reset)
 
 ## Database Schema
 
@@ -113,7 +188,7 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 
 ### Change Type Enum
 
-\`\`\`sql
+```sql
 CREATE TYPE change_type AS ENUM (
   'FEATURE',      -- New features
   'FIX',          -- Bug fixes
@@ -123,7 +198,7 @@ CREATE TYPE change_type AS ENUM (
   'REMOVED',      -- Removed features
   'NOTE'          -- General notes
 );
-\`\`\`
+```
 
 ### Row Level Security (RLS)
 
@@ -137,7 +212,7 @@ All tables have RLS enabled:
 
 ### Supabase Client Usage
 
-\`\`\`typescript
+```typescript
 // Browser (client components) - use singleton
 import { createClient } from '@/lib/supabase/client'
 const supabase = createClient()
@@ -145,17 +220,17 @@ const supabase = createClient()
 // Server (RSC, route handlers, server actions)
 import { createClient } from '@/lib/supabase/server'
 const supabase = await createClient()
-\`\`\`
+```
 
 ### Fetching Entries with Items
 
-\`\`\`typescript
+```typescript
 const { data } = await supabase
   .from('entries')
   .select('*, entry_items(*)')
   .eq('product_id', productId)
   .eq('published', true)
-\`\`\`
+```
 
 ### Route Conflict Avoidance
 
@@ -167,11 +242,11 @@ Static routes use distinct paths to avoid conflicts with dynamic segments:
 ### Public URL Structure
 
 All public pages are namespaced by owner:
-\`\`\`
+```
 /{ownerSlug}                           # Owner profile
 /{ownerSlug}/{productSlug}             # Product changelog
 /{ownerSlug}/{productSlug}/{entrySlug} # Single entry
-\`\`\`
+```
 
 ## Brand Guidelines
 
@@ -180,12 +255,13 @@ All public pages are namespaced by owner:
 **Personality:** Friendly, helpful, playful
 
 **Color Palette:**
-- Sky: `#7DD3FC` (primary, features)
-- Peach: `#FDBA74` (improvements)
-- Mint: `#86EFAC` (fixes)
-- Butter: `#FDE047` (known issues)
-- Red: Standard red (breaking changes)
-- Neutrals: Slate grays
+- Sky: `#a7d8ff` (features)
+- Peach: `#ffb8a1` (improvements)
+- Mint: `#bfebd6` (fixes)
+- Butter: `#ffe7a3` (known issues)
+- Red: `#dc2626` (breaking changes)
+- Ink: `#1f2937` (primary text/buttons)
+- Slate grays for secondary text and borders
 
 **Typography:**
 - Font: DM Sans (clean, friendly)
@@ -198,6 +274,7 @@ All public pages are namespaced by owner:
 2. Update `ChangeType` in `lib/types.ts`
 3. Add config in `components/admin/entry-item-row.tsx` (changeTypeConfig)
 4. Add config in `components/changelog/change-type-badge.tsx`
+5. Add config in `components/changelog/entry-items-list.tsx` (typeConfig)
 
 ### Adding New Admin Pages
 
@@ -213,9 +290,16 @@ All public pages are namespaced by owner:
 3. Update `lib/types.ts` with new interfaces
 4. Update RLS policies as needed
 
+### Adding New MUI Components
+
+1. Import from `@mui/material` or `@mui/icons-material`
+2. Use the `sx` prop for styling (not className with Tailwind)
+3. Reference theme colors: `bgcolor: "background.paper"`, `color: "text.primary"`
+4. For pixel values, use strings: `width: "2px"` not `width: 2`
+
 ## API Response Format
 
-\`\`\`json
+```json
 {
   "product": { "name": "...", "slug": "...", "description": "..." },
   "entries": [
@@ -231,7 +315,7 @@ All public pages are namespaced by owner:
     }
   ]
 }
-\`\`\`
+```
 
 ## Testing Flows
 

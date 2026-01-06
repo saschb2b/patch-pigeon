@@ -1,71 +1,148 @@
+'use client'
+
 import Link from "next/link"
-import { BrandHeader } from "@/components/brand/brand-header"
-import { PigeonLogo } from "@/components/brand/pigeon-logo"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import Paper from "@mui/material/Paper"
+import Chip from "@mui/material/Chip"
 import { Button } from "@/components/ui/button"
-import { Zap, Globe, Code, Clock, Heart, ArrowRight, Sparkles } from "lucide-react"
+import { PigeonLogo } from "@/components/brand/pigeon-logo"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
+import PublicIcon from "@mui/icons-material/Public"
+import CodeIcon from "@mui/icons-material/Code"
+import BoltIcon from "@mui/icons-material/Bolt"
+import CheckIcon from "@mui/icons-material/Check"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+
+// Brand colors
+const colors = {
+  sky: '#a7d8ff',
+  peach: '#ffb8a1',
+  mint: '#bfebd6',
+  butter: '#ffe7a3',
+  ink: '#1f2937',
+}
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
-      <BrandHeader />
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Header */}
+      <Box
+        component="header"
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          borderBottom: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ py: 2 }}
+          >
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <PigeonLogo size="sm" />
+              <Typography variant="h6" fontWeight={700} color="text.primary">
+                PatchPigeon
+              </Typography>
+            </Link>
+            <Stack direction="row" spacing={1.5}>
+              <Button variant="ghost" asChild>
+                <Link href="/auth/login">Sign in</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/auth/sign-up">Get started free</Link>
+              </Button>
+            </Stack>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Subtle background decoration */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A7D8FF]/20 rounded-full blur-3xl" />
-          <div className="absolute top-60 -left-40 w-60 h-60 bg-[#FFB8A1]/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-[#BFEBD6]/20 rounded-full blur-3xl" />
-        </div>
+      <Box component="section" sx={{ py: { xs: 8, md: 12 } }}>
+        <Container maxWidth="md">
+          <Stack alignItems="center" textAlign="center" spacing={3}>
+            <Chip
+              icon={<AutoAwesomeIcon sx={{ color: colors.peach }} />}
+              label="Built for indie devs who ship fast"
+              sx={{
+                bgcolor: `${colors.sky}20`,
+                border: `1px solid ${colors.sky}40`,
+                color: 'text.primary',
+                fontWeight: 500,
+              }}
+            />
 
-        <div className="container mx-auto px-4 py-20 lg:py-32 relative">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#A7D8FF]/20 border border-[#A7D8FF]/30 text-sm font-medium text-foreground mb-8">
-              <Sparkles className="w-4 h-4 text-[#FFB8A1]" />
-              Built for indie devs who ship fast
-            </div>
+            <Typography
+              variant="h2"
+              component="h1"
+              fontWeight={700}
+              sx={{
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                lineHeight: 1.1,
+              }}
+            >
+              Your users deserve to know{' '}
+              <Box component="span" sx={{ color: colors.peach }}>
+                what&apos;s new
+              </Box>
+            </Typography>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 tracking-tight text-balance">
-              Your users deserve to know <span className="text-[#FFB8A1]">what{"'"}s new</span>
-            </h1>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 600, fontWeight: 400, lineHeight: 1.6 }}
+            >
+              Stop burying updates in Discord or Twitter. Give your product a beautiful,
+              public changelog that keeps users excited and informed.
+            </Typography>
 
-            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed text-pretty">
-              Stop burying updates in Discord or Twitter. Give your product a beautiful, public changelog that keeps
-              users excited and informed.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <Button
-                asChild
-                size="lg"
-                className="bg-[#FFB8A1] text-[#1F2937] hover:bg-[#ffa78a] shadow-lg shadow-[#FFB8A1]/25 text-base px-8 h-12"
-              >
-                <Link href="/auth/sign-up">
-                  Create your changelog
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{ pt: 2 }}
+            >
+              <Button asChild size="lg" endIcon={<ArrowForwardIcon />}>
+                <Link href="/auth/sign-up">Create your changelog</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="text-base px-8 h-12 border-2 bg-transparent">
+              <Button variant="outline" asChild size="lg">
                 <Link href="/demo">See a live example</Link>
               </Button>
-            </div>
+            </Stack>
 
-            {/* Social proof */}
-            <p className="text-sm text-muted-foreground">Free to start. No credit card required.</p>
-          </div>
-        </div>
-      </section>
+            <Typography variant="body2" color="text.secondary">
+              Free to start. No credit card required.
+            </Typography>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* Pain Point Section */}
-      <section className="py-20 bg-[#F7FAFC]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6 text-balance">Sound familiar?</h2>
-          </div>
+      <Box component="section" sx={{ py: 10, bgcolor: '#f8fafc' }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h3"
+            fontWeight={700}
+            textAlign="center"
+            sx={{ mb: 6 }}
+          >
+            Sound familiar?
+          </Typography>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={3}
+            justifyContent="center"
+          >
             {[
               {
                 emoji: "😅",
@@ -83,233 +160,431 @@ export default function HomePage() {
                 desc: "Without visible updates, users assume the worst. Trust erodes silently.",
               },
             ].map((pain, i) => (
-              <div key={i} className="bg-background rounded-xl p-6 border border-border/50 shadow-sm">
-                <span className="text-4xl mb-4 block">{pain.emoji}</span>
-                <h3 className="font-semibold text-foreground mb-2">{pain.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{pain.desc}</p>
-              </div>
+              <Paper
+                key={i}
+                elevation={0}
+                sx={{
+                  p: 3,
+                  flex: 1,
+                  maxWidth: 360,
+                  border: 1,
+                  borderColor: 'divider',
+                }}
+              >
+                <Typography variant="h2" sx={{ mb: 2 }}>{pain.emoji}</Typography>
+                <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+                  {pain.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {pain.desc}
+                </Typography>
+              </Paper>
             ))}
-          </div>
-        </div>
-      </section>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* Solution Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#BFEBD6]/30 border border-[#BFEBD6]/50 mb-6">
+      <Box component="section" sx={{ py: 10 }}>
+        <Container maxWidth="lg">
+          <Stack alignItems="center" textAlign="center" spacing={2} sx={{ mb: 8 }}>
+            <Box
+              sx={{
+                width: 64,
+                height: 64,
+                borderRadius: 3,
+                bgcolor: `${colors.mint}30`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <PigeonLogo size="md" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6 text-balance">
+            </Box>
+            <Typography variant="h3" fontWeight={700}>
               PatchPigeon delivers your changelog
-            </h2>
-            <p className="text-lg text-muted-foreground">
+            </Typography>
+            <Typography variant="h6" color="text.secondary" fontWeight={400}>
               A beautiful home for all your updates. Takes 2 minutes to set up.
-            </p>
-          </div>
+            </Typography>
+          </Stack>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          <Stack
+            direction={{ xs: 'column', lg: 'row' }}
+            spacing={6}
+            alignItems="center"
+          >
             {/* Feature List */}
-            <div className="space-y-6">
+            <Stack spacing={4} sx={{ flex: 1 }}>
               {[
                 {
-                  icon: Clock,
+                  icon: <AccessTimeIcon />,
                   title: "Ship updates in seconds",
-                  desc: "Markdown editor with live preview. Write once, publish instantly.",
-                  color: "bg-[#A7D8FF]/20 text-[#1F2937]",
+                  desc: "Structured editor with live preview. Write once, publish instantly.",
+                  color: colors.sky,
                 },
                 {
-                  icon: Globe,
+                  icon: <PublicIcon />,
                   title: "One public link, infinite reach",
                   desc: "Share your changelog URL anywhere. No sign-up required for readers.",
-                  color: "bg-[#FFB8A1]/20 text-[#1F2937]",
+                  color: colors.peach,
                 },
                 {
-                  icon: Code,
+                  icon: <CodeIcon />,
                   title: "Simple REST API",
                   desc: "Fetch your changelog as JSON or RSS. Build custom integrations.",
-                  color: "bg-[#BFEBD6]/20 text-[#1F2937]",
+                  color: colors.mint,
                 },
                 {
-                  icon: Zap,
+                  icon: <BoltIcon />,
                   title: "Zero maintenance",
                   desc: "We handle hosting, performance, and uptime. You just write.",
-                  color: "bg-[#FFE7A3]/20 text-[#1F2937]",
+                  color: colors.butter,
                 },
               ].map((feature, i) => (
-                <div key={i} className="flex gap-4">
-                  <div
-                    className={`flex-shrink-0 w-12 h-12 rounded-xl ${feature.color} flex items-center justify-center`}
+                <Stack key={i} direction="row" spacing={2}>
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 2,
+                      bgcolor: `${feature.color}30`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: colors.ink,
+                      flexShrink: 0,
+                    }}
                   >
-                    <feature.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
-                  </div>
-                </div>
+                    {feature.icon}
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {feature.desc}
+                    </Typography>
+                  </Box>
+                </Stack>
               ))}
-            </div>
+            </Stack>
 
             {/* Preview Card */}
-            <div className="relative">
-              <div className="bg-background rounded-2xl border border-border shadow-xl overflow-hidden">
-                {/* Browser Chrome */}
-                <div className="bg-muted px-4 py-3 border-b border-border flex items-center gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-400" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                    <div className="w-3 h-3 rounded-full bg-green-400" />
-                  </div>
-                  <div className="flex-1 mx-4">
-                    <div className="bg-background rounded-md px-3 py-1.5 text-xs text-muted-foreground font-mono">
-                      patchpigeon.app/your-product
-                    </div>
-                  </div>
-                </div>
+            <Paper
+              elevation={3}
+              sx={{
+                flex: 1,
+                maxWidth: 480,
+                overflow: 'hidden',
+                borderRadius: 3,
+              }}
+            >
+              {/* Browser Chrome */}
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1.5,
+                  bgcolor: '#f1f5f9',
+                  borderBottom: 1,
+                  borderColor: 'divider',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                }}
+              >
+                <Stack direction="row" spacing={0.75}>
+                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#f87171' }} />
+                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#fbbf24' }} />
+                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#4ade80' }} />
+                </Stack>
+                <Box
+                  sx={{
+                    flex: 1,
+                    mx: 2,
+                    px: 2,
+                    py: 0.75,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                    fontSize: '0.75rem',
+                    color: 'text.secondary',
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  patchpigeon.com/acme/app
+                </Box>
+              </Box>
 
-                {/* Preview Content */}
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-lg bg-[#A7D8FF]/30 flex items-center justify-center">
-                      <Sparkles className="w-5 h-5 text-[#1F2937]" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground">Acme App</h4>
-                      <p className="text-xs text-muted-foreground">Changelog</p>
-                    </div>
-                  </div>
+              {/* Preview Content */}
+              <Box sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 2,
+                      bgcolor: `${colors.sky}30`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <AutoAwesomeIcon sx={{ color: colors.ink }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={600}>Acme App</Typography>
+                    <Typography variant="caption" color="text.secondary">Changelog</Typography>
+                  </Box>
+                </Stack>
 
-                  {/* Sample entries */}
-                  <div className="space-y-4">
-                    {[
-                      {
-                        type: "Feature",
-                        title: "Dark mode is here!",
-                        date: "Jan 6, 2025",
-                        color: "bg-[#BFEBD6] text-[#1F2937]",
-                      },
-                      {
-                        type: "Fix",
-                        title: "Fixed login issues on Safari",
-                        date: "Jan 4, 2025",
-                        color: "bg-[#FFE7A3] text-[#1F2937]",
-                      },
-                      {
-                        type: "Improvement",
-                        title: "Faster dashboard loading",
-                        date: "Jan 2, 2025",
-                        color: "bg-[#A7D8FF] text-[#1F2937]",
-                      },
-                    ].map((entry, i) => (
-                      <div
-                        key={i}
-                        className="flex items-start gap-3 pb-4 border-b border-border/50 last:border-0 last:pb-0"
-                      >
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${entry.color}`}>
-                          {entry.type}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-foreground text-sm truncate">{entry.title}</p>
-                          <p className="text-xs text-muted-foreground">{entry.date}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative elements */}
-              <div className="absolute -z-10 -bottom-4 -right-4 w-full h-full bg-[#A7D8FF]/10 rounded-2xl" />
-            </div>
-          </div>
-        </div>
-      </section>
+                <Stack spacing={2}>
+                  {[
+                    { type: "Feature", title: "Dark mode is here!", date: "Jan 6, 2025", color: colors.mint },
+                    { type: "Fix", title: "Fixed login issues on Safari", date: "Jan 4, 2025", color: colors.butter },
+                    { type: "Improvement", title: "Faster dashboard loading", date: "Jan 2, 2025", color: colors.sky },
+                  ].map((entry, i) => (
+                    <Stack
+                      key={i}
+                      direction="row"
+                      spacing={1.5}
+                      sx={{
+                        pb: 2,
+                        borderBottom: i < 2 ? 1 : 0,
+                        borderColor: 'divider',
+                      }}
+                    >
+                      <Chip
+                        label={entry.type}
+                        size="small"
+                        sx={{
+                          bgcolor: entry.color,
+                          color: colors.ink,
+                          fontWeight: 500,
+                          fontSize: '0.75rem',
+                        }}
+                      />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" fontWeight={500}>
+                          {entry.title}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {entry.date}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Box>
+            </Paper>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* How It Works */}
-      <section className="py-20 bg-[#F7FAFC]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">Up and running in 3 steps</h2>
-          </div>
+      <Box component="section" sx={{ py: 10, bgcolor: '#f8fafc' }}>
+        <Container maxWidth="md">
+          <Typography
+            variant="h3"
+            fontWeight={700}
+            textAlign="center"
+            sx={{ mb: 6 }}
+          >
+            Up and running in 3 steps
+          </Typography>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={4}
+            justifyContent="center"
+          >
             {[
-              {
-                step: "1",
-                title: "Create your product",
-                desc: "Name it, describe it, get your unique changelog URL.",
-                color: "bg-[#A7D8FF]",
-              },
-              {
-                step: "2",
-                title: "Write your first entry",
-                desc: "Use our markdown editor with live preview. Publish when ready.",
-                color: "bg-[#FFB8A1]",
-              },
-              {
-                step: "3",
-                title: "Share the link",
-                desc: "Add it to your app, website, or social bio. Done!",
-                color: "bg-[#BFEBD6]",
-              },
+              { step: "1", title: "Create your product", desc: "Name it, describe it, get your unique changelog URL.", color: colors.sky },
+              { step: "2", title: "Write your first entry", desc: "Use our structured editor with live preview. Publish when ready.", color: colors.peach },
+              { step: "3", title: "Share the link", desc: "Add it to your app, website, or social bio. Done!", color: colors.mint },
             ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div
-                  className={`w-14 h-14 rounded-2xl ${item.color} text-[#1F2937] font-bold text-xl flex items-center justify-center mx-auto mb-4 shadow-sm`}
+              <Stack key={i} alignItems="center" textAlign="center" sx={{ flex: 1 }}>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 3,
+                    bgcolor: item.color,
+                    color: colors.ink,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 700,
+                    fontSize: '1.25rem',
+                    mb: 2,
+                  }}
                 >
                   {item.step}
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-muted-foreground text-sm">{item.desc}</p>
-              </div>
+                </Box>
+                <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.desc}
+                </Typography>
+              </Stack>
             ))}
-          </div>
-        </div>
-      </section>
+          </Stack>
+        </Container>
+      </Box>
+
+      {/* Why Section */}
+      <Box component="section" sx={{ py: 10 }}>
+        <Container maxWidth="lg">
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={6}
+            alignItems="center"
+          >
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
+                Why a dedicated changelog?
+              </Typography>
+              <Stack spacing={2}>
+                {[
+                  "Shows users your product is actively maintained",
+                  "Builds trust and transparency with your audience",
+                  "Gives you a link to share on every platform",
+                  "Makes your hard work visible to the world",
+                ].map((item, i) => (
+                  <Stack key={i} direction="row" spacing={1.5} alignItems="flex-start">
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        bgcolor: `${colors.mint}40`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        mt: 0.25,
+                      }}
+                    >
+                      <CheckIcon sx={{ fontSize: 14, color: colors.ink }} />
+                    </Box>
+                    <Typography variant="body1" color="text.secondary">
+                      {item}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+
+            <Paper
+              elevation={0}
+              sx={{
+                flex: 1,
+                maxWidth: 400,
+                p: 4,
+                bgcolor: '#f8fafc',
+                borderRadius: 3,
+                border: 1,
+                borderColor: 'divider',
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{ fontStyle: 'italic', mb: 3 }}
+              >
+                &ldquo;Finally, a changelog tool that doesn&apos;t feel like a chore.
+                My users actually read my updates now!&rdquo;
+              </Typography>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    bgcolor: colors.sky,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 600,
+                    color: colors.ink,
+                  }}
+                >
+                  S
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={600}>Sarah Chen</Typography>
+                  <Typography variant="caption" color="text.secondary">Indie Developer</Typography>
+                </Box>
+              </Stack>
+            </Paper>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* Final CTA */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center mb-6">
-              <PigeonLogo size="lg" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6 text-balance">
+      <Box
+        component="section"
+        sx={{
+          py: 10,
+          bgcolor: colors.ink,
+          color: 'white',
+        }}
+      >
+        <Container maxWidth="sm">
+          <Stack alignItems="center" textAlign="center" spacing={3}>
+            <PigeonLogo size="lg" />
+            <Typography variant="h3" fontWeight={700}>
               Your changelog, delivered.
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
+            </Typography>
+            <Typography variant="body1" sx={{ opacity: 0.7 }}>
               Join indie developers who keep their users in the loop.
-            </p>
+            </Typography>
             <Button
               asChild
               size="lg"
-              className="bg-[#FFB8A1] text-[#1F2937] hover:bg-[#ffa78a] shadow-lg shadow-[#FFB8A1]/25 text-base px-8 h-12"
+              endIcon={<ArrowForwardIcon />}
+              sx={{
+                bgcolor: colors.peach,
+                color: colors.ink,
+                '&:hover': { bgcolor: '#ffa78a' },
+              }}
             >
-              <Link href="/auth/sign-up">
-                Start for free
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
+              <Link href="/auth/sign-up">Start for free</Link>
             </Button>
-          </div>
-        </div>
-      </section>
+          </Stack>
+        </Container>
+      </Box>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
-              <Heart className="w-4 h-4 text-[#FFB8A1]" />
-              Made with love for indie devs
-            </div>
-            <div className="flex items-center gap-2">
+      <Box
+        component="footer"
+        sx={{
+          py: 3,
+          borderTop: 1,
+          borderColor: 'divider',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              <FavoriteIcon sx={{ fontSize: 16, color: colors.peach }} />
+              <Typography variant="body2" color="text.secondary">
+                Made with love for indie devs
+              </Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
               <PigeonLogo size="sm" />
-              <span className="text-sm font-medium text-foreground">PatchPigeon</span>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+              <Typography variant="body2" fontWeight={500}>
+                PatchPigeon
+              </Typography>
+            </Stack>
+          </Stack>
+        </Container>
+      </Box>
+    </Box>
   )
 }

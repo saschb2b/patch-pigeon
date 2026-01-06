@@ -1,5 +1,12 @@
-import { changeTypeConfig } from "./change-type-badge"
+import { Box, Typography, Stack, Chip } from "@mui/material"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import BugReportIcon from "@mui/icons-material/BugReport"
+import BoltIcon from "@mui/icons-material/Bolt"
+import WarningIcon from "@mui/icons-material/Warning"
+import RemoveIcon from "@mui/icons-material/Remove"
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"
 import type { EntryItem, ChangeType } from "@/lib/types"
+import type React from "react"
 
 interface EntryItemsListProps {
   items: EntryItem[]
@@ -7,6 +14,58 @@ interface EntryItemsListProps {
 }
 
 const typeOrder: ChangeType[] = ["FEATURE", "IMPROVEMENT", "FIX", "BREAKING", "REMOVED", "KNOWNISSUE", "NOTE"]
+
+interface TypeConfig {
+  label: string
+  icon: React.ReactElement
+  color: string
+  dotColor: string
+}
+
+const typeConfig: Record<ChangeType, TypeConfig> = {
+  FEATURE: {
+    label: "Feature",
+    icon: <AutoAwesomeIcon sx={{ fontSize: 16 }} />,
+    color: "#0284c7",
+    dotColor: "#a7d8ff",
+  },
+  IMPROVEMENT: {
+    label: "Improvement",
+    icon: <BoltIcon sx={{ fontSize: 16 }} />,
+    color: "#c2410c",
+    dotColor: "#ffb8a1",
+  },
+  FIX: {
+    label: "Fix",
+    icon: <BugReportIcon sx={{ fontSize: 16 }} />,
+    color: "#15803d",
+    dotColor: "#bfebd6",
+  },
+  KNOWNISSUE: {
+    label: "Known Issue",
+    icon: <WarningIcon sx={{ fontSize: 16 }} />,
+    color: "#a16207",
+    dotColor: "#ffe7a3",
+  },
+  BREAKING: {
+    label: "Breaking",
+    icon: <WarningIcon sx={{ fontSize: 16 }} />,
+    color: "#dc2626",
+    dotColor: "#fca5a5",
+  },
+  REMOVED: {
+    label: "Removed",
+    icon: <RemoveIcon sx={{ fontSize: 16 }} />,
+    color: "#757575",
+    dotColor: "#9e9e9e",
+  },
+  NOTE: {
+    label: "Note",
+    icon: <ChatBubbleOutlineIcon sx={{ fontSize: 16 }} />,
+    color: "#757575",
+    dotColor: "#9e9e9e",
+  },
+}
 
 export function EntryItemsList({ items, compact = false }: EntryItemsListProps) {
   // Group items by type
@@ -22,89 +81,101 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
   if (compact) {
     // Compact view: just show counts by type
     return (
-      <div className="flex flex-wrap gap-2">
+      <Stack direction="row" spacing={1} flexWrap="wrap">
         {typeOrder.map((type) => {
           const typeItems = groupedItems[type]
           if (!typeItems || typeItems.length === 0) return null
-          const config = changeTypeConfig[type]
+          const config = typeConfig[type]
 
           return (
-            <span key={type} className="text-xs text-muted-foreground flex items-center gap-1">
-              <span className={config.className.split(" ")[1]}>{config.icon}</span>
-              {typeItems.length} {config.label.toLowerCase()}
-              {typeItems.length > 1 ? "s" : ""}
-            </span>
+            <Stack key={type} direction="row" spacing={0.5} alignItems="center">
+              <Box sx={{ color: config.color }}>{config.icon}</Box>
+              <Typography variant="caption" color="text.secondary">
+                {typeItems.length} {config.label.toLowerCase()}
+                {typeItems.length > 1 ? "s" : ""}
+              </Typography>
+            </Stack>
           )
         })}
-      </div>
+      </Stack>
     )
   }
 
   // Full view: grouped list
   return (
-    <div className="space-y-6">
+    <Stack spacing={3}>
       {typeOrder.map((type) => {
         const typeItems = groupedItems[type]
         if (!typeItems || typeItems.length === 0) return null
 
-        const config = changeTypeConfig[type]
-        const colorClass = config.className.includes("sky")
-          ? "text-sky-600 dark:text-sky-400"
-          : config.className.includes("peach")
-            ? "text-peach-600 dark:text-peach-400"
-            : config.className.includes("mint")
-              ? "text-mint-600 dark:text-mint-400"
-              : config.className.includes("butter")
-                ? "text-butter-600 dark:text-butter-400"
-                : config.className.includes("red")
-                  ? "text-red-600 dark:text-red-400"
-                  : "text-muted-foreground"
-
-        const dotColor = config.className.includes("sky")
-          ? "bg-sky-500"
-          : config.className.includes("peach")
-            ? "bg-peach-500"
-            : config.className.includes("mint")
-              ? "bg-mint-500"
-              : config.className.includes("butter")
-                ? "bg-butter-500"
-                : config.className.includes("red")
-                  ? "bg-red-500"
-                  : "bg-muted-foreground"
+        const config = typeConfig[type]
 
         return (
-          <div key={type}>
-            <div className={`flex items-center gap-2 mb-3 ${colorClass}`}>
+          <Box key={type}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5, color: config.color }}>
               {config.icon}
-              <h3 className="font-semibold text-sm uppercase tracking-wide">
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}
+              >
                 {config.label}
                 {typeItems.length > 1 ? "s" : ""}
-              </h3>
-              <span className="text-xs opacity-60">({typeItems.length})</span>
-            </div>
-            <ul className="space-y-2.5">
-              {typeItems
-                .sort((a, b) => a.sort_order - b.sort_order)
-                .map((item) => (
-                  <li key={item.id} className="flex items-start gap-3">
-                    <span className={`mt-2 w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {item.area && (
-                          <span className="text-xs font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                            {item.area}
-                          </span>
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.6 }}>
+                ({typeItems.length})
+              </Typography>
+            </Stack>
+            <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0 }}>
+              <Stack spacing={1.5}>
+                {typeItems
+                  .sort((a, b) => a.sort_order - b.sort_order)
+                  .map((item) => (
+                    <Box
+                      component="li"
+                      key={item.id}
+                      sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
+                    >
+                      <Box
+                        sx={{
+                          mt: 1,
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          bgcolor: config.dotColor,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          {item.area && (
+                            <Chip
+                              label={item.area}
+                              size="small"
+                              sx={{
+                                height: 20,
+                                fontSize: "0.7rem",
+                                bgcolor: "grey.100",
+                                color: "text.secondary",
+                              }}
+                            />
+                          )}
+                          <Typography variant="body2" color="text.primary">
+                            {item.title}
+                          </Typography>
+                        </Stack>
+                        {item.description && (
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                            {item.description}
+                          </Typography>
                         )}
-                        <span className="text-foreground">{item.title}</span>
-                      </div>
-                      {item.description && <p className="text-sm text-muted-foreground mt-1">{item.description}</p>}
-                    </div>
-                  </li>
-                ))}
-            </ul>
-          </div>
+                      </Box>
+                    </Box>
+                  ))}
+              </Stack>
+            </Box>
+          </Box>
         )
       })}
-    </div>
+    </Stack>
   )
 }

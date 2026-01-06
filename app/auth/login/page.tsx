@@ -9,7 +9,11 @@ import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Mail, Lock, ArrowRight, Sparkles } from "lucide-react"
+import { Box, Container, Typography, Paper, Stack, Alert, InputAdornment } from "@mui/material"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -39,69 +43,157 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full">
+    <Box sx={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       {/* Left side - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[var(--sky)]/30 via-[var(--peach)]/20 to-[var(--mint)]/30 items-center justify-center p-12 relative overflow-hidden">
+      <Box
+        sx={{
+          display: { xs: "none", lg: "flex" },
+          width: "50%",
+          background: "linear-gradient(135deg, rgba(167, 216, 255, 0.3) 0%, rgba(255, 184, 161, 0.2) 50%, rgba(191, 235, 214, 0.3) 100%)",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 6,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         {/* Floating shapes */}
-        <div className="absolute top-20 left-20 w-32 h-32 rounded-full bg-[var(--sky)]/40 blur-2xl" />
-        <div className="absolute bottom-32 right-20 w-40 h-40 rounded-full bg-[var(--peach)]/40 blur-2xl" />
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-[var(--mint)]/40 blur-2xl" />
+        <Box
+          sx={{
+            position: "absolute",
+            top: 80,
+            left: 80,
+            width: 128,
+            height: 128,
+            borderRadius: "50%",
+            bgcolor: "rgba(167, 216, 255, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 128,
+            right: 80,
+            width: 160,
+            height: 160,
+            borderRadius: "50%",
+            bgcolor: "rgba(255, 184, 161, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "33%",
+            width: 96,
+            height: 96,
+            borderRadius: "50%",
+            bgcolor: "rgba(191, 235, 214, 0.4)",
+            filter: "blur(32px)",
+          }}
+        />
 
-        <div className="relative z-10 max-w-md text-center">
-          <div className="flex justify-center mb-8">
-            <div className="relative">
-              <PigeonLogo size="lg" className="w-32 h-32" />
-              <div className="absolute -top-2 -right-2">
-                <Sparkles className="w-6 h-6 text-[var(--butter)]" />
-              </div>
-            </div>
-          </div>
-          <h2 className="text-3xl font-bold text-foreground mb-4 text-balance">Your updates deserve to be seen</h2>
-          <p className="text-muted-foreground text-lg leading-relaxed">
+        <Box sx={{ position: "relative", zIndex: 1, maxWidth: 400, textAlign: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+            <Box sx={{ position: "relative" }}>
+              <PigeonLogo size="lg" sx={{ width: 128, height: 128 }} />
+              <Box sx={{ position: "absolute", top: -8, right: -8 }}>
+                <AutoAwesomeIcon sx={{ fontSize: 24, color: "#FFE7A3" }} />
+              </Box>
+            </Box>
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 2 }}>
+            Your updates deserve to be seen
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: "1.125rem", lineHeight: 1.7 }}>
             Join hundreds of indie devs who keep their users in the loop with beautiful, hassle-free changelogs.
-          </p>
+          </Typography>
 
           {/* Testimonial card */}
-          <div className="mt-8 bg-card/80 backdrop-blur-sm rounded-2xl p-6 border border-border/50 text-left">
-            <p className="text-foreground italic mb-4">
+          <Paper
+            elevation={0}
+            sx={{
+              mt: 4,
+              p: 3,
+              borderRadius: 3,
+              bgcolor: "rgba(255, 255, 255, 0.8)",
+              backdropFilter: "blur(8px)",
+              border: 1,
+              borderColor: "divider",
+              textAlign: "left",
+            }}
+          >
+            <Typography variant="body1" sx={{ fontStyle: "italic", mb: 2, color: "text.primary" }}>
               "Finally, a changelog tool that doesn't feel like a chore. My users actually read my updates now!"
-            </p>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[var(--sky)] flex items-center justify-center text-foreground font-semibold">
+            </Typography>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  bgcolor: "#a7d8ff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
                 S
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Sarah Chen</p>
-                <p className="text-sm text-muted-foreground">Indie Developer</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Box>
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>
+                  Sarah Chen
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Indie Developer
+                </Typography>
+              </Box>
+            </Stack>
+          </Paper>
+        </Box>
+      </Box>
 
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-background">
-        <div className="w-full max-w-md">
+      <Box
+        sx={{
+          width: { xs: "100%", lg: "50%" },
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: { xs: 3, md: 6 },
+          bgcolor: "background.paper",
+        }}
+      >
+        <Container maxWidth="sm">
           {/* Mobile logo */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/" className="flex items-center gap-3">
-              <PigeonLogo size="md" />
-              <span className="text-2xl font-bold text-foreground">PatchPigeon</span>
+          <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center", mb: 4 }}>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Stack direction="row" spacing={1.5} alignItems="center">
+                <PigeonLogo size="md" />
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  PatchPigeon
+                </Typography>
+              </Stack>
             </Link>
-          </div>
+          </Box>
 
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back!</h1>
-            <p className="text-muted-foreground">Your changelogs missed you. Let's get you signed in.</p>
-          </div>
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+              Welcome back!
+            </Typography>
+            <Typography color="text.secondary">
+              Your changelogs missed you. Let's get you signed in.
+            </Typography>
+          </Box>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-medium">
-                Email
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <Box component="form" onSubmit={handleLogin}>
+            <Stack spacing={2.5}>
+              <Box>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -109,17 +201,18 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlineIcon sx={{ color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-            </div>
+              </Box>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-medium">
-                Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Box>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -127,61 +220,66 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <div className="flex justify-end">
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-muted-foreground hover:text-[var(--peach)] transition-colors"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-            </div>
+                <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+                  <Link href="/auth/forgot-password" style={{ textDecoration: "none" }}>
+                    <Typography variant="body2" sx={{ color: "text.secondary", "&:hover": { color: "#ffb8a1" } }}>
+                      Forgot your password?
+                    </Typography>
+                  </Link>
+                </Box>
+              </Box>
 
-            {error && (
-              <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg border border-destructive/20">
-                {error}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-semibold text-base gap-2 group"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                "Signing in..."
-              ) : (
-                <>
-                  Sign In
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </>
+              {error && (
+                <Alert severity="error" sx={{ borderRadius: 2 }}>
+                  {error}
+                </Alert>
               )}
-            </Button>
-          </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-muted-foreground">
+              <Button type="submit" disabled={isLoading} sx={{ height: 48 }}>
+                {isLoading ? (
+                  "Signing in..."
+                ) : (
+                  <>
+                    Sign In
+                    <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
+                  </>
+                )}
+              </Button>
+            </Stack>
+          </Box>
+
+          <Box sx={{ mt: 4, textAlign: "center" }}>
+            <Typography color="text.secondary">
               {"New to PatchPigeon? "}
-              <Link
-                href="/auth/sign-up"
-                className="text-foreground font-semibold hover:text-[var(--sky)] transition-colors"
-              >
-                Create an account
+              <Link href="/auth/sign-up" style={{ textDecoration: "none" }}>
+                <Typography
+                  component="span"
+                  sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}
+                >
+                  Create an account
+                </Typography>
               </Link>
-            </p>
-          </div>
+            </Typography>
+          </Box>
 
           {/* Back to home */}
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              ← Back to home
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Typography variant="body2" sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+                Back to home
+              </Typography>
             </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </Container>
+      </Box>
+    </Box>
   )
 }

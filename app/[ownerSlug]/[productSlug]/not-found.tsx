@@ -1,18 +1,31 @@
 import Link from "next/link"
+import { Box, Typography } from "@mui/material"
 import { Button } from "@/components/ui/button"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center">
-        <PigeonLogo className="w-16 h-16 mx-auto mb-6 opacity-50" />
-        <h1 className="text-4xl font-bold text-foreground mb-4">404</h1>
-        <p className="text-muted-foreground mb-8">This changelog could not be found.</p>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box sx={{ textAlign: "center" }}>
+        <PigeonLogo size="lg" sx={{ mx: "auto", mb: 3, opacity: 0.5 }} />
+        <Typography variant="h2" sx={{ fontWeight: 700, color: "text.primary", mb: 2 }}>
+          404
+        </Typography>
+        <Typography color="text.secondary" sx={{ mb: 4 }}>
+          This changelog could not be found.
+        </Typography>
         <Button asChild>
           <Link href="/">Go Home</Link>
         </Button>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

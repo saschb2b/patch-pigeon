@@ -2,10 +2,11 @@ import type React from "react"
 import type { Metadata } from "next"
 import { DM_Sans, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ThemeRegistry } from "@/components/theme-registry"
 import "./globals.css"
 
-const _dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" })
-const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" })
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" })
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" })
 
 export const metadata: Metadata = {
   title: "PatchPigeon - Deliver release notes anywhere",
@@ -37,9 +38,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
-        {children}
+    <html lang="en" className={`${dmSans.variable} ${jetbrainsMono.variable}`}>
+      <body>
+        <ThemeRegistry>
+          {children}
+        </ThemeRegistry>
         <Analytics />
       </body>
     </html>

@@ -20,7 +20,15 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { EntryItemRow, changeTypeConfig } from "./entry-item-row"
-import { Save, ArrowLeft, Plus, Eye, Sparkles, Bug, Zap, AlertTriangle } from "lucide-react"
+import { Box, Container, Typography, Stack, Paper, Alert, Chip, Grid } from "@mui/material"
+import SaveIcon from "@mui/icons-material/Save"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import AddIcon from "@mui/icons-material/Add"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import BugReportIcon from "@mui/icons-material/BugReport"
+import BoltIcon from "@mui/icons-material/Bolt"
+import WarningIcon from "@mui/icons-material/Warning"
 import { generateEntrySlug } from "@/lib/utils/slug"
 import type { Entry, EntryItem, ChangeType } from "@/lib/types"
 
@@ -229,284 +237,387 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   const typeOrder: ChangeType[] = ["FEATURE", "IMPROVEMENT", "FIX", "BREAKING", "REMOVED", "KNOWNISSUE", "NOTE"]
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          borderBottom: 1,
+          borderColor: "divider",
+          bgcolor: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 3, py: 2 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
             </Button>
-            <div>
-              <h1 className="text-lg font-semibold">{entry ? "Edit Version" : "New Version"}</h1>
-              <p className="text-sm text-muted-foreground">{productName}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 mr-4">
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                {entry ? "Edit Version" : "New Version"}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {productName}
+              </Typography>
+            </Box>
+          </Stack>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mr: 2 }}>
               <Switch id="published" checked={published} onCheckedChange={setPublished} />
-              <Label htmlFor="published" className="text-sm cursor-pointer">
+              <Label htmlFor="published" style={{ cursor: "pointer" }}>
                 {published ? "Published" : "Draft"}
               </Label>
-            </div>
+            </Stack>
             <Button
               onClick={handleSubmit}
               disabled={isLoading || !title || items.filter((i) => i.title.trim()).length === 0}
             >
-              <Save className="h-4 w-4 mr-2" />
+              <SaveIcon sx={{ fontSize: 18, mr: 1 }} />
               {isLoading ? "Saving..." : "Save"}
             </Button>
-          </div>
-        </div>
-      </div>
+          </Stack>
+        </Stack>
+      </Box>
 
       {error && (
-        <div className="mx-6 mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
-          {error}
-        </div>
+        <Box sx={{ mx: 3, mt: 2 }}>
+          <Alert severity="error">{error}</Alert>
+        </Box>
       )}
 
       {/* Split Screen Editor */}
-      <div className="grid lg:grid-cols-2 min-h-[calc(100vh-73px)]">
+      <Grid container sx={{ minHeight: "calc(100vh - 73px)" }}>
         {/* Left: Form */}
-        <div className="border-r bg-muted/30 overflow-auto">
-          <div className="p-6 space-y-6">
-            {/* Version Details */}
-            <div className="space-y-4 p-4 rounded-lg border bg-card">
-              <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Version Details</h3>
+        <Grid size={{ xs: 12, lg: 6 }} sx={{ borderRight: { lg: 1 }, borderColor: "divider", bgcolor: "grey.50", overflow: "auto" }}>
+          <Box sx={{ p: 3 }}>
+            <Stack spacing={3}>
+              {/* Version Details */}
+              <Paper elevation={0} sx={{ p: 2, border: 1, borderColor: "divider" }}>
+                <Typography variant="overline" color="text.secondary" sx={{ mb: 2, display: "block" }}>
+                  Version Details
+                </Typography>
 
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    value={title}
-                    onChange={(e) => handleTitleChange(e.target.value)}
-                    placeholder="January 2025 Update"
-                    className="bg-background"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="version">Version</Label>
+                <Stack spacing={2}>
+                  <Box>
+                    <Label htmlFor="title">Title</Label>
                     <Input
-                      id="version"
-                      value={version}
-                      onChange={(e) => setVersion(e.target.value)}
-                      placeholder="1.2.0"
-                      className="bg-background font-mono"
+                      id="title"
+                      value={title}
+                      onChange={(e) => handleTitleChange(e.target.value)}
+                      placeholder="January 2025 Update"
                     />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="publishDate">Publish Date</Label>
+                  </Box>
+
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 6 }}>
+                      <Label htmlFor="version">Version</Label>
+                      <Input
+                        id="version"
+                        value={version}
+                        onChange={(e) => setVersion(e.target.value)}
+                        placeholder="1.2.0"
+                        inputProps={{ style: { fontFamily: "monospace" } }}
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 6 }}>
+                      <Label htmlFor="publishDate">Publish Date</Label>
+                      <Input
+                        id="publishDate"
+                        type="date"
+                        value={publishDate}
+                        onChange={(e) => setPublishDate(e.target.value)}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Box>
+                    <Label htmlFor="summary">Summary (optional)</Label>
+                    <Textarea
+                      id="summary"
+                      value={summary}
+                      onChange={(e) => setSummary(e.target.value)}
+                      placeholder="Brief overview of this release..."
+                      rows={2}
+                    />
+                  </Box>
+
+                  <Box>
+                    <Label htmlFor="slug">URL Slug</Label>
                     <Input
-                      id="publishDate"
-                      type="date"
-                      value={publishDate}
-                      onChange={(e) => setPublishDate(e.target.value)}
-                      className="bg-background"
+                      id="slug"
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value)}
+                      placeholder="2025-01-january-update"
+                      inputProps={{ style: { fontFamily: "monospace", fontSize: "0.875rem" } }}
                     />
-                  </div>
-                </div>
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+                      /{ownerSlug}/{productSlug}/{slug || "your-slug"}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Paper>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="summary">Summary (optional)</Label>
-                  <Textarea
-                    id="summary"
-                    value={summary}
-                    onChange={(e) => setSummary(e.target.value)}
-                    placeholder="Brief overview of this release..."
-                    className="bg-background resize-none"
-                    rows={2}
-                  />
-                </div>
+              {/* Changes List */}
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                  <Typography variant="overline" color="text.secondary">
+                    Changes
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {items.filter((i) => i.title.trim()).length} items
+                  </Typography>
+                </Stack>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="slug">URL Slug</Label>
-                  <Input
-                    id="slug"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                    placeholder="2025-01-january-update"
-                    className="bg-background font-mono text-sm"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    /{ownerSlug}/{productSlug}/{slug || "your-slug"}
-                  </p>
-                </div>
-              </div>
-            </div>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                    <Stack spacing={1}>
+                      {items.map((item) => (
+                        <EntryItemRow key={item.id} item={item} onUpdate={handleUpdateItem} onDelete={handleDeleteItem} />
+                      ))}
+                    </Stack>
+                  </SortableContext>
+                </DndContext>
 
-            {/* Changes List */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Changes</h3>
-                <span className="text-xs text-muted-foreground">
-                  {items.filter((i) => i.title.trim()).length} items
-                </span>
-              </div>
+                {items.length === 0 && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      textAlign: "center",
+                      py: 4,
+                      border: "1px dashed",
+                      borderColor: "divider",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography color="text.secondary" sx={{ mb: 1 }}>
+                      No changes added yet
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Click a button below to add your first change
+                    </Typography>
+                  </Paper>
+                )}
 
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                  <div className="space-y-2">
-                    {items.map((item) => (
-                      <EntryItemRow key={item.id} item={item} onUpdate={handleUpdateItem} onDelete={handleDeleteItem} />
-                    ))}
-                  </div>
-                </SortableContext>
-              </DndContext>
-
-              {items.length === 0 && (
-                <div className="text-center py-8 border border-dashed rounded-lg bg-card">
-                  <p className="text-muted-foreground mb-4">No changes added yet</p>
-                  <p className="text-sm text-muted-foreground">Click a button below to add your first change</p>
-                </div>
-              )}
-
-              {/* Quick Add Buttons */}
-              <div className="flex flex-wrap gap-2 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddItem("FEATURE")}
-                  className="text-sky-600 border-sky-500/30 hover:bg-sky-500/10"
-                >
-                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                  Feature
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddItem("IMPROVEMENT")}
-                  className="text-peach-600 border-peach-500/30 hover:bg-peach-500/10"
-                >
-                  <Zap className="w-3.5 h-3.5 mr-1.5" />
-                  Improvement
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddItem("FIX")}
-                  className="text-mint-600 border-mint-500/30 hover:bg-mint-500/10"
-                >
-                  <Bug className="w-3.5 h-3.5 mr-1.5" />
-                  Fix
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddItem("BREAKING")}
-                  className="text-red-600 border-red-500/30 hover:bg-red-500/10"
-                >
-                  <AlertTriangle className="w-3.5 h-3.5 mr-1.5" />
-                  Breaking
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddItem("NOTE")}
-                  className="text-muted-foreground"
-                >
-                  <Plus className="w-3.5 h-3.5 mr-1.5" />
-                  More
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+                {/* Quick Add Buttons */}
+                <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 2 }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddItem("FEATURE")}
+                    sx={{ color: "#0ea5e9", borderColor: "rgba(14, 165, 233, 0.3)", "&:hover": { bgcolor: "rgba(14, 165, 233, 0.1)" } }}
+                  >
+                    <AutoAwesomeIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                    Feature
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddItem("IMPROVEMENT")}
+                    sx={{ color: "#f97316", borderColor: "rgba(249, 115, 22, 0.3)", "&:hover": { bgcolor: "rgba(249, 115, 22, 0.1)" } }}
+                  >
+                    <BoltIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                    Improvement
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddItem("FIX")}
+                    sx={{ color: "#10b981", borderColor: "rgba(16, 185, 129, 0.3)", "&:hover": { bgcolor: "rgba(16, 185, 129, 0.1)" } }}
+                  >
+                    <BugReportIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                    Fix
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddItem("BREAKING")}
+                    sx={{ color: "#ef4444", borderColor: "rgba(239, 68, 68, 0.3)", "&:hover": { bgcolor: "rgba(239, 68, 68, 0.1)" } }}
+                  >
+                    <WarningIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                    Breaking
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => handleAddItem("NOTE")}>
+                    <AddIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                    More
+                  </Button>
+                </Stack>
+              </Box>
+            </Stack>
+          </Box>
+        </Grid>
 
         {/* Right: Live Preview */}
-        <div className="bg-background overflow-auto">
-          <div className="sticky top-0 border-b bg-muted/50 px-6 py-3">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Eye className="h-4 w-4" />
-              Live Preview
-            </div>
-          </div>
+        <Grid size={{ xs: 12, lg: 6 }} sx={{ bgcolor: "background.paper", overflow: "auto" }}>
+          <Box
+            sx={{
+              position: "sticky",
+              top: 0,
+              borderBottom: 1,
+              borderColor: "divider",
+              bgcolor: "grey.50",
+              px: 3,
+              py: 1.5,
+            }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              <VisibilityIcon sx={{ fontSize: 18, color: "text.secondary" }} />
+              <Typography variant="body2" color="text.secondary">
+                Live Preview
+              </Typography>
+            </Stack>
+          </Box>
 
-          <div className="p-6 lg:p-10">
-            <div className="max-w-3xl">
+          <Box sx={{ p: { xs: 3, lg: 5 } }}>
+            <Box sx={{ maxWidth: 768 }}>
               {/* Preview Header */}
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <Box sx={{ mb: 4 }}>
+                <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
                   {version && (
-                    <span className="text-sm font-mono font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
-                      v{version}
-                    </span>
+                    <Chip
+                      label={`v${version}`}
+                      size="small"
+                      sx={{
+                        fontFamily: "monospace",
+                        fontWeight: 500,
+                        bgcolor: "#f1f5f9",
+                        color: "#475569",
+                      }}
+                    />
                   )}
-                  {formattedDate && <time className="text-sm text-muted-foreground">{formattedDate}</time>}
+                  {formattedDate && (
+                    <Typography variant="body2" color="text.secondary">
+                      {formattedDate}
+                    </Typography>
+                  )}
                   {!published && (
-                    <span className="text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                      Draft
-                    </span>
+                    <Chip
+                      label="Draft"
+                      size="small"
+                      sx={{
+                        fontSize: "0.7rem",
+                        fontWeight: 500,
+                        bgcolor: "rgba(234, 179, 8, 0.1)",
+                        color: "#a16207",
+                        borderColor: "rgba(234, 179, 8, 0.2)",
+                      }}
+                      variant="outlined"
+                    />
                   )}
-                </div>
+                </Stack>
 
-                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-4 text-balance">
+                <Typography
+                  variant="h4"
+                  sx={{ fontWeight: 700, color: "text.primary", mb: 2, textWrap: "balance" }}
+                >
                   {title || "Untitled Version"}
-                </h1>
+                </Typography>
 
-                {summary && <p className="text-lg text-muted-foreground">{summary}</p>}
-              </div>
+                {summary && (
+                  <Typography variant="body1" color="text.secondary">
+                    {summary}
+                  </Typography>
+                )}
+              </Box>
 
               {/* Preview Content - Grouped by Type */}
-              <div className="border-t pt-8 space-y-8">
-                {typeOrder.map((type) => {
-                  const typeItems = groupedItems[type]
-                  if (!typeItems || typeItems.length === 0) return null
+              <Box sx={{ borderTop: 1, borderColor: "divider", pt: 4 }}>
+                <Stack spacing={4}>
+                  {typeOrder.map((type) => {
+                    const typeItems = groupedItems[type]
+                    if (!typeItems || typeItems.length === 0) return null
 
-                  const config = changeTypeConfig[type]
+                    const config = changeTypeConfig[type]
 
-                  return (
-                    <div key={type}>
-                      <div className={`flex items-center gap-2 mb-4 ${config.color}`}>
-                        {config.icon}
-                        <h2 className="font-semibold">{config.label}s</h2>
-                        <span className="text-xs text-muted-foreground">({typeItems.length})</span>
-                      </div>
-                      <ul className="space-y-3">
-                        {typeItems.map((item) => (
-                          <li key={item.id} className="flex items-start gap-3 group">
-                            <span
-                              className={`mt-2 w-1.5 h-1.5 rounded-full shrink-0 ${config.color.replace("text-", "bg-")}`}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                {item.area && (
-                                  <span className="text-xs font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                    {item.area}
-                                  </span>
-                                )}
-                                <span className="text-foreground">{item.title}</span>
-                              </div>
-                              {item.description && (
-                                <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )
-                })}
+                    return (
+                      <Box key={type}>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2, color: config.muiColor }}>
+                          {config.icon}
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                            {config.label}s
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            ({typeItems.length})
+                          </Typography>
+                        </Stack>
+                        <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0 }}>
+                          <Stack spacing={1.5}>
+                            {typeItems.map((item) => (
+                              <Box
+                                component="li"
+                                key={item.id}
+                                sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
+                              >
+                                <Box
+                                  sx={{
+                                    mt: 1,
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: "50%",
+                                    bgcolor: config.muiColor,
+                                    flexShrink: 0,
+                                    opacity: 0.6,
+                                  }}
+                                />
+                                <Box sx={{ flex: 1, minWidth: 0 }}>
+                                  <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                                    {item.area && (
+                                      <Chip
+                                        label={item.area}
+                                        size="small"
+                                        sx={{
+                                          height: 20,
+                                          fontSize: "0.7rem",
+                                          bgcolor: "grey.100",
+                                          color: "text.secondary",
+                                        }}
+                                      />
+                                    )}
+                                    <Typography variant="body2" color="text.primary">
+                                      {item.title}
+                                    </Typography>
+                                  </Stack>
+                                  {item.description && (
+                                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                      {item.description}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              </Box>
+                            ))}
+                          </Stack>
+                        </Box>
+                      </Box>
+                    )
+                  })}
 
-                {Object.keys(groupedItems).length === 0 && (
-                  <div className="text-center py-12 border border-dashed rounded-lg">
-                    <p className="text-muted-foreground text-lg mb-2">No changes yet</p>
-                    <p className="text-sm text-muted-foreground">Add changes on the left to see the preview</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  {Object.keys(groupedItems).length === 0 && (
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        textAlign: "center",
+                        py: 6,
+                        border: "1px dashed",
+                        borderColor: "divider",
+                        borderRadius: 2,
+                      }}
+                    >
+                      <Typography color="text.secondary" variant="h6" sx={{ mb: 1 }}>
+                        No changes yet
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Add changes on the left to see the preview
+                      </Typography>
+                    </Paper>
+                  )}
+                </Stack>
+              </Box>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   )
 }

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { Box, Container, Typography, Stack, Paper } from "@mui/material"
 import { createClient } from "@/lib/supabase/server"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
@@ -66,23 +67,38 @@ export default async function ChangelogPage({ params }: PageProps) {
   const groupedEntries = groupEntriesByMonth((entries as EntryWithItems[]) || [])
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <ChangelogHeader product={product as Product} profile={profile as Profile} />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-2">Changelog</h2>
-            <p className="text-muted-foreground">All the latest updates, improvements, and fixes.</p>
-          </div>
+      <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
+        <Box sx={{ maxWidth: 768, mx: "auto" }}>
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+              Changelog
+            </Typography>
+            <Typography color="text.secondary">
+              All the latest updates, improvements, and fixes.
+            </Typography>
+          </Box>
 
           {groupedEntries.length === 0 ? (
-            <div className="text-center py-16 border border-dashed rounded-xl">
-              <p className="text-muted-foreground">No changelog entries yet.</p>
-              <p className="text-sm text-muted-foreground mt-2">Check back soon for updates!</p>
-            </div>
+            <Paper
+              elevation={0}
+              sx={{
+                textAlign: "center",
+                py: 8,
+                border: "1px dashed",
+                borderColor: "divider",
+                borderRadius: 3,
+              }}
+            >
+              <Typography color="text.secondary">No changelog entries yet.</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Check back soon for updates!
+              </Typography>
+            </Paper>
           ) : (
-            <div className="space-y-12 md:pl-4">
+            <Stack spacing={6} sx={{ pl: { xs: 0, md: 2 } }}>
               {groupedEntries.map((group) => (
                 <TimelineGroup
                   key={group.date}
@@ -92,11 +108,11 @@ export default async function ChangelogPage({ params }: PageProps) {
                   productSlug={productSlug}
                 />
               ))}
-            </div>
+            </Stack>
           )}
-        </div>
-      </main>
-    </div>
+        </Box>
+      </Container>
+    </Box>
   )
 }
 

@@ -8,7 +8,11 @@ import { Label } from "@/components/ui/label"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { useState } from "react"
-import { Mail, ArrowLeft, Send, CheckCircle2 } from "lucide-react"
+import { Box, Typography, Stack, Paper, Alert, InputAdornment } from "@mui/material"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import SendIcon from "@mui/icons-material/Send"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -37,67 +41,144 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6 bg-gradient-to-br from-[var(--sky)]/10 via-background to-[var(--peach)]/10">
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 3,
+        background: "linear-gradient(135deg, rgba(167, 216, 255, 0.1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 184, 161, 0.1) 100%)",
+      }}
+    >
       {/* Floating shapes */}
-      <div className="fixed top-20 left-20 w-64 h-64 rounded-full bg-[var(--sky)]/20 blur-3xl pointer-events-none" />
-      <div className="fixed bottom-20 right-20 w-64 h-64 rounded-full bg-[var(--peach)]/20 blur-3xl pointer-events-none" />
+      <Box
+        sx={{
+          position: "fixed",
+          top: 80,
+          left: 80,
+          width: 256,
+          height: 256,
+          borderRadius: "50%",
+          bgcolor: "rgba(167, 216, 255, 0.2)",
+          filter: "blur(48px)",
+          pointerEvents: "none",
+        }}
+      />
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 80,
+          right: 80,
+          width: 256,
+          height: 256,
+          borderRadius: "50%",
+          bgcolor: "rgba(255, 184, 161, 0.2)",
+          filter: "blur(48px)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div className="w-full max-w-md relative z-10">
+      <Box sx={{ width: "100%", maxWidth: 448, position: "relative", zIndex: 1 }}>
         {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-3">
-            <PigeonLogo size="lg" />
-            <span className="text-2xl font-bold text-foreground">PatchPigeon</span>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <PigeonLogo size="lg" />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
+                PatchPigeon
+              </Typography>
+            </Stack>
           </Link>
-        </div>
+        </Box>
 
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-8 border border-border/50 shadow-xl">
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            borderRadius: 4,
+            bgcolor: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(8px)",
+            border: 1,
+            borderColor: "divider",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           {isSuccess ? (
             // Success state
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--mint)]/30 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-8 h-8 text-[var(--mint)]" />
-              </div>
-              <h1 className="text-2xl font-bold text-foreground mb-2">Check your inbox!</h1>
-              <p className="text-muted-foreground mb-6">
-                We've sent a password reset link to <span className="font-medium text-foreground">{email}</span>. Click
-                the link to create a new password.
-              </p>
-              <p className="text-sm text-muted-foreground mb-6">
+            <Box sx={{ textAlign: "center" }}>
+              <Box
+                sx={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(191, 235, 214, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                  mb: 3,
+                }}
+              >
+                <CheckCircleIcon sx={{ fontSize: 32, color: "#bfebd6" }} />
+              </Box>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+                Check your inbox!
+              </Typography>
+              <Typography color="text.secondary" sx={{ mb: 3 }}>
+                We've sent a password reset link to{" "}
+                <Typography component="span" sx={{ fontWeight: 500, color: "text.primary" }}>
+                  {email}
+                </Typography>
+                . Click the link to create a new password.
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 Didn't receive the email? Check your spam folder or try again.
-              </p>
-              <div className="flex flex-col gap-3">
-                <Button variant="outline" onClick={() => setIsSuccess(false)} className="w-full">
+              </Typography>
+              <Stack spacing={1.5}>
+                <Button variant="outline" onClick={() => setIsSuccess(false)}>
                   Try another email
                 </Button>
-                <Link href="/auth/login">
-                  <Button variant="ghost" className="w-full gap-2">
-                    <ArrowLeft className="w-4 h-4" />
+                <Button variant="ghost" asChild>
+                  <Link href="/auth/login">
+                    <ArrowBackIcon sx={{ fontSize: 16, mr: 1 }} />
                     Back to sign in
-                  </Button>
-                </Link>
-              </div>
-            </div>
+                  </Link>
+                </Button>
+              </Stack>
+            </Box>
           ) : (
             // Form state
             <>
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 rounded-full bg-[var(--butter)]/30 flex items-center justify-center mx-auto mb-6">
-                  <Mail className="w-8 h-8 text-[var(--butter)]" />
-                </div>
-                <h1 className="text-2xl font-bold text-foreground mb-2">Forgot your password?</h1>
-                <p className="text-muted-foreground">
+              <Box sx={{ textAlign: "center", mb: 4 }}>
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: "50%",
+                    bgcolor: "rgba(255, 231, 163, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mx: "auto",
+                    mb: 3,
+                  }}
+                >
+                  <MailOutlineIcon sx={{ fontSize: 32, color: "#ffe7a3" }} />
+                </Box>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+                  Forgot your password?
+                </Typography>
+                <Typography color="text.secondary">
                   No worries! Enter your email and we'll send you a reset link. Our pigeon is fast!
-                </p>
-              </div>
+                </Typography>
+              </Box>
 
-              <form onSubmit={handleResetPassword} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground font-medium">
-                    Email address
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Box component="form" onSubmit={handleResetPassword}>
+                <Stack spacing={2.5}>
+                  <Box>
+                    <Label htmlFor="email">Email address</Label>
                     <Input
                       id="email"
                       type="email"
@@ -105,46 +186,53 @@ export default function ForgotPasswordPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-12 bg-muted/50 border-border focus:border-[var(--sky)] focus:ring-[var(--sky)]/20"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <MailOutlineIcon sx={{ color: "text.secondary" }} />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                  </div>
-                </div>
+                  </Box>
 
-                {error && (
-                  <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg border border-destructive/20">
-                    {error}
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-semibold text-base gap-2 group"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      Send Reset Link
-                      <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
+                  {error && (
+                    <Alert severity="error" sx={{ borderRadius: 2 }}>
+                      {error}
+                    </Alert>
                   )}
-                </Button>
-              </form>
 
-              <div className="mt-6 text-center">
-                <Link
-                  href="/auth/login"
-                  className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back to sign in
+                  <Button type="submit" disabled={isLoading} sx={{ height: 48 }}>
+                    {isLoading ? (
+                      "Sending..."
+                    ) : (
+                      <>
+                        Send Reset Link
+                        <SendIcon sx={{ ml: 1, fontSize: 18 }} />
+                      </>
+                    )}
+                  </Button>
+                </Stack>
+              </Box>
+
+              <Box sx={{ mt: 3, textAlign: "center" }}>
+                <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}
+                  >
+                    <ArrowBackIcon sx={{ fontSize: 16 }} />
+                    <Typography variant="body2">Back to sign in</Typography>
+                  </Stack>
                 </Link>
-              </div>
+              </Box>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </Paper>
+      </Box>
+    </Box>
   )
 }

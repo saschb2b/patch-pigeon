@@ -1,3 +1,8 @@
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import MuiLink from "@mui/material/Link"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { getDemoData } from "@/lib/demo-data"
@@ -8,7 +13,7 @@ export const metadata = {
 }
 
 function groupEntriesByMonth(
-  entries: typeof import("@/lib/demo-data").getDemoData extends () => infer R ? R["entries"] : never,
+  entries: ReturnType<typeof getDemoData>["entries"],
 ) {
   const groups: Record<string, typeof entries> = {}
 
@@ -32,25 +37,47 @@ export default function DemoProductPage() {
   const groupedEntries = groupEntriesByMonth(entries)
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       {/* Demo banner */}
-      <div className="bg-gradient-to-r from-[#A7D8FF] via-[#FFD4B8] to-[#B8E8D2] text-slate-800 py-2 px-4 text-center text-sm font-medium">
+      <Box
+        sx={{
+          background: "linear-gradient(to right, #A7D8FF, #FFD4B8, #B8E8D2)",
+          color: "#1e293b",
+          py: 1,
+          px: 2,
+          textAlign: "center",
+          fontSize: "0.875rem",
+          fontWeight: 500,
+        }}
+      >
         This is a demo changelog. Want your own?{" "}
-        <a href="/auth/sign-up" className="underline font-semibold hover:no-underline">
+        <MuiLink
+          href="/auth/sign-up"
+          sx={{
+            color: "inherit",
+            fontWeight: 600,
+            textDecoration: "underline",
+            "&:hover": { textDecoration: "none" },
+          }}
+        >
           Sign up for free
-        </a>
-      </div>
+        </MuiLink>
+      </Box>
 
       <ChangelogHeader product={product} profile={profile} isDemo />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-2">Changelog</h2>
-            <p className="text-muted-foreground">All the latest updates, improvements, and fixes.</p>
-          </div>
+      <Box component="main">
+        <Container maxWidth="md" sx={{ py: 6 }}>
+          <Box sx={{ mb: 6 }}>
+            <Typography variant="h4" component="h2" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
+              Changelog
+            </Typography>
+            <Typography sx={{ color: "text.secondary" }}>
+              All the latest updates, improvements, and fixes.
+            </Typography>
+          </Box>
 
-          <div className="space-y-12 md:pl-4">
+          <Stack spacing={6} sx={{ pl: { md: 2 } }}>
             {groupedEntries.map((group) => (
               <TimelineGroup
                 key={group.date}
@@ -60,9 +87,9 @@ export default function DemoProductPage() {
                 productSlug="acme-app"
               />
             ))}
-          </div>
-        </div>
-      </main>
-    </div>
+          </Stack>
+        </Container>
+      </Box>
+    </Box>
   )
 }

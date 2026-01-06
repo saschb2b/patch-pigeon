@@ -1,19 +1,28 @@
-import { cn } from "@/lib/utils"
+import { Box, type SxProps, type Theme } from "@mui/material"
 
 interface PigeonLogoProps {
-  className?: string
+  sx?: SxProps<Theme>
   size?: "sm" | "md" | "lg"
 }
 
-export function PigeonLogo({ className, size = "md" }: PigeonLogoProps) {
-  const sizes = {
-    sm: "w-8 h-8",
-    md: "w-10 h-10",
-    lg: "w-16 h-16",
-  }
+const sizes = {
+  sm: { width: 32, height: 32 },
+  md: { width: 40, height: 40 },
+  lg: { width: 64, height: 64 },
+}
 
+export function PigeonLogo({ sx, size = "md" }: PigeonLogoProps) {
   return (
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={cn(sizes[size], className)}>
+    <Box
+      component="svg"
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      sx={{
+        ...sizes[size],
+        ...sx,
+      }}
+    >
       {/* Body */}
       <ellipse cx="32" cy="38" rx="18" ry="16" fill="#A7D8FF" />
       {/* Wing */}
@@ -34,6 +43,6 @@ export function PigeonLogo({ className, size = "md" }: PigeonLogoProps) {
       {/* Feet */}
       <path d="M26 52L24 58M26 52L28 58M26 52L26 58" stroke="#FFB8A1" strokeWidth="2" strokeLinecap="round" />
       <path d="M38 52L36 58M38 52L40 58M38 52L38 58" stroke="#FFB8A1" strokeWidth="2" strokeLinecap="round" />
-    </svg>
+    </Box>
   )
 }

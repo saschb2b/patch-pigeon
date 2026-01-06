@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { User } from "@supabase/supabase-js"
-import { LogOut } from "lucide-react"
+import { AppBar, Toolbar, Container, Box, Typography, Stack } from "@mui/material"
+import LogoutIcon from "@mui/icons-material/Logout"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
@@ -22,22 +23,48 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   }
 
   return (
-    <header className="border-b border-border bg-background">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/admin" className="flex items-center gap-3 group">
-            <PigeonLogo size="sm" className="transition-transform group-hover:scale-105" />
-            <span className="text-xl font-bold text-foreground">PatchPigeon</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user.email}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-      </div>
-    </header>
+    <AppBar
+      position="static"
+      color="inherit"
+      elevation={0}
+      sx={{
+        borderBottom: 1,
+        borderColor: "divider",
+        bgcolor: "background.paper",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar disableGutters sx={{ py: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+            <Link href="/admin" style={{ textDecoration: "none" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  "&:hover svg": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <PigeonLogo size="sm" sx={{ transition: "transform 0.2s" }} />
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  PatchPigeon
+                </Typography>
+              </Box>
+            </Link>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Typography variant="body2" color="text.secondary">
+                {user.email}
+              </Typography>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogoutIcon sx={{ fontSize: 18, mr: 1 }} />
+                Sign Out
+              </Button>
+            </Stack>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   )
 }

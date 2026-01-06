@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
+import { Box, Stack, Typography, Alert } from "@mui/material"
 import { generateSlug } from "@/lib/utils/slug"
 import type { Product } from "@/lib/types"
 
@@ -83,67 +84,71 @@ export function ProductForm({ userId, product }: ProductFormProps) {
 
   return (
     <Card>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-2">
-            <Label htmlFor="name">Product Name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="My Awesome App"
-              required
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="slug">URL Slug</Label>
-            <div className="flex items-center gap-2">
-              <span className="text-muted-foreground">/</span>
+      <CardContent sx={{ pt: 3 }}>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            <Box>
+              <Label htmlFor="name">Product Name</Label>
               <Input
-                id="slug"
-                value={slug}
-                onChange={(e) => setSlug(generateSlug(e.target.value))}
-                placeholder="my-awesome-app"
+                id="name"
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                placeholder="My Awesome App"
                 required
               />
-            </div>
-            <p className="text-xs text-muted-foreground">This will be your public changelog URL</p>
-          </div>
+            </Box>
 
-          <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="A brief description of your product"
-              rows={3}
-            />
-          </div>
+            <Box>
+              <Label htmlFor="slug">URL Slug</Label>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography color="text.secondary">/</Typography>
+                <Input
+                  id="slug"
+                  value={slug}
+                  onChange={(e) => setSlug(generateSlug(e.target.value))}
+                  placeholder="my-awesome-app"
+                  required
+                />
+              </Stack>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+                This will be your public changelog URL
+              </Typography>
+            </Box>
 
-          <div className="grid gap-2">
-            <Label htmlFor="logoUrl">Logo URL (optional)</Label>
-            <Input
-              id="logoUrl"
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://example.com/logo.png"
-            />
-          </div>
+            <Box>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="A brief description of your product"
+                rows={3}
+              />
+            </Box>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+            <Box>
+              <Label htmlFor="logoUrl">Logo URL (optional)</Label>
+              <Input
+                id="logoUrl"
+                type="url"
+                value={logoUrl}
+                onChange={(e) => setLogoUrl(e.target.value)}
+                placeholder="https://example.com/logo.png"
+              />
+            </Box>
 
-          <div className="flex gap-4">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : product ? "Update Product" : "Create Product"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
-            </Button>
-          </div>
-        </form>
+            {error && <Alert severity="error">{error}</Alert>}
+
+            <Stack direction="row" spacing={2}>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Saving..." : product ? "Update Product" : "Create Product"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
       </CardContent>
     </Card>
   )

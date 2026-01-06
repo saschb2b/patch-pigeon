@@ -1,3 +1,4 @@
+import { Box, Typography, Stack } from "@mui/material"
 import { EntryCard } from "./entry-card"
 import type { EntryWithItems } from "@/lib/types"
 
@@ -15,19 +16,45 @@ export function TimelineGroup({ date, entries, ownerSlug, productSlug }: Timelin
   })
 
   return (
-    <div className="relative">
-      <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 to-border hidden md:block" />
+    <Box sx={{ position: "relative" }}>
+      {/* Timeline line */}
+      <Box
+        sx={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: "2px",
+          bgcolor: "#e2e8f0",
+          display: { xs: "none", md: "block" },
+        }}
+      />
 
-      <div className="flex items-center gap-4 mb-6">
-        <div className="hidden md:flex items-center justify-center w-3 h-3 rounded-full bg-primary ring-4 ring-background -ml-[5px]" />
-        <h2 className="text-xl font-semibold text-foreground">{formattedDate}</h2>
-      </div>
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+        {/* Timeline dot */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            justifyContent: "center",
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            bgcolor: "#64748b",
+            boxShadow: "0 0 0 4px white",
+            ml: "-4px",
+          }}
+        />
+        <Typography variant="h6" sx={{ fontWeight: 600, color: "#64748b" }}>
+          {formattedDate}
+        </Typography>
+      </Stack>
 
-      <div className="md:pl-8 space-y-4">
+      <Stack spacing={2} sx={{ pl: { xs: 0, md: 4 } }}>
         {entries.map((entry) => (
           <EntryCard key={entry.id} entry={entry} ownerSlug={ownerSlug} productSlug={productSlug} />
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Box>
   )
 }

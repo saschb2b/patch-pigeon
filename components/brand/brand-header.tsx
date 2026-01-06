@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { AppBar, Toolbar, Container, Box, Typography, Stack } from "@mui/material"
 import { PigeonLogo } from "./pigeon-logo"
 import { Button } from "@/components/ui/button"
 
@@ -10,25 +11,50 @@ interface BrandHeaderProps {
 
 export function BrandHeader({ showAuth = true }: BrandHeaderProps) {
   return (
-    <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <PigeonLogo size="sm" className="transition-transform group-hover:scale-105" />
-            <span className="text-xl font-bold text-foreground">PatchPigeon</span>
-          </Link>
-          {showAuth && (
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" asChild>
-                <Link href="/auth/login">Sign in</Link>
-              </Button>
-              <Button asChild className="bg-[#FFB8A1] text-[#1F2937] hover:bg-[#ffa78a] shadow-sm">
-                <Link href="/auth/sign-up">Get started free</Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
+    <AppBar
+      position="sticky"
+      color="inherit"
+      elevation={0}
+      sx={{
+        borderBottom: 1,
+        borderColor: "divider",
+        bgcolor: "rgba(255, 255, 255, 0.95)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar disableGutters sx={{ py: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  "&:hover svg": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <PigeonLogo size="sm" sx={{ transition: "transform 0.2s" }} />
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  PatchPigeon
+                </Typography>
+              </Box>
+            </Link>
+            {showAuth && (
+              <Stack direction="row" spacing={1.5}>
+                <Button variant="ghost" asChild>
+                  <Link href="/auth/login">Sign in</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/auth/sign-up">Get started free</Link>
+                </Button>
+              </Stack>
+            )}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   )
 }

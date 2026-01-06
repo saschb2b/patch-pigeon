@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { Box, Container, Typography, Stack, Paper } from "@mui/material"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { createClient } from "@/lib/supabase/server"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { ProductForm } from "@/components/admin/product-form"
@@ -43,40 +44,67 @@ export default async function ProductSettingsPage({ params }: PageProps) {
   const publicUrl = `/${(profile as Profile).owner_slug}/${(product as Product).slug}`
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AdminHeader user={user} />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <Link
-            href={`/admin/products/${productId}`}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to entries
+      <Container component="main" maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ maxWidth: 672, mx: "auto" }}>
+          <Link href={`/admin/products/${productId}`} style={{ textDecoration: "none" }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{
+                color: "text.secondary",
+                "&:hover": { color: "text.primary" },
+                transition: "color 0.2s",
+                mb: 2,
+              }}
+            >
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
+              <Typography variant="body2">Back to entries</Typography>
+            </Stack>
           </Link>
 
-          <h1 className="text-3xl font-bold text-foreground mb-8">Product Settings</h1>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 4 }}>
+            Product Settings
+          </Typography>
 
-          <div className="mb-8 p-4 rounded-lg bg-muted/50 border border-border">
-            <h3 className="text-sm font-medium text-foreground mb-2">Public Changelog URL</h3>
-            <p className="text-sm font-mono text-primary">{publicUrl}</p>
-            <p className="text-xs text-muted-foreground mt-2">
-              API: <span className="font-mono">/api{publicUrl}/changelog.json</span>
-            </p>
-          </div>
+          <Paper
+            elevation={0}
+            sx={{
+              mb: 4,
+              p: 2,
+              borderRadius: 2,
+              bgcolor: "grey.50",
+              border: 1,
+              borderColor: "divider",
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: "text.primary", mb: 1 }}>
+              Public Changelog URL
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: "monospace", color: "primary.main" }}>
+              {publicUrl}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
+              API: <Box component="span" sx={{ fontFamily: "monospace" }}>/api{publicUrl}/changelog.json</Box>
+            </Typography>
+          </Paper>
 
           <ProductForm userId={user.id} product={product as Product} />
 
-          <div className="mt-12 pt-8 border-t border-border">
-            <h2 className="text-xl font-semibold text-destructive mb-4">Danger Zone</h2>
-            <p className="text-sm text-muted-foreground mb-4">
+          <Box sx={{ mt: 6, pt: 4, borderTop: 1, borderColor: "divider" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "error.main", mb: 2 }}>
+              Danger Zone
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Deleting this product will also delete all changelog entries. This action cannot be undone.
-            </p>
+            </Typography>
             <DeleteProductButton productId={productId} productName={(product as Product).name} />
-          </div>
-        </div>
-      </main>
-    </div>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   )
 }

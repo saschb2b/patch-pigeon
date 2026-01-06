@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Trash2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
+import DeleteIcon from "@mui/icons-material/Delete"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,7 +39,7 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="destructive">
-          <Trash2 className="w-4 h-4 mr-2" />
+          <DeleteIcon sx={{ fontSize: 18, mr: 1 }} />
           Delete Product
         </Button>
       </AlertDialogTrigger>
@@ -53,11 +53,7 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
+          <AlertDialogAction onClick={handleDelete} disabled={isDeleting} color="error">
             {isDeleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>

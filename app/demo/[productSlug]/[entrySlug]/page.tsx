@@ -1,6 +1,13 @@
 import { notFound } from "next/navigation"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import Link from "@/components/link"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import MuiLink from "@mui/material/Link"
+import Chip from "@mui/material/Chip"
+import Paper from "@mui/material/Paper"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import { getDemoData } from "@/lib/demo-data"
@@ -46,75 +53,157 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
   const relatedEntries = entries.filter((e) => e.id !== entry.id).slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-background">
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       {/* Demo banner */}
-      <div className="bg-gradient-to-r from-[#A7D8FF] via-[#FFD4B8] to-[#B8E8D2] text-slate-800 py-2 px-4 text-center text-sm font-medium">
+      <Box
+        sx={{
+          background: "linear-gradient(to right, #A7D8FF, #FFD4B8, #B8E8D2)",
+          color: "#1e293b",
+          py: 1,
+          px: 2,
+          textAlign: "center",
+          fontSize: "0.875rem",
+          fontWeight: 500,
+        }}
+      >
         This is a demo changelog. Want your own?{" "}
-        <a href="/auth/sign-up" className="underline font-semibold hover:no-underline">
+        <MuiLink
+          href="/auth/sign-up"
+          sx={{
+            color: "inherit",
+            fontWeight: 600,
+            textDecoration: "underline",
+            "&:hover": { textDecoration: "none" },
+          }}
+        >
           Sign up for free
-        </a>
-      </div>
+        </MuiLink>
+      </Box>
 
       <ChangelogHeader product={product} profile={profile} isDemo />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <Link
+      <Box component="main">
+        <Container maxWidth="md" sx={{ py: 6 }}>
+          <MuiLink
+            component={Link}
             href={`/demo/${productSlug}`}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 1,
+              fontSize: "0.875rem",
+              color: "text.secondary",
+              textDecoration: "none",
+              mb: 4,
+              "&:hover": { color: "text.primary" },
+            }}
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowBackIcon sx={{ fontSize: "1rem" }} />
             Back to changelog
-          </Link>
+          </MuiLink>
 
-          <article>
-            <header className="mb-8">
-              <div className="flex items-center gap-3 flex-wrap mb-4">
+          <Box component="article">
+            <Box component="header" sx={{ mb: 4 }}>
+              <Stack direction="row" spacing={1.5} sx={{ flexWrap: "wrap", mb: 2, alignItems: "center" }}>
                 {entry.version && (
-                  <span className="text-sm font-mono font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-                    v{entry.version}
-                  </span>
+                  <Chip
+                    label={`v${entry.version}`}
+                    size="small"
+                    sx={{
+                      fontFamily: "monospace",
+                      fontWeight: 500,
+                      bgcolor: "primary.main",
+                      color: "primary.contrastText",
+                      opacity: 0.9,
+                    }}
+                  />
                 )}
-                {publishDate && <span className="text-sm text-muted-foreground">{publishDate}</span>}
-              </div>
+                {publishDate && (
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {publishDate}
+                  </Typography>
+                )}
+              </Stack>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{entry.title}</h1>
+              <Typography
+                variant="h3"
+                component="h1"
+                sx={{
+                  fontWeight: 700,
+                  color: "text.primary",
+                  mb: 2,
+                  fontSize: { xs: "1.875rem", md: "2.25rem" },
+                }}
+              >
+                {entry.title}
+              </Typography>
 
-              {entry.summary && <p className="text-lg text-muted-foreground">{entry.summary}</p>}
-            </header>
+              {entry.summary && (
+                <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1.125rem" }}>
+                  {entry.summary}
+                </Typography>
+              )}
+            </Box>
 
             {/* Entry items */}
-            <div className="border-t border-border pt-8">
+            <Box sx={{ borderTop: 1, borderColor: "divider", pt: 4 }}>
               <EntryItemsList items={entry.entry_items || []} />
-            </div>
-          </article>
+            </Box>
+          </Box>
 
           {/* Related entries */}
           {relatedEntries.length > 0 && (
-            <aside className="mt-16 pt-8 border-t border-border">
-              <h2 className="text-xl font-semibold text-foreground mb-6">Other Updates</h2>
-              <div className="space-y-4">
+            <Box component="aside" sx={{ mt: 8, pt: 4, borderTop: 1, borderColor: "divider" }}>
+              <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}>
+                Other Updates
+              </Typography>
+              <Stack spacing={2}>
                 {relatedEntries.map((related) => (
-                  <Link
+                  <Paper
                     key={related.id}
+                    component={Link}
                     href={`/demo/${productSlug}/${related.slug}`}
-                    className="block p-4 rounded-lg border border-border/50 hover:border-primary/30 hover:bg-muted/50 transition-all"
+                    elevation={0}
+                    sx={{
+                      display: "block",
+                      p: 2,
+                      borderRadius: 2,
+                      border: 1,
+                      borderColor: "divider",
+                      textDecoration: "none",
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        borderColor: "primary.main",
+                        bgcolor: "action.hover",
+                      },
+                    }}
                   >
-                    <div className="flex items-center gap-2 mb-2">
+                    <Stack direction="row" spacing={1} sx={{ mb: 1, alignItems: "center" }}>
                       {related.version && (
-                        <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                          v{related.version}
-                        </span>
+                        <Chip
+                          label={`v${related.version}`}
+                          size="small"
+                          sx={{
+                            fontFamily: "monospace",
+                            fontSize: "0.75rem",
+                            height: 20,
+                            bgcolor: "primary.main",
+                            color: "primary.contrastText",
+                            opacity: 0.8,
+                          }}
+                        />
                       )}
-                    </div>
-                    <h3 className="font-medium text-foreground">{related.title}</h3>
-                  </Link>
+                    </Stack>
+                    <Typography sx={{ fontWeight: 500, color: "text.primary" }}>
+                      {related.title}
+                    </Typography>
+                  </Paper>
                 ))}
-              </div>
-            </aside>
+              </Stack>
+            </Box>
           )}
-        </div>
-      </main>
-    </div>
+        </Container>
+      </Box>
+    </Box>
   )
 }

@@ -6,12 +6,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { Card, CardContent } from "@/components/ui/card"
+import { Box, Stack, TextField, MenuItem, FormLabel, Alert, Grid } from "@mui/material"
 import { generateEntrySlug } from "@/lib/utils/slug"
 import type { Entry, EntryType } from "@/lib/types"
 
@@ -96,96 +93,131 @@ export function EntryForm({ productId, entry }: EntryFormProps) {
 
   return (
     <Card>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="Improved performance for workflows"
-              required
-            />
-          </div>
+      <CardContent sx={{ pt: 3 }}>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            <Box>
+              <FormLabel htmlFor="title" sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}>
+                Title
+              </FormLabel>
+              <TextField
+                id="title"
+                value={title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                placeholder="Improved performance for workflows"
+                required
+                size="small"
+                fullWidth
+              />
+            </Box>
 
-          <div className="grid gap-2">
-            <Label htmlFor="slug">URL Slug</Label>
-            <Input
-              id="slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="2025-01-06-improved-performance"
-              required
-            />
-            <p className="text-xs text-muted-foreground">Unique identifier for this entry</p>
-          </div>
+            <Box>
+              <FormLabel htmlFor="slug" sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}>
+                URL Slug
+              </FormLabel>
+              <TextField
+                id="slug"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="2025-01-06-improved-performance"
+                required
+                size="small"
+                fullWidth
+                helperText="Unique identifier for this entry"
+              />
+            </Box>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="type">Type</Label>
-              <Select value={type} onValueChange={(v) => setType(v as EntryType)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 6 }}>
+                <FormLabel htmlFor="type" sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}>
+                  Type
+                </FormLabel>
+                <TextField
+                  id="type"
+                  select
+                  value={type}
+                  onChange={(e) => setType(e.target.value as EntryType)}
+                  size="small"
+                  fullWidth
+                >
                   {entryTypes.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
+                    <MenuItem key={t.value} value={t.value}>
                       {t.label}
-                    </SelectItem>
+                    </MenuItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
+                </TextField>
+              </Grid>
 
-            <div className="grid gap-2">
-              <Label htmlFor="version">Version (optional)</Label>
-              <Input id="version" value={version} onChange={(e) => setVersion(e.target.value)} placeholder="1.2.0" />
-            </div>
-          </div>
+              <Grid size={{ xs: 6 }}>
+                <FormLabel htmlFor="version" sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}>
+                  Version (optional)
+                </FormLabel>
+                <TextField
+                  id="version"
+                  value={version}
+                  onChange={(e) => setVersion(e.target.value)}
+                  placeholder="1.2.0"
+                  size="small"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
 
-          <div className="grid gap-2">
-            <Label htmlFor="publishDate">Publish Date</Label>
-            <Input
-              id="publishDate"
-              type="date"
-              value={publishDate}
-              onChange={(e) => setPublishDate(e.target.value)}
-              required
-            />
-          </div>
+            <Box>
+              <FormLabel
+                htmlFor="publishDate"
+                sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}
+              >
+                Publish Date
+              </FormLabel>
+              <TextField
+                id="publishDate"
+                type="date"
+                value={publishDate}
+                onChange={(e) => setPublishDate(e.target.value)}
+                required
+                size="small"
+                fullWidth
+              />
+            </Box>
 
-          <div className="grid gap-2">
-            <Label htmlFor="content">Content (Markdown)</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="## What's New&#10;&#10;Describe your changes here using Markdown..."
-              rows={12}
-              className="font-mono text-sm"
-              required
-            />
-          </div>
+            <Box>
+              <FormLabel htmlFor="content" sx={{ fontWeight: 500, fontSize: "0.875rem", mb: 0.5, display: "block" }}>
+                Content (Markdown)
+              </FormLabel>
+              <TextField
+                id="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="## What's New&#10;&#10;Describe your changes here using Markdown..."
+                multiline
+                rows={12}
+                required
+                size="small"
+                fullWidth
+                sx={{ "& .MuiInputBase-input": { fontFamily: "monospace", fontSize: "0.875rem" } }}
+              />
+            </Box>
 
-          <div className="flex items-center gap-3">
-            <Switch id="published" checked={published} onCheckedChange={setPublished} />
-            <Label htmlFor="published" className="cursor-pointer">
-              Publish immediately
-            </Label>
-          </div>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Switch id="published" checked={published} onCheckedChange={setPublished} />
+              <FormLabel htmlFor="published" sx={{ cursor: "pointer", fontWeight: 500, fontSize: "0.875rem" }}>
+                Publish immediately
+              </FormLabel>
+            </Stack>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <Alert severity="error">{error}</Alert>}
 
-          <div className="flex gap-4">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : entry ? "Update Entry" : "Create Entry"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
-            </Button>
-          </div>
-        </form>
+            <Stack direction="row" spacing={2}>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Saving..." : entry ? "Update Entry" : "Create Entry"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
       </CardContent>
     </Card>
   )

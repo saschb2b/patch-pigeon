@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Trash2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
+import { IconButton, Box } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,10 +40,18 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-          <Trash2 className="w-4 h-4" />
-          <span className="sr-only">Delete</span>
-        </Button>
+        <IconButton
+          size="small"
+          sx={{
+            color: "error.main",
+            "&:hover": { bgcolor: "error.light", color: "error.dark" },
+          }}
+        >
+          <DeleteIcon sx={{ fontSize: 18 }} />
+          <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
+            Delete
+          </Box>
+        </IconButton>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -53,11 +62,7 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
+          <AlertDialogAction onClick={handleDelete} disabled={isDeleting} color="error">
             {isDeleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -1,42 +1,60 @@
-import { cn } from "@/lib/utils"
+import { Chip } from "@mui/material"
 import type { EntryType } from "@/lib/types"
 
-const typeConfig: Record<EntryType, { label: string; className: string }> = {
+interface TypeConfigItem {
+  label: string
+  bgcolor: string
+  color: string
+  borderColor: string
+}
+
+const typeConfig: Record<EntryType, TypeConfigItem> = {
   feature: {
     label: "Feature",
-    className: "bg-[#BFEBD6] text-[#1F2937] border-[#BFEBD6]",
+    bgcolor: "#BFEBD6",
+    color: "#1F2937",
+    borderColor: "#BFEBD6",
   },
   improvement: {
     label: "Improvement",
-    className: "bg-[#A7D8FF] text-[#1F2937] border-[#A7D8FF]",
+    bgcolor: "#A7D8FF",
+    color: "#1F2937",
+    borderColor: "#A7D8FF",
   },
   fix: {
     label: "Fix",
-    className: "bg-[#FFE7A3] text-[#1F2937] border-[#FFE7A3]",
+    bgcolor: "#FFE7A3",
+    color: "#1F2937",
+    borderColor: "#FFE7A3",
   },
   breaking: {
     label: "Breaking",
-    className: "bg-[#FFB8A1] text-[#1F2937] border-[#FFB8A1]",
+    bgcolor: "#FFB8A1",
+    color: "#1F2937",
+    borderColor: "#FFB8A1",
   },
 }
 
 interface EntryTypeBadgeProps {
   type: EntryType
-  className?: string
 }
 
-export function EntryTypeBadge({ type, className }: EntryTypeBadgeProps) {
+export function EntryTypeBadge({ type }: EntryTypeBadgeProps) {
   const config = typeConfig[type]
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
-        config.className,
-        className,
-      )}
-    >
-      {config.label}
-    </span>
+    <Chip
+      label={config.label}
+      size="small"
+      variant="outlined"
+      sx={{
+        height: 24,
+        fontSize: "0.75rem",
+        fontWeight: 500,
+        bgcolor: config.bgcolor,
+        color: config.color,
+        borderColor: config.borderColor,
+      }}
+    />
   )
 }

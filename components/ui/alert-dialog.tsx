@@ -1,144 +1,192 @@
 'use client'
 
 import * as React from 'react'
-import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogActions from '@mui/material/DialogActions'
+import MuiButton from '@mui/material/Button'
+import Box from '@mui/material/Box'
 
-import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
+// Context to manage dialog state
+const AlertDialogContext = React.createContext<{
+  open: boolean
+  setOpen: (open: boolean) => void
+} | null>(null)
 
-function AlertDialog({
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
-  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
+function useAlertDialogContext() {
+  const context = React.useContext(AlertDialogContext)
+  if (!context) {
+    throw new Error('AlertDialog components must be used within an AlertDialog')
+  }
+  return context
 }
 
-function AlertDialogTrigger({
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>) {
+interface AlertDialogProps {
+  children: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+function AlertDialog({ children, open: controlledOpen, onOpenChange }: AlertDialogProps) {
+  const [internalOpen, setInternalOpen] = React.useState(false)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+  
+  const setOpen = (newOpen: boolean) => {
+    if (!isControlled) {
+      setInternalOpen(newOpen)
+    }
+    onOpenChange?.(newOpen)
+  }
+
   return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
+    <AlertDialogContext.Provider value={{ open, setOpen }}>
+      {children}
+    </AlertDialogContext.Provider>
   )
 }
 
-function AlertDialogPortal({
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
+interface AlertDialogTriggerProps {
+  children: React.ReactNode
+  asChild?: boolean
+}
+
+function AlertDialogTrigger({ children, asChild }: AlertDialogTriggerProps) {
+  const { setOpen } = useAlertDialogContext()
+  
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
+      onClick: () => setOpen(true),
+    })
+  }
+  
   return (
-    <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
+    <span onClick={() => setOpen(true)} style={{ cursor: 'pointer' }}>
+      {children}
+    </span>
   )
 }
 
-function AlertDialogOverlay({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+function AlertDialogPortal({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}
+
+function AlertDialogOverlay() {
+  return null
+}
+
+interface AlertDialogContentProps {
+  children: React.ReactNode
+}
+
+function AlertDialogContent({ children }: AlertDialogContentProps) {
+  const { open, setOpen } = useAlertDialogContext()
+  
   return (
-    <AlertDialogPrimitive.Overlay
-      data-slot="alert-dialog-overlay"
-      className={cn(
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
-        className,
-      )}
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      maxWidth="sm"
+      fullWidth
+    >
+      {children}
+    </Dialog>
+  )
+}
+
+interface AlertDialogHeaderProps {
+  children: React.ReactNode
+}
+
+function AlertDialogHeader({ children }: AlertDialogHeaderProps) {
+  return (
+    <Box sx={{ px: 3, pt: 3 }}>
+      {children}
+    </Box>
+  )
+}
+
+interface AlertDialogFooterProps {
+  children: React.ReactNode
+}
+
+function AlertDialogFooter({ children }: AlertDialogFooterProps) {
+  return (
+    <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+      {children}
+    </DialogActions>
+  )
+}
+
+interface AlertDialogTitleProps {
+  children: React.ReactNode
+}
+
+function AlertDialogTitle({ children }: AlertDialogTitleProps) {
+  return (
+    <DialogTitle sx={{ p: 0, fontSize: '1.125rem', fontWeight: 600 }}>
+      {children}
+    </DialogTitle>
+  )
+}
+
+interface AlertDialogDescriptionProps {
+  children: React.ReactNode
+}
+
+function AlertDialogDescription({ children }: AlertDialogDescriptionProps) {
+  return (
+    <DialogContentText sx={{ mt: 1, color: 'text.secondary' }}>
+      {children}
+    </DialogContentText>
+  )
+}
+
+interface AlertDialogActionProps extends React.ComponentProps<typeof MuiButton> {
+  children: React.ReactNode
+}
+
+function AlertDialogAction({ children, onClick, ...props }: AlertDialogActionProps) {
+  const { setOpen } = useAlertDialogContext()
+  
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e)
+    setOpen(false)
+  }
+  
+  return (
+    <MuiButton
+      variant="contained"
+      onClick={handleClick}
       {...props}
-    />
+    >
+      {children}
+    </MuiButton>
   )
 }
 
-function AlertDialogContent({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
-  return (
-    <AlertDialogPortal>
-      <AlertDialogOverlay />
-      <AlertDialogPrimitive.Content
-        data-slot="alert-dialog-content"
-        className={cn(
-          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg',
-          className,
-        )}
-        {...props}
-      />
-    </AlertDialogPortal>
-  )
+interface AlertDialogCancelProps extends React.ComponentProps<typeof MuiButton> {
+  children: React.ReactNode
 }
 
-function AlertDialogHeader({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+function AlertDialogCancel({ children, onClick, ...props }: AlertDialogCancelProps) {
+  const { setOpen } = useAlertDialogContext()
+  
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e)
+    setOpen(false)
+  }
+  
   return (
-    <div
-      data-slot="alert-dialog-header"
-      className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
+    <MuiButton
+      variant="outlined"
+      onClick={handleClick}
       {...props}
-    />
-  )
-}
-
-function AlertDialogFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="alert-dialog-footer"
-      className={cn(
-        'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-function AlertDialogTitle({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
-  return (
-    <AlertDialogPrimitive.Title
-      data-slot="alert-dialog-title"
-      className={cn('text-lg font-semibold', className)}
-      {...props}
-    />
-  )
-}
-
-function AlertDialogDescription({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
-  return (
-    <AlertDialogPrimitive.Description
-      data-slot="alert-dialog-description"
-      className={cn('text-muted-foreground text-sm', className)}
-      {...props}
-    />
-  )
-}
-
-function AlertDialogAction({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
-  return (
-    <AlertDialogPrimitive.Action
-      className={cn(buttonVariants(), className)}
-      {...props}
-    />
-  )
-}
-
-function AlertDialogCancel({
-  className,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
-  return (
-    <AlertDialogPrimitive.Cancel
-      className={cn(buttonVariants({ variant: 'outline' }), className)}
-      {...props}
-    />
+    >
+      {children}
+    </MuiButton>
   )
 }
 

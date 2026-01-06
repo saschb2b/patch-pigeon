@@ -2,7 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Product, Profile } from "@/lib/types"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
-import { ChevronRight } from "lucide-react"
+import { Box, Container, Stack, Typography, Avatar } from "@mui/material"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 
 interface ChangelogHeaderProps {
   product: Product
@@ -15,61 +16,113 @@ export function ChangelogHeader({ product, profile, isDemo }: ChangelogHeaderPro
   const productHref = isDemo ? `/demo/${product.slug}` : `/${profile.owner_slug}/${product.slug}`
 
   return (
-    <header className="border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href={ownerHref} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              {profile.avatar_url ? (
-                <img
-                  src={profile.avatar_url || "/placeholder.svg"}
-                  alt={profile.display_name || profile.owner_slug}
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-[#A7D8FF]/30 flex items-center justify-center">
-                  <span className="text-sm font-bold text-foreground">
-                    {(profile.display_name || profile.owner_slug).charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              )}
-              <span className="text-sm font-medium text-muted-foreground hidden sm:inline">
-                {profile.display_name || profile.owner_slug}
-              </span>
+    <Box
+      component="header"
+      sx={{
+        borderBottom: 1,
+        borderColor: "divider",
+        bgcolor: "rgba(255, 255, 255, 0.95)",
+        backdropFilter: "blur(8px)",
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+      }}
+    >
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Link href={ownerHref} style={{ textDecoration: "none" }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                sx={{ "&:hover": { opacity: 0.8 }, transition: "opacity 0.2s" }}
+              >
+                {profile.avatar_url ? (
+                  <Avatar
+                    src={profile.avatar_url}
+                    alt={profile.display_name || profile.owner_slug}
+                    sx={{ width: 32, height: 32 }}
+                  />
+                ) : (
+                  <Avatar sx={{ width: 32, height: 32, bgcolor: "rgba(167, 216, 255, 0.3)" }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: "text.primary" }}>
+                      {(profile.display_name || profile.owner_slug).charAt(0).toUpperCase()}
+                    </Typography>
+                  </Avatar>
+                )}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 500,
+                    color: "text.secondary",
+                    display: { xs: "none", sm: "inline" },
+                  }}
+                >
+                  {profile.display_name || profile.owner_slug}
+                </Typography>
+              </Stack>
             </Link>
 
-            <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+            <ChevronRightIcon sx={{ fontSize: 16, color: "text.disabled" }} />
 
             {/* Product info */}
-            <Link href={productHref} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              {product.logo_url ? (
-                <Image
-                  src={product.logo_url || "/placeholder.svg"}
-                  alt={`${product.name} logo`}
-                  width={36}
-                  height={36}
-                  className="rounded-lg"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-lg bg-[#A7D8FF]/30 flex items-center justify-center">
-                  <span className="text-base font-bold text-foreground">{product.name.charAt(0)}</span>
-                </div>
-              )}
-              <div>
-                <h1 className="text-xl font-bold text-foreground">{product.name}</h1>
-              </div>
+            <Link href={productHref} style={{ textDecoration: "none" }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={1.5}
+                sx={{ "&:hover": { opacity: 0.8 }, transition: "opacity 0.2s" }}
+              >
+                {product.logo_url ? (
+                  <Image
+                    src={product.logo_url}
+                    alt={`${product.name} logo`}
+                    width={36}
+                    height={36}
+                    style={{ borderRadius: 8 }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 2,
+                      bgcolor: "rgba(167, 216, 255, 0.3)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography sx={{ fontWeight: 700, color: "text.primary" }}>
+                      {product.name.charAt(0)}
+                    </Typography>
+                  </Box>
+                )}
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "text.primary" }}>
+                  {product.name}
+                </Typography>
+              </Stack>
             </Link>
-          </div>
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span className="hidden sm:inline">Powered by</span>
-            <PigeonLogo size="sm" className="w-5 h-5" />
-            <span className="font-medium hidden sm:inline">PatchPigeon</span>
+          </Stack>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{ color: "text.secondary", "&:hover": { color: "text.primary" }, transition: "color 0.2s" }}
+            >
+              <Typography variant="caption" sx={{ display: { xs: "none", sm: "inline" } }}>
+                Powered by
+              </Typography>
+              <PigeonLogo size="sm" sx={{ width: 20, height: 20 }} />
+              <Typography variant="caption" sx={{ fontWeight: 500, display: { xs: "none", sm: "inline" } }}>
+                PatchPigeon
+              </Typography>
+            </Stack>
           </Link>
-        </div>
-      </div>
-    </header>
+        </Stack>
+      </Container>
+    </Box>
   )
 }
