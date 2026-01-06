@@ -8,7 +8,7 @@ import { CSS } from "@dnd-kit/utilities"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Box, IconButton, Stack } from "@mui/material"
+import { Box, IconButton, Stack, Tooltip } from "@mui/material"
 import MuiSelect, { SelectChangeEvent } from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator"
@@ -199,23 +199,27 @@ export function EntryItemRow({ item, onUpdate, onDelete }: EntryItemRowProps) {
 
         {/* Actions */}
         <Stack direction="row" spacing={0.5}>
-          <IconButton
-            size="small"
-            onClick={() => setIsExpanded(!isExpanded)}
-            sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
-          >
-            {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => onDelete(item.id)}
-            sx={{
-              opacity: 0.6,
-              "&:hover": { opacity: 1, color: "error.main" },
-            }}
-          >
-            <DeleteIcon sx={{ fontSize: 18 }} />
-          </IconButton>
+          <Tooltip title={isExpanded ? "Collapse" : "Expand"}>
+            <IconButton
+              size="small"
+              onClick={() => setIsExpanded(!isExpanded)}
+              sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
+            >
+              {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete item">
+            <IconButton
+              size="small"
+              onClick={() => onDelete(item.id)}
+              sx={{
+                opacity: 0.6,
+                "&:hover": { opacity: 1, color: "error.main" },
+              }}
+            >
+              <DeleteIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </Stack>
     </Box>

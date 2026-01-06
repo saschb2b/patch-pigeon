@@ -1,6 +1,6 @@
 import { redirect, notFound } from "next/navigation"
 import Link from "@/components/link"
-import { Box, Container, Typography, Stack, IconButton } from "@mui/material"
+import { Box, Container, Typography, Stack, IconButton, Tooltip } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
@@ -164,9 +164,11 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                     </Stack>
                     <Stack direction="row" spacing={0.5}>
                       <TogglePublishButton entry={entry} />
-                      <IconButton size="small" component={Link} href={`/admin/products/${productId}/entries/${entry.id}/edit`}>
-                        <EditIcon sx={{ fontSize: 18 }} />
-                      </IconButton>
+                      <Tooltip title="Edit entry">
+                        <IconButton size="small" component={Link} href={`/admin/products/${productId}/entries/${entry.id}/edit`}>
+                          <EditIcon sx={{ fontSize: 18 }} />
+                        </IconButton>
+                      </Tooltip>
                       <DeleteEntryButton entryId={entry.id} entryTitle={entry.title} />
                     </Stack>
                   </Stack>

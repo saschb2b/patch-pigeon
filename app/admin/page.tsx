@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Box, Container, Typography, Stack, Grid } from "@mui/material"
+import { Box, Container, Typography, Stack, Grid, Tooltip } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import OpenInNewIcon from "@mui/icons-material/OpenInNew"
 import SettingsIcon from "@mui/icons-material/Settings"
@@ -94,22 +94,20 @@ export default async function AdminPage() {
                         </CardDescription>
                       </Box>
                       <Stack direction="row" spacing={0.5}>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/${profile.owner_slug}/${product.slug}`} target="_blank">
-                            <OpenInNewIcon sx={{ fontSize: 18 }} />
-                            <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
-                              View public changelog
-                            </Box>
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/admin/products/${product.id}/settings`}>
-                            <SettingsIcon sx={{ fontSize: 18 }} />
-                            <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
-                              Product settings
-                            </Box>
-                          </Link>
-                        </Button>
+                        <Tooltip title="View public changelog">
+                          <Button variant="ghost" size="icon" asChild>
+                            <Link href={`/${profile.owner_slug}/${product.slug}`} target="_blank">
+                              <OpenInNewIcon sx={{ fontSize: 18 }} />
+                            </Link>
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Product settings">
+                          <Button variant="ghost" size="icon" asChild>
+                            <Link href={`/admin/products/${product.id}/settings`}>
+                              <SettingsIcon sx={{ fontSize: 18 }} />
+                            </Link>
+                          </Button>
+                        </Tooltip>
                       </Stack>
                     </Stack>
                   </CardHeader>

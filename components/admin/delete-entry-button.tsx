@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { IconButton, Box } from "@mui/material"
+import { IconButton, Tooltip } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import {
   AlertDialog,
@@ -39,20 +39,19 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <IconButton
-          size="small"
-          sx={{
-            color: "error.main",
-            "&:hover": { bgcolor: "error.light", color: "error.dark" },
-          }}
-        >
-          <DeleteIcon sx={{ fontSize: 18 }} />
-          <Box component="span" sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden" }}>
-            Delete
-          </Box>
-        </IconButton>
-      </AlertDialogTrigger>
+      <Tooltip title="Delete entry">
+        <AlertDialogTrigger asChild>
+          <IconButton
+            size="small"
+            sx={{
+              color: "error.main",
+              "&:hover": { bgcolor: "error.light", color: "error.dark" },
+            }}
+          >
+            <DeleteIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </AlertDialogTrigger>
+      </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Entry</AlertDialogTitle>
