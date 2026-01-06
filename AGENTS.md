@@ -15,7 +15,7 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 
 ## Project Structure
 
-```
+\`\`\`
 ├── app/
 │   ├── [ownerSlug]/                    # Public pages (namespaced by owner)
 │   │   ├── page.tsx                    # Owner profile - lists all products
@@ -72,7 +72,7 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 │   ├── 002_add_profiles.sql
 │   └── 003_add_entry_items.sql
 └── proxy.ts                            # Next.js middleware
-```
+\`\`\`
 
 ## Database Schema
 
@@ -113,7 +113,7 @@ This document helps AI agents and LLMs understand and work with the PatchPigeon 
 
 ### Change Type Enum
 
-```sql
+\`\`\`sql
 CREATE TYPE change_type AS ENUM (
   'FEATURE',      -- New features
   'FIX',          -- Bug fixes
@@ -123,7 +123,7 @@ CREATE TYPE change_type AS ENUM (
   'REMOVED',      -- Removed features
   'NOTE'          -- General notes
 );
-```
+\`\`\`
 
 ### Row Level Security (RLS)
 
@@ -137,7 +137,7 @@ All tables have RLS enabled:
 
 ### Supabase Client Usage
 
-```typescript
+\`\`\`typescript
 // Browser (client components) - use singleton
 import { createClient } from '@/lib/supabase/client'
 const supabase = createClient()
@@ -145,17 +145,17 @@ const supabase = createClient()
 // Server (RSC, route handlers, server actions)
 import { createClient } from '@/lib/supabase/server'
 const supabase = await createClient()
-```
+\`\`\`
 
 ### Fetching Entries with Items
 
-```typescript
+\`\`\`typescript
 const { data } = await supabase
   .from('entries')
   .select('*, entry_items(*)')
   .eq('product_id', productId)
   .eq('published', true)
-```
+\`\`\`
 
 ### Route Conflict Avoidance
 
@@ -167,11 +167,11 @@ Static routes use distinct paths to avoid conflicts with dynamic segments:
 ### Public URL Structure
 
 All public pages are namespaced by owner:
-```
+\`\`\`
 /{ownerSlug}                           # Owner profile
 /{ownerSlug}/{productSlug}             # Product changelog
 /{ownerSlug}/{productSlug}/{entrySlug} # Single entry
-```
+\`\`\`
 
 ## Brand Guidelines
 
@@ -215,7 +215,7 @@ All public pages are namespaced by owner:
 
 ## API Response Format
 
-```json
+\`\`\`json
 {
   "product": { "name": "...", "slug": "...", "description": "..." },
   "entries": [
@@ -231,7 +231,7 @@ All public pages are namespaced by owner:
     }
   ]
 }
-```
+\`\`\`
 
 ## Testing Flows
 
