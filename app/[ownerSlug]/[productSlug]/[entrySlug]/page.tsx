@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import type { Metadata } from "next"
 import { Box, Container, Typography, Stack, Paper, Chip, Button } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
@@ -9,7 +10,10 @@ import { createClient } from "@/lib/supabase/server"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import { EntryCard } from "@/components/changelog/entry-card"
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld"
 import type { EntryWithItems, Product, Profile } from "@/lib/types"
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
 
 // Brand colors
 const colors = {
@@ -24,7 +28,7 @@ interface PageProps {
   params: Promise<{ ownerSlug: string; productSlug: string; entrySlug: string }>
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ownerSlug, productSlug, entrySlug } = await params
   const supabase = await createClient()
 
@@ -47,7 +51,7 @@ export async function generateMetadata({ params }: PageProps) {
 
   const { data: entry } = await supabase
     .from("entries")
-    .select("*")
+    .select("*, entry_items(*)")
     .eq("product_id", product.id)
     .eq("slug", entrySlug)
     .eq("published", true)
@@ -57,9 +61,48 @@ export async function generateMetadata({ params }: PageProps) {
     return { title: "Not Found" }
   }
 
+  const title = `${entry.title} - ${product.name} Changelog`
+  const description = entry.summary || `${entry.title} - View the latest changes, features, and fixes for ${product.name}.`
+  const url = `${siteUrl}/${ownerSlug}/${productSlug}/${entrySlug}`
+  
+  const publishDate = entry.publish_date ? new Date(entry.publish_date).toISOString() : undefined
+  const itemCount = entry.entry_items?.length || 0
+
   return {
-    title: `${entry.title} - ${product.name} Changelog | PatchPigeon`,
-    description: entry.summary || `${entry.title} changelog for ${product.name}`,
+    title,
+    description,
+    keywords: [
+      product.name,
+      entry.title,
+      "changelog",
+      "release notes",
+      entry.version ? `v${entry.version}` : null,
+      "update",
+    ].filter(Boolean) as string[],
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      siteName: "PatchPigeon",
+      publishedTime: publishDate,
+      modifiedTime: entry.updated_at,
+      authors: [profile.display_name || profile.owner_slug],
+      tags: ["changelog", "release notes", product.name],
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: url,
+    },
+    other: {
+      "article:published_time": publishDate || "",
+      "version": entry.version || "",
+      "change-count": String(itemCount),
+    },
   }
 }
 
@@ -117,8 +160,22 @@ export default async function EntryDetailPage({ params }: PageProps) {
   const items = entryWithItems.entry_items || []
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <ChangelogHeader product={product as Product} profile={profile as Profile} />
+    <>
+      <ArticleJsonLd 
+        entry={entryWithItems} 
+        product={product as Product} 
+        profile={profile as Profile} 
+      />
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Home", url: siteUrl },
+          { name: profile.display_name || profile.owner_slug, url: `${siteUrl}/${ownerSlug}` },
+          { name: product.name, url: `${siteUrl}/${ownerSlug}/${productSlug}` },
+          { name: entry.title, url: `${siteUrl}/${ownerSlug}/${productSlug}/${entrySlug}` },
+        ]} 
+      />
+      <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+        <ChangelogHeader product={product as Product} profile={profile as Profile} />
 
       {/* Hero section for entry */}
       <Box
@@ -351,7 +408,8 @@ export default async function EntryDetailPage({ params }: PageProps) {
             </Stack>
           </Stack>
         </Container>
+        </Box>
       </Box>
-    </Box>
+    </>
   )
 }

@@ -1,0 +1,30 @@
+{
+  "name": "PatchPigeon",
+  "short_name": "PatchPigeon",
+  "description": "Beautiful changelogs for indie developers. Create and share product updates with your users.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2937",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-light-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "developer tools", "business"],
+  "lang": "en",
+  "dir": "ltr"
+}

@@ -1,16 +1,20 @@
 import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 import { Box, Container, Typography, Stack, Paper, Chip } from "@mui/material"
 import { createClient } from "@/lib/supabase/server"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
+import { ChangelogJsonLd, BreadcrumbJsonLd, SoftwareApplicationJsonLd } from "@/components/seo/json-ld"
 import type { EntryWithItems, Product, Profile } from "@/lib/types"
 import HistoryIcon from "@mui/icons-material/History"
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
 
 interface PageProps {
   params: Promise<{ ownerSlug: string; productSlug: string }>
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ownerSlug, productSlug } = await params
   const supabase = await createClient()
 
@@ -31,9 +35,51 @@ export async function generateMetadata({ params }: PageProps) {
     return { title: "Not Found" }
   }
 
+  const { count } = await supabase
+    .from("entries")
+    .select("*", { count: "exact", head: true })
+    .eq("product_id", product.id)
+    .eq("published", true)
+
+  const title = `${product.name} Changelog`
+  const description = product.description || `Latest updates, features, and bug fixes for ${product.name}. Stay informed about all product changes.`
+  const url = `${siteUrl}/${ownerSlug}/${productSlug}`
+
   return {
-    title: `${product.name} Changelog | PatchPigeon`,
-    description: product.description || `Latest updates and changes for ${product.name}`,
+    title,
+    description,
+    keywords: [
+      product.name,
+      "changelog",
+      "release notes",
+      "updates",
+      "features",
+      "bug fixes",
+      `${product.name} updates`,
+    ],
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      siteName: "PatchPigeon",
+      images: product.logo_url ? [{ url: product.logo_url, alt: product.name }] : undefined,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: url,
+      types: {
+        "application/rss+xml": `${siteUrl}/api/${ownerSlug}/${productSlug}/changelog.rss`,
+        "application/json": `${siteUrl}/api/${ownerSlug}/${productSlug}/changelog.json`,
+      },
+    },
+    other: {
+      "release-count": String(count || 0),
+    },
   }
 }
 
@@ -69,12 +115,26 @@ export default async function ChangelogPage({ params }: PageProps) {
   const totalEntries = entries?.length || 0
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      <ChangelogHeader 
+    <>
+      <SoftwareApplicationJsonLd product={product as Product} profile={profile as Profile} />
+      <ChangelogJsonLd 
         product={product as Product} 
         profile={profile as Profile} 
-        entryCount={totalEntries}
+        entries={(entries as EntryWithItems[]) || []} 
       />
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Home", url: siteUrl },
+          { name: profile.display_name || profile.owner_slug, url: `${siteUrl}/${ownerSlug}` },
+          { name: product.name, url: `${siteUrl}/${ownerSlug}/${productSlug}` },
+        ]} 
+      />
+      <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+        <ChangelogHeader 
+          product={product as Product} 
+          profile={profile as Profile} 
+          entryCount={totalEntries}
+        />
 
       <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ maxWidth: 800, mx: "auto" }}>
@@ -197,7 +257,8 @@ export default async function ChangelogPage({ params }: PageProps) {
           </Stack>
         </Container>
       </Box>
-    </Box>
+      </Box>
+    </>
   )
 }
 

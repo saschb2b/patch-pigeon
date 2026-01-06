@@ -1,5 +1,7 @@
 'use client'
 
+// Note: Metadata is defined in layout.tsx for this page since it's a client component
+
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import Box from "@mui/material/Box"
