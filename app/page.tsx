@@ -1046,6 +1046,17 @@ export default function HomePage() {
                     Get Started
                   </Typography>
                 </Link>
+                <Box
+                  component="a"
+                  href="https://github.com/saschb2b/patch-pigeon"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                    Source Code
+                  </Typography>
+                </Box>
               </Stack>
 
               <Stack spacing={1.5}>
@@ -1075,6 +1086,7 @@ export default function HomePage() {
                     href="https://github.com/saschb2b"
                     target="_blank"
                     rel="noopener noreferrer"
+                    title="GitHub Profile"
                     sx={{
                       width: 32,
                       height: 32,

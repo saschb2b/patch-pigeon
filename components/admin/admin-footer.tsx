@@ -55,6 +55,22 @@ export function AdminFooter() {
           <Stack direction="row" spacing={2} alignItems="center">
             <Box
               component="a"
+              href="https://github.com/saschb2b/patch-pigeon"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ textDecoration: 'none' }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ '&:hover': { color: 'text.primary' } }}
+              >
+                Source Code
+              </Typography>
+            </Box>
+
+            <Box
+              component="a"
               href="https://www.saschb2b.com/impressum"
               target="_blank"
               rel="noopener noreferrer"
@@ -74,6 +90,7 @@ export function AdminFooter() {
               href="https://github.com/saschb2b"
               target="_blank"
               rel="noopener noreferrer"
+              title="GitHub Profile"
               sx={{
                 display: 'flex',
                 alignItems: 'center',
