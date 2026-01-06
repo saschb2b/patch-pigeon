@@ -829,16 +829,18 @@ export default function HomePage() {
             <Stack spacing={3} sx={{ flex: 1, maxWidth: 480 }}>
               {[
                 {
-                  quote: "Finally, a changelog tool that doesn't feel like a chore. My users actually read my updates now!",
-                  name: "Sarah Chen",
-                  role: "Indie Developer",
+                  quote: "Coo! Finally a changelog tool that doesn't ruffle my feathers. My flock actually reads my updates now!",
+                  name: "Peggy Pigeon",
+                  role: "Professional Seed Critic",
                   color: colors.sky,
+                  emoji: "🐦",
                 },
                 {
-                  quote: "Set it up in 5 minutes, shipped my first changelog the same day. The live preview is a game changer.",
-                  name: "Marcus Rodriguez",
-                  role: "Founder, DevTools Co",
+                  quote: "Set it up faster than I can fly to the park. The live preview? *chef's kiss* ...or should I say *beak's kiss*?",
+                  name: "Sir Coos-a-Lot",
+                  role: "Head of Rooftop Operations",
                   color: colors.peach,
+                  emoji: "🕊️",
                 },
               ].map((testimonial, i) => (
                 <Paper
@@ -879,11 +881,10 @@ export default function HomePage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontWeight: 600,
-                        color: colors.ink,
+                        fontSize: '1.25rem',
                       }}
                     >
-                      {testimonial.name[0]}
+                      {testimonial.emoji}
                     </Box>
                     <Box>
                       <Typography variant="subtitle2" fontWeight={600}>{testimonial.name}</Typography>

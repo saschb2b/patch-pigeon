@@ -126,7 +126,7 @@ export default function LoginPage() {
             }}
           >
             <Typography variant="body1" sx={{ fontStyle: "italic", mb: 2, color: "text.primary" }}>
-              "Finally, a changelog tool that doesn't feel like a chore. My users actually read my updates now!"
+              "Coo coo! This tool is the bread crumbs I've been searching for. No more scattered updates across the park!"
             </Typography>
             <Stack direction="row" spacing={1.5} alignItems="center">
               <Box
@@ -138,18 +138,17 @@ export default function LoginPage() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontWeight: 600,
-                  color: "text.primary",
+                  fontSize: "1.25rem",
                 }}
               >
-                S
+                🐦
               </Box>
               <Box>
                 <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>
-                  Sarah Chen
+                  Colonel Feathers
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  Indie Developer
+                  Chief Nesting Officer
                 </Typography>
               </Box>
             </Stack>
