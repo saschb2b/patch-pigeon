@@ -105,6 +105,8 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             }}>
             <Box
               component="button"
+              type="button"
+              aria-label="Reorder change"
               {...attributes}
               {...listeners}
               sx={{
@@ -127,6 +129,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               <MuiSelect
                 value={item.type}
                 onChange={handleTypeChange}
+                inputProps={{ "aria-label": "Change type" }}
                 size="small"
                 fullWidth
                 sx={{
@@ -171,6 +174,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
 
             <Stack direction="row" spacing={0}>
               <IconButton
+                aria-label={isExpanded ? "Hide change description" : "Add change description"}
                 size="small"
                 onClick={() => setIsExpanded(!isExpanded)}
                 sx={{ opacity: 0.6 }}
@@ -178,6 +182,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                 {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
               </IconButton>
               <IconButton
+                aria-label="Delete change"
                 size="small"
                 onClick={() => onDelete(item.id)}
                 sx={{ opacity: 0.6, "&:hover": { color: "error.main" } }}
@@ -194,6 +199,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             onChange={(e) => onUpdate(item.id, { title: e.target.value })}
             onKeyDown={handleKeyDown}
             placeholder="What changed?"
+            slotProps={{ htmlInput: { "aria-label": "Change title" } }}
             fullWidth
             sx={{ mb: 1 }}
           />
@@ -204,7 +210,12 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
             placeholder="Area (optional)"
             fullWidth
-            slotProps={{ htmlInput: { style: { fontSize: "0.75rem", fontFamily: "monospace" } } }}
+            slotProps={{
+              htmlInput: {
+                "aria-label": "Change area",
+                style: { fontSize: "0.75rem", fontFamily: "monospace" },
+              },
+            }}
           />
 
           {/* Description (expandable) */}
@@ -213,6 +224,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               value={item.description || ""}
               onChange={(e) => onUpdate(item.id, { description: e.target.value || null })}
               placeholder="Add more details (optional)..."
+              slotProps={{ htmlInput: { "aria-label": "Change description" } }}
               rows={2}
               autoFocus={isExpanded && !item.description}
               sx={{ mt: 1 }}
@@ -232,6 +244,8 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
           <Tooltip title="Drag to reorder">
             <Box
               component="button"
+              type="button"
+              aria-label="Reorder change"
               {...attributes}
               {...listeners}
               sx={{
@@ -255,6 +269,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             <MuiSelect
               value={item.type}
               onChange={handleTypeChange}
+              inputProps={{ "aria-label": "Change type" }}
               size="small"
               fullWidth
               sx={{
@@ -308,6 +323,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                 onChange={(e) => onUpdate(item.id, { title: e.target.value })}
                 onKeyDown={handleKeyDown}
                 placeholder="What changed?"
+                slotProps={{ htmlInput: { "aria-label": "Change title" } }}
                 sx={{ flex: 1 }}
               />
               <Tooltip title="Component/area tag">
@@ -316,7 +332,12 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                     value={item.area || ""}
                     onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
                     placeholder="Area"
-                    slotProps={{ htmlInput: { style: { fontSize: "0.75rem", fontFamily: "monospace" } } }}
+                    slotProps={{
+                      htmlInput: {
+                        "aria-label": "Change area",
+                        style: { fontSize: "0.75rem", fontFamily: "monospace" },
+                      },
+                    }}
                   />
                 </Box>
               </Tooltip>
@@ -328,6 +349,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                 value={item.description || ""}
                 onChange={(e) => onUpdate(item.id, { description: e.target.value || null })}
                 placeholder="Add more details (optional)..."
+                slotProps={{ htmlInput: { "aria-label": "Change description" } }}
                 rows={2}
                 autoFocus={isExpanded && !item.description}
               />
@@ -337,6 +359,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
           <Stack direction="row" spacing={0.5}>
             <Tooltip title={isExpanded ? "Hide description" : "Add description (Enter)"}>
               <IconButton
+                aria-label={isExpanded ? "Hide change description" : "Add change description"}
                 size="small"
                 onClick={() => setIsExpanded(!isExpanded)}
                 sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
@@ -347,6 +370,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             {onDuplicate && (
               <Tooltip title="Duplicate item">
                 <IconButton
+                  aria-label="Duplicate change"
                   size="small"
                   onClick={() => onDuplicate(item)}
                   sx={{ opacity: 0.6, "&:hover": { opacity: 1 } }}
@@ -357,6 +381,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             )}
             <Tooltip title="Delete item">
               <IconButton
+                aria-label="Delete change"
                 size="small"
                 onClick={() => onDelete(item.id)}
                 sx={{
