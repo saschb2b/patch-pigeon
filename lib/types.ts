@@ -1,57 +1,15 @@
-export type ChangeType = "FEATURE" | "FIX" | "IMPROVEMENT" | "KNOWNISSUE" | "BREAKING" | "REMOVED" | "NOTE"
+import { changeTypeEnum } from "@/lib/db/schema"
+import type { profiles, products, entries, entryItems } from "@/lib/db/schema"
 
-// Legacy entry type (kept for backwards compatibility)
-export type EntryType = "feature" | "improvement" | "fix" | "breaking"
+export type ChangeType = (typeof changeTypeEnum.enumValues)[number]
 
-export interface Profile {
-  id: string
-  owner_slug: string
-  display_name: string | null
-  avatar_url: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface Product {
-  id: string
-  user_id: string
-  name: string
-  slug: string
-  description: string | null
-  logo_url: string | null
-  created_at: string
-  updated_at: string
-}
+export type Profile = typeof profiles.$inferSelect
+export type Product = typeof products.$inferSelect
+export type Entry = typeof entries.$inferSelect
+export type EntryItem = typeof entryItems.$inferSelect
 
 export interface ProductWithProfile extends Product {
   profiles: Profile
-}
-
-export interface Entry {
-  id: string
-  product_id: string
-  title: string
-  slug: string
-  content: string | null // Now optional, for backwards compatibility
-  summary: string | null // Optional version summary
-  type: EntryType | null // Legacy, optional
-  version: string | null
-  published: boolean
-  publish_date: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface EntryItem {
-  id: string
-  entry_id: string
-  type: ChangeType
-  title: string
-  description: string | null
-  area: string | null
-  sort_order: number
-  created_at: string
-  updated_at: string
 }
 
 export interface EntryWithItems extends Entry {

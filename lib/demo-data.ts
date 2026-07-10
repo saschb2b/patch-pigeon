@@ -1,4 +1,9 @@
-import type { EntryWithItems, Product, Profile, ChangeType } from "@/lib/types"
+import type { EntryItem, EntryWithItems, Product, Profile, ChangeType } from "@/lib/types"
+
+type DemoEntryItem = Omit<EntryItem, "area" | "updated_at">
+type DemoEntry = Omit<EntryWithItems, "entry_items" | "updated_at"> & {
+  entry_items: DemoEntryItem[]
+}
 
 const mockProfile: Profile = {
   id: "demo-user",
@@ -6,6 +11,7 @@ const mockProfile: Profile = {
   display_name: "Acme Labs",
   avatar_url: null,
   created_at: "2024-01-01T00:00:00Z",
+  updated_at: "2024-01-01T00:00:00Z",
 }
 
 const mockProduct: Product = {
@@ -16,9 +22,10 @@ const mockProduct: Product = {
   description: "The best productivity app for teams",
   logo_url: null,
   created_at: "2024-01-01T00:00:00Z",
+  updated_at: "2024-01-01T00:00:00Z",
 }
 
-const mockEntries: EntryWithItems[] = [
+const mockEntries: DemoEntry[] = [
   {
     id: "entry-1",
     product_id: "demo-product",
@@ -230,6 +237,14 @@ export function getDemoData() {
   return {
     profile: mockProfile,
     product: mockProduct,
-    entries: mockEntries,
+    entries: mockEntries.map((entry): EntryWithItems => ({
+      ...entry,
+      updated_at: entry.created_at,
+      entry_items: entry.entry_items.map((item) => ({
+        ...item,
+        area: null,
+        updated_at: item.created_at,
+      })),
+    })),
   }
 }

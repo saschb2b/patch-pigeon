@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { createProductAction, updateProductAction } from "@/app/admin/actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,11 +15,10 @@ import { generateSlug } from "@/lib/utils/slug"
 import type { Product } from "@/lib/types"
 
 interface ProductFormProps {
-  userId: string
   product?: Product
 }
 
-export function ProductForm({ userId, product }: ProductFormProps) {
+export function ProductForm({ product }: ProductFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -40,43 +39,31 @@ export function ProductForm({ userId, product }: ProductFormProps) {
     setIsLoading(true)
     setError(null)
 
-    const supabase = createClient()
-
     try {
+      const values = {
+        name,
+        slug,
+        description: description || null,
+        logo_url: logoUrl || null,
+      }
       if (product) {
-        // Update existing product
-        const { error } = await supabase
-          .from("products")
-          .update({
-            name,
-            slug,
-            description: description || null,
-            logo_url: logoUrl || null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", product.id)
-
-        if (error) throw error
+        const result = await updateProductAction(product.id, values)
+        if ("error" in result) {
+          setError(result.error)
+          return
+        }
         router.push(`/admin/products/${product.id}`)
       } else {
-        // Create new product
-        const { data, error } = await supabase
-          .from("products")
-          .insert({
-            user_id: userId,
-            name,
-            slug,
-            description: description || null,
-            logo_url: logoUrl || null,
-          })
-          .select()
-          .single()
-
-        if (error) throw error
-        router.push(`/admin/products/${data.id}`)
+        const result = await createProductAction(values)
+        if ("error" in result) {
+          setError(result.error)
+          return
+        }
+        router.push(`/admin/products/${result.id}`)
       }
+      router.refresh()
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      setError(error instanceof Error ? error.message : "Unable to save product")
     } finally {
       setIsLoading(false)
     }

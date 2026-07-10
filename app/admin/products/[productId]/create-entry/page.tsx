@@ -1,7 +1,7 @@
-import { redirect, notFound } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { notFound } from "next/navigation"
+import { requireUserAndProfile } from "@/lib/auth-helpers"
+import { getOwnedProduct } from "@/lib/data/admin"
 import { EntryEditor } from "@/components/admin/entry-editor"
-import type { Product, Profile } from "@/lib/types"
 
 interface PageProps {
   params: Promise<{ productId: string }>
@@ -9,42 +9,19 @@ interface PageProps {
 
 export default async function CreateEntryPage({ params }: PageProps) {
   const { productId } = await params
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-  if (!profile) {
-    redirect("/auth/onboarding")
-  }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", productId)
-    .eq("user_id", user.id)
-    .single()
+  const { user, profile } = await requireUserAndProfile()
+  const product = await getOwnedProduct(user.id, productId)
 
   if (!product) {
     notFound()
   }
 
-  const typedProduct = product as Product
-  const typedProfile = profile as Profile
-
   return (
     <EntryEditor
       productId={productId}
-      productSlug={typedProduct.slug}
-      productName={typedProduct.name}
-      ownerSlug={typedProfile.owner_slug}
+      productSlug={product.slug}
+      productName={product.name}
+      ownerSlug={profile.owner_slug}
     />
   )
 }

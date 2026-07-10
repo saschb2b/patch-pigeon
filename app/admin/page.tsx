@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Box, Container, Typography, Stack, Grid, Tooltip, Paper, Chip, IconButton } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
@@ -10,9 +9,9 @@ import ArticleIcon from "@mui/icons-material/Article"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 import InventoryIcon from "@mui/icons-material/Inventory"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
-import { createClient } from "@/lib/supabase/server"
+import { requireUserAndProfile } from "@/lib/auth-helpers"
+import { getProductsForOwner } from "@/lib/data/admin"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/lib/types"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminFooter } from "@/components/admin/admin-footer"
 
@@ -34,36 +33,16 @@ const cardGradients = [
 ]
 
 export default async function AdminPage() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
-
-  if (!profile) {
-    redirect("/auth/onboarding")
-  }
-
-  // Fetch products with entry counts
-  const { data: products } = await supabase
-    .from("products")
-    .select("*, entries(id, published)")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
+  const { user, profile } = await requireUserAndProfile()
+  const products = await getProductsForOwner(user.id)
 
   // Calculate stats
-  const totalProducts = products?.length || 0
-  const totalEntries = products?.reduce((sum, p) => sum + (p.entries?.length || 0), 0) || 0
-  const publishedEntries = products?.reduce(
-    (sum, p) => sum + (p.entries?.filter((e: { published: boolean }) => e.published)?.length || 0),
-    0
-  ) || 0
+  const totalProducts = products.length
+  const totalEntries = products.reduce((sum, product) => sum + product.entries.length, 0)
+  const publishedEntries = products.reduce(
+    (sum, product) => sum + product.entries.filter((entry) => entry.published).length,
+    0,
+  )
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
@@ -218,10 +197,10 @@ export default async function AdminPage() {
           </Paper>
         ) : (
           <Grid container spacing={3}>
-            {products.map((product: Product & { entries?: { id: string; published: boolean }[] }, index: number) => {
+            {products.map((product, index) => {
               const gradient = cardGradients[index % cardGradients.length]
-              const entryCount = product.entries?.length || 0
-              const publishedCount = product.entries?.filter(e => e.published)?.length || 0
+              const entryCount = product.entries.length
+              const publishedCount = product.entries.filter((entry) => entry.published).length
               
               return (
                 <Grid size={{ xs: 12, md: 6 }} key={product.id}>

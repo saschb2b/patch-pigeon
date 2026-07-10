@@ -4,7 +4,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { useSession } from "next-auth/react"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
@@ -27,7 +27,6 @@ import CheckIcon from "@mui/icons-material/Check"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 import TrendingUpIcon from "@mui/icons-material/TrendingUp"
-import GroupsIcon from "@mui/icons-material/Groups"
 import RssFeedIcon from "@mui/icons-material/RssFeed"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import XIcon from "@mui/icons-material/X"
@@ -53,19 +52,9 @@ const demoEntries = [
 
 export default function HomePage() {
   const [visibleEntries, setVisibleEntries] = useState(0)
-  const [isTyping, setIsTyping] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
-
-  // Check auth state on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      setIsLoggedIn(!!user)
-    }
-    checkAuth()
-  }, [])
+  const { status } = useSession()
+  const isLoggedIn = status === "authenticated"
 
   // Animate entries appearing one by one
   useEffect(() => {
@@ -74,10 +63,9 @@ export default function HomePage() {
         setVisibleEntries(v => v + 1)
       }, 800)
       return () => clearTimeout(timer)
-    } else {
-      setIsTyping(false)
     }
   }, [visibleEntries])
+  const isTyping = visibleEntries < demoEntries.length
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>

@@ -1,77 +1,52 @@
-import { createClient } from "@/lib/supabase/server"
+import { getPublicFeed } from "@/lib/data/public"
+import { escapeXml } from "@/lib/utils/xml"
+import { getSiteUrl } from "@/lib/site-url"
 
 interface RouteParams {
   params: Promise<{ ownerSlug: string; productSlug: string }>
 }
 
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(_request: Request, { params }: RouteParams) {
   const { ownerSlug, productSlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicFeed(ownerSlug, productSlug, { limit: 50 })
 
-  // Fetch profile by owner slug
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id, display_name, owner_slug")
-    .eq("owner_slug", ownerSlug)
-    .maybeSingle()
-
-  if (!profile) {
-    return new Response("Owner not found", { status: 404 })
+  if (!result) {
+    return new Response("Changelog not found", { status: 404 })
   }
 
-  // Fetch product scoped to owner
-  const { data: product } = await supabase
-    .from("products")
-    .select("id, name, slug, description")
-    .eq("user_id", profile.id)
-    .eq("slug", productSlug)
-    .maybeSingle()
-
-  if (!product) {
-    return new Response("Product not found", { status: 404 })
-  }
-
-  // Fetch published entries
-  const { data: entries } = await supabase
-    .from("entries")
-    .select("title, slug, content, type, version, publish_date")
-    .eq("product_id", product.id)
-    .eq("published", true)
-    .order("publish_date", { ascending: false })
-    .limit(50)
-
-  const baseUrl = new URL(request.url).origin
-  const publicPath = `/${profile.owner_slug}/${product.slug}`
-
-  const rssItems = (entries || [])
+  const baseUrl = getSiteUrl()
+  const publicPath = `/${result.profile.owner_slug}/${result.product.slug}`
+  const items = result.entries
     .map((entry) => {
-      const pubDate = entry.publish_date ? new Date(entry.publish_date).toUTCString() : new Date().toUTCString()
       const link = `${baseUrl}${publicPath}/${entry.slug}`
-      const description = entry.content.replace(/[#*`]/g, "").substring(0, 500)
+      const description =
+        entry.summary ?? entry.entry_items.map((item) => item.title).join(" · ")
+      const categories = [...new Set(entry.entry_items.map((item) => item.type))]
 
       return `
     <item>
-      <title><![CDATA[${entry.title}]]></title>
-      <link>${link}</link>
-      <guid isPermaLink="true">${link}</guid>
-      <pubDate>${pubDate}</pubDate>
-      <description><![CDATA[${description}]]></description>
-      <category>${entry.type}</category>
-      ${entry.version ? `<version>${entry.version}</version>` : ""}
+      <title>${escapeXml(entry.title)}</title>
+      <link>${escapeXml(link)}</link>
+      <guid isPermaLink="true">${escapeXml(link)}</guid>
+      <pubDate>${new Date(entry.publish_date).toUTCString()}</pubDate>
+      <description>${escapeXml(description.slice(0, 500))}</description>
+      ${categories.map((category) => `<category>${escapeXml(category)}</category>`).join("\n      ")}
     </item>`
     })
     .join("")
 
+  const title = `${result.product.name} Changelog`
+  const description = result.product.description || `Latest updates for ${result.product.name}`
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${product.name} Changelog</title>
-    <link>${baseUrl}${publicPath}</link>
-    <description>${product.description || `Latest updates for ${product.name}`}</description>
+    <title>${escapeXml(title)}</title>
+    <link>${escapeXml(`${baseUrl}${publicPath}`)}</link>
+    <description>${escapeXml(description)}</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${baseUrl}/api${publicPath}/changelog.rss" rel="self" type="application/rss+xml"/>
-    ${rssItems}
+    <atom:link href="${escapeXml(`${baseUrl}/api${publicPath}/changelog.rss`)}" rel="self" type="application/rss+xml"/>
+    ${items}
   </channel>
 </rss>`
 

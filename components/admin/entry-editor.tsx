@@ -1,9 +1,9 @@
 "use client"
 
 import type React from "react"
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useEffect, useEffectEvent, useRef, useSyncExternalStore } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { saveEntryAction } from "@/app/admin/actions"
 import {
   DndContext,
   closestCenter,
@@ -19,10 +19,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { EntryItemRow, changeTypeConfig } from "./entry-item-row"
+import { EntryItemRow } from "./entry-item-row"
+import { CHANGE_TYPE_ORDER, changeTypeConfig } from "@/components/change-type-config"
 import {
   Box,
-  Container,
   Typography,
   Stack,
   Paper,
@@ -81,6 +81,8 @@ interface DraftData {
   savedAt: string
 }
 
+const subscribeToHydration = () => () => undefined
+
 export function EntryEditor({ productId, productSlug, productName, ownerSlug, entry }: EntryEditorProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -93,10 +95,15 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   const [summary, setSummary] = useState(entry?.summary || "")
   const [version, setVersion] = useState(entry?.version || "")
   const [published, setPublished] = useState(entry?.published || false)
-  const [publishDate, setPublishDate] = useState(entry?.publish_date || new Date().toISOString().split("T")[0])
+  const [initialPublishDate] = useState(
+    () => entry?.publish_date || new Date().toISOString().split("T")[0],
+  )
+  const [publishDate, setPublishDate] = useState(initialPublishDate)
 
   // Entry items (structured changes)
-  const [items, setItems] = useState<EntryItem[]>(entry?.entry_items?.sort((a, b) => a.sort_order - b.sort_order) || [])
+  const [items, setItems] = useState<EntryItem[]>(
+    () => [...(entry?.entry_items ?? [])].sort((a, b) => a.sort_order - b.sort_order),
+  )
 
   // Track deleted items for database sync
   const [deletedItemIds, setDeletedItemIds] = useState<string[]>([])
@@ -105,7 +112,6 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   const [lastDeletedItem, setLastDeletedItem] = useState<{ item: EntryItem; index: number } | null>(null)
 
   // Track if there are unsaved changes
-  const [hasChanges, setHasChanges] = useState(false)
 
   // Track which item was just added for auto-focus
   const [newItemId, setNewItemId] = useState<string | null>(null)
@@ -117,7 +123,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   const [mobileView, setMobileView] = useState<"editor" | "preview">("editor")
 
   // Client-side mounted state for DndContext (prevents hydration mismatch)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useSyncExternalStore(subscribeToHydration, () => true, () => false)
 
   // Draft recovery state
   const [hasDraft, setHasDraft] = useState(false)
@@ -131,26 +137,27 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     }),
   )
 
-  // Track changes
-  useEffect(() => {
-    const hasItemChanges = items.some(
-      (item) =>
-        item.id.startsWith("temp-") ||
-        entry?.entry_items?.find((ei) => ei.id === item.id)?.title !== item.title ||
-        entry?.entry_items?.find((ei) => ei.id === item.id)?.description !== item.description ||
-        entry?.entry_items?.find((ei) => ei.id === item.id)?.type !== item.type ||
-        entry?.entry_items?.find((ei) => ei.id === item.id)?.area !== item.area
-    )
-    const hasMetaChanges =
-      title !== (entry?.title || "") ||
-      summary !== (entry?.summary || "") ||
-      version !== (entry?.version || "") ||
-      published !== (entry?.published || false) ||
-      publishDate !== (entry?.publish_date || new Date().toISOString().split("T")[0]) ||
-      deletedItemIds.length > 0
-
-    setHasChanges(hasItemChanges || hasMetaChanges)
-  }, [title, summary, version, published, publishDate, items, deletedItemIds, entry])
+  const initialItemsById = new Map(
+    entry?.entry_items?.map((item) => [item.id, item]) ?? [],
+  )
+  const hasItemChanges = items.some((item) => {
+    const initialItem = initialItemsById.get(item.id)
+    return item.id.startsWith("temp-") ||
+      initialItem?.title !== item.title ||
+      initialItem?.description !== item.description ||
+      initialItem?.type !== item.type ||
+      initialItem?.area !== item.area ||
+      initialItem?.sort_order !== item.sort_order
+  })
+  const hasMetaChanges =
+    title !== (entry?.title || "") ||
+    slug !== (entry?.slug || "") ||
+    summary !== (entry?.summary || "") ||
+    version !== (entry?.version || "") ||
+    published !== (entry?.published || false) ||
+    publishDate !== initialPublishDate ||
+    deletedItemIds.length > 0
+  const hasChanges = hasItemChanges || hasMetaChanges
 
   // Warn before leaving with unsaved changes
   useEffect(() => {
@@ -164,26 +171,23 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     return () => window.removeEventListener("beforeunload", handleBeforeUnload)
   }, [hasChanges])
 
-  // Mark as mounted for client-side only rendering (DndContext)
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   // Check for existing draft on mount
   useEffect(() => {
-    try {
-      const savedDraft = localStorage.getItem(draftKey)
-      if (savedDraft) {
-        const draft: DraftData = JSON.parse(savedDraft)
-        // Only show draft recovery if there's actual content
-        if (draft.title || draft.items.length > 0) {
-          setHasDraft(true)
-          setDraftSavedAt(draft.savedAt)
+    const handle = window.setTimeout(() => {
+      try {
+        const savedDraft = localStorage.getItem(draftKey)
+        if (savedDraft) {
+          const draft: DraftData = JSON.parse(savedDraft)
+          if (draft.title || draft.items.length > 0) {
+            setHasDraft(true)
+            setDraftSavedAt(draft.savedAt)
+          }
         }
+      } catch {
+        // Ignore malformed or inaccessible local storage.
       }
-    } catch {
-      // Ignore localStorage errors
-    }
+    }, 0)
+    return () => window.clearTimeout(handle)
   }, [draftKey])
 
   // Auto-save draft every 30 seconds when there are changes
@@ -216,7 +220,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     return () => clearInterval(interval)
   }, [hasChanges, title, slug, summary, version, published, publishDate, items, draftKey])
 
-  const handleRestoreDraft = useCallback(() => {
+  const handleRestoreDraft = () => {
     try {
       const savedDraft = localStorage.getItem(draftKey)
       if (savedDraft) {
@@ -234,59 +238,54 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     } catch {
       setError("Failed to restore draft")
     }
-  }, [draftKey])
+  }
 
-  const handleDiscardDraft = useCallback(() => {
+  const handleDiscardDraft = () => {
     try {
       localStorage.removeItem(draftKey)
       setHasDraft(false)
     } catch {
       // Ignore
     }
-  }, [draftKey])
+  }
 
-  const clearDraft = useCallback(() => {
+  const clearDraft = () => {
     try {
       localStorage.removeItem(draftKey)
     } catch {
       // Ignore
     }
-  }, [draftKey])
+  }
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + S to save
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        e.preventDefault()
-        if (!isLoading && title && items.filter((i) => i.title.trim()).length > 0) {
-          handleSubmit(e as unknown as React.FormEvent)
-        }
-      }
-      // Ctrl/Cmd + Shift + F for feature
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "F") {
-        e.preventDefault()
-        handleAddItem("FEATURE")
-      }
-      // Ctrl/Cmd + Shift + I for improvement
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "I") {
-        e.preventDefault()
-        handleAddItem("IMPROVEMENT")
-      }
-      // Ctrl/Cmd + Shift + B for bug fix
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "B") {
-        e.preventDefault()
-        handleAddItem("FIX")
-      }
-      // Ctrl/Cmd + Z to undo last delete
-      if ((e.ctrlKey || e.metaKey) && e.key === "z" && lastDeletedItem) {
-        e.preventDefault()
-        handleUndoDelete()
+  const handleKeyboardShortcut = useEffectEvent((event: KeyboardEvent) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+      event.preventDefault()
+      if (!isLoading && title && items.some((item) => item.title.trim())) {
+        void handleSubmit(event as unknown as React.FormEvent)
       }
     }
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isLoading, title, items, lastDeletedItem])
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "F") {
+      event.preventDefault()
+      handleAddItem("FEATURE")
+    }
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "I") {
+      event.preventDefault()
+      handleAddItem("IMPROVEMENT")
+    }
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "B") {
+      event.preventDefault()
+      handleAddItem("FIX")
+    }
+    if ((event.ctrlKey || event.metaKey) && event.key === "z" && lastDeletedItem) {
+      event.preventDefault()
+      handleUndoDelete()
+    }
+  })
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyboardShortcut)
+    return () => window.removeEventListener("keydown", handleKeyboardShortcut)
+  }, [])
 
   const handleTitleChange = (value: string) => {
     setTitle(value)
@@ -295,7 +294,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     }
   }
 
-  const handleAddItem = (type: ChangeType = "FEATURE") => {
+  function handleAddItem(type: ChangeType = "FEATURE") {
     const newId = generateTempId()
     const newItem: EntryItem = {
       id: newId,
@@ -320,7 +319,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     }, 100)
   }
 
-  const handleDuplicateItem = useCallback((item: EntryItem) => {
+  const handleDuplicateItem = (item: EntryItem) => {
     const newId = generateTempId()
     const newItem: EntryItem = {
       ...item,
@@ -333,15 +332,15 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     setItems((prev) => [...prev, newItem])
     setNewItemId(newId)
     setSuccessMessage("Item duplicated")
-  }, [items.length])
+  }
 
-  const handleUpdateItem = useCallback((id: string, updates: Partial<EntryItem>) => {
+  const handleUpdateItem = (id: string, updates: Partial<EntryItem>) => {
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, ...updates, updated_at: new Date().toISOString() } : item)),
     )
-  }, [])
+  }
 
-  const handleDeleteItem = useCallback((id: string) => {
+  const handleDeleteItem = (id: string) => {
     const itemIndex = items.findIndex((item) => item.id === id)
     const deletedItem = items[itemIndex]
 
@@ -354,9 +353,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     if (!id.startsWith("temp-")) {
       setDeletedItemIds((prev) => [...prev, id])
     }
-  }, [items])
+  }
 
-  const handleUndoDelete = useCallback(() => {
+  function handleUndoDelete() {
     if (lastDeletedItem) {
       const { item, index } = lastDeletedItem
       setItems((prev) => {
@@ -371,9 +370,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
       setLastDeletedItem(null)
       setSuccessMessage("Item restored")
     }
-  }, [lastDeletedItem])
+  }
 
-  const handleNavigateItem = useCallback((currentId: string, direction: "up" | "down") => {
+  const handleNavigateItem = (currentId: string, direction: "up" | "down") => {
     const currentIndex = items.findIndex((item) => item.id === currentId)
     if (currentIndex === -1) return
 
@@ -382,7 +381,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
 
     // Focus the target item
     setNewItemId(items[targetIndex].id)
-  }, [items])
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -398,94 +397,31 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
 
-    const supabase = createClient()
-
     try {
-      let entryId = entry?.id
+      const result = await saveEntryAction({
+        productId,
+        entryId: entry?.id,
+        title,
+        slug,
+        summary: summary || null,
+        version: version || null,
+        published,
+        publish_date: publishDate,
+        items,
+        deletedItemIds,
+      })
 
-      // Create or update entry
-      if (entry) {
-        const { error } = await supabase
-          .from("entries")
-          .update({
-            title,
-            slug,
-            summary: summary || null,
-            version: version || null,
-            published,
-            publish_date: publishDate,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", entry.id)
-
-        if (error) throw error
-      } else {
-        const { data, error } = await supabase
-          .from("entries")
-          .insert({
-            product_id: productId,
-            title,
-            slug,
-            summary: summary || null,
-            version: version || null,
-            published,
-            publish_date: publishDate,
-          })
-          .select("id")
-          .single()
-
-        if (error) throw error
-        entryId = data.id
-      }
-
-      // Delete removed items
-      if (deletedItemIds.length > 0) {
-        const { error } = await supabase.from("entry_items").delete().in("id", deletedItemIds)
-
-        if (error) throw error
-      }
-
-      // Upsert items
-      const validItems = items.filter((item) => item.title.trim())
-
-      for (const item of validItems) {
-        if (item.id.startsWith("temp-")) {
-          // Insert new item
-          const { error } = await supabase.from("entry_items").insert({
-            entry_id: entryId,
-            type: item.type,
-            title: item.title,
-            description: item.description,
-            area: item.area,
-            sort_order: item.sort_order,
-          })
-
-          if (error) throw error
-        } else {
-          // Update existing item
-          const { error } = await supabase
-            .from("entry_items")
-            .update({
-              type: item.type,
-              title: item.title,
-              description: item.description,
-              area: item.area,
-              sort_order: item.sort_order,
-              updated_at: new Date().toISOString(),
-            })
-            .eq("id", item.id)
-
-          if (error) throw error
-        }
+      if ("error" in result) {
+        setError(result.error)
+        return
       }
 
       setSuccessMessage("Saved successfully!")
-      setHasChanges(false)
       setDeletedItemIds([])
       clearDraft()
 
@@ -519,7 +455,6 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
     {} as Record<ChangeType, EntryItem[]>,
   )
 
-  const typeOrder: ChangeType[] = ["FEATURE", "IMPROVEMENT", "FIX", "BREAKING", "REMOVED", "KNOWNISSUE", "NOTE"]
   const validItemCount = items.filter((i) => i.title.trim()).length
 
   return (
@@ -988,16 +923,17 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
               {/* Preview Content - Grouped by Type */}
               <Box sx={{ borderTop: 1, borderColor: "divider", pt: 4 }}>
                 <Stack spacing={4}>
-                  {typeOrder.map((type) => {
+                  {CHANGE_TYPE_ORDER.map((type) => {
                     const typeItems = groupedItems[type]
                     if (!typeItems || typeItems.length === 0) return null
 
                     const config = changeTypeConfig[type]
+                    const Icon = config.icon
 
                     return (
                       <Box key={type}>
-                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2, color: config.muiColor }}>
-                          {config.icon}
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2, color: config.color }}>
+                          <Icon sx={{ fontSize: 14 }} />
                           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                             {config.label}s
                           </Typography>
@@ -1019,7 +955,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                                       width: "6px",
                                       height: "6px",
                                       borderRadius: "50%",
-                                      bgcolor: config.muiColor,
+                                      bgcolor: config.color,
                                       flexShrink: 0,
                                       opacity: 0.6,
                                     }}

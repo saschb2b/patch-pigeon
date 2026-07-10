@@ -1,20 +1,11 @@
-import { redirect } from "next/navigation"
 import { Box, Container, Typography } from "@mui/material"
-import { createClient } from "@/lib/supabase/server"
+import { requireUserAndProfile } from "@/lib/auth-helpers"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminFooter } from "@/components/admin/admin-footer"
 import { ProductForm } from "@/components/admin/product-form"
 
 export default async function CreateProductPage() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
+  const { user } = await requireUserAndProfile()
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
@@ -25,7 +16,7 @@ export default async function CreateProductPage() {
           <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 4 }}>
             Create New Product
           </Typography>
-          <ProductForm userId={user.id} />
+          <ProductForm />
         </Box>
       </Container>
 

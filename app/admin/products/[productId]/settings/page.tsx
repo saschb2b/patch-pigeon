@@ -1,13 +1,13 @@
-import { redirect, notFound } from "next/navigation"
+import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Box, Container, Typography, Stack, Paper } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import { createClient } from "@/lib/supabase/server"
+import { requireUserAndProfile } from "@/lib/auth-helpers"
+import { getOwnedProduct } from "@/lib/data/admin"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminFooter } from "@/components/admin/admin-footer"
 import { ProductForm } from "@/components/admin/product-form"
 import { DeleteProductButton } from "@/components/admin/delete-product-button"
-import type { Product, Profile } from "@/lib/types"
 
 interface PageProps {
   params: Promise<{ productId: string }>
@@ -15,34 +15,14 @@ interface PageProps {
 
 export default async function ProductSettingsPage({ params }: PageProps) {
   const { productId } = await params
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
-
-  if (!profile) {
-    redirect("/auth/onboarding")
-  }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", productId)
-    .eq("user_id", user.id)
-    .single()
+  const { user, profile } = await requireUserAndProfile()
+  const product = await getOwnedProduct(user.id, productId)
 
   if (!product) {
     notFound()
   }
 
-  const publicUrl = `/${(profile as Profile).owner_slug}/${(product as Product).slug}`
+  const publicUrl = `/${profile.owner_slug}/${product.slug}`
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
@@ -93,7 +73,7 @@ export default async function ProductSettingsPage({ params }: PageProps) {
             </Typography>
           </Paper>
 
-          <ProductForm userId={user.id} product={product as Product} />
+          <ProductForm product={product} />
 
           <Box sx={{ mt: 6, pt: 4, borderTop: 1, borderColor: "divider" }}>
             <Typography variant="h6" sx={{ fontWeight: 600, color: "error.main", mb: 2 }}>
@@ -102,7 +82,7 @@ export default async function ProductSettingsPage({ params }: PageProps) {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Deleting this product will also delete all changelog entries. This action cannot be undone.
             </Typography>
-            <DeleteProductButton productId={productId} productName={(product as Product).name} />
+            <DeleteProductButton productId={productId} productName={product.name} />
           </Box>
         </Box>
       </Container>

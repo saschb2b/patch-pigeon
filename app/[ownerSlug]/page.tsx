@@ -1,13 +1,12 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { getPublicOwner, getPublicOwnerWithProducts } from "@/lib/data/public"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import { Card, CardContent } from "@/components/ui/card"
 import { Box, Container, Typography, Stack, Chip, Avatar } from "@mui/material"
 import InventoryIcon from "@mui/icons-material/Inventory2Outlined"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
-import type { Product, Entry } from "@/lib/types"
 
 interface PageProps {
   params: Promise<{ ownerSlug: string }>
@@ -15,9 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { ownerSlug } = await params
-  const supabase = await createClient()
-
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
+  const profile = await getPublicOwner(ownerSlug)
 
   if (!profile) {
     return { title: "Not Found" }
@@ -29,56 +26,22 @@ export async function generateMetadata({ params }: PageProps) {
   }
 }
 
-interface ProductWithLatestEntry extends Product {
-  latest_entry?: Entry | null
-  entry_count?: number
-}
-
 export default async function OwnerProfilePage({ params }: PageProps) {
   const { ownerSlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicOwnerWithProducts(ownerSlug)
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
-
-  if (!profile) {
+  if (!result) {
     notFound()
   }
-
-  // Get all products for this owner
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", profile.id)
-    .order("created_at", { ascending: false })
-
-  // Fetch latest published entry and count for each product
-  const productsWithLatest: ProductWithLatestEntry[] = await Promise.all(
-    (products || []).map(async (product) => {
-      const { data: latestEntry } = await supabase
-        .from("entries")
-        .select("*")
-        .eq("product_id", product.id)
-        .eq("published", true)
-        .order("publish_date", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      const { count } = await supabase
-        .from("entries")
-        .select("*", { count: "exact", head: true })
-        .eq("product_id", product.id)
-        .eq("published", true)
-
-      return {
-        ...product,
-        latest_entry: latestEntry,
-        entry_count: count || 0,
-      }
-    }),
-  )
+  const { profile } = result
+  const productsWithLatest = result.products.map((product) => ({
+    ...product,
+    latest_entry: product.entries[0] ?? null,
+    entry_count: product.entries.length,
+  }))
 
   // Only show products that have at least one published entry
-  const publicProducts = productsWithLatest.filter((p) => p.entry_count && p.entry_count > 0)
+  const publicProducts = productsWithLatest.filter((product) => product.entry_count > 0)
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>

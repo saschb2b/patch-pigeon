@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
+import { deleteEntryAction } from "@/app/admin/actions"
 import { IconButton, Tooltip } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import {
@@ -29,12 +28,12 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
 
   const handleDelete = async () => {
     setIsDeleting(true)
-    const supabase = createClient()
-
-    await supabase.from("entries").delete().eq("id", entryId)
-
-    router.refresh()
-    setIsDeleting(false)
+    try {
+      await deleteEntryAction(entryId)
+      router.refresh()
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   return (
@@ -42,6 +41,7 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
       <Tooltip title="Delete entry">
         <AlertDialogTrigger asChild>
           <IconButton
+            aria-label={`Delete ${entryTitle}`}
             size="small"
             sx={{
               color: "error.main",

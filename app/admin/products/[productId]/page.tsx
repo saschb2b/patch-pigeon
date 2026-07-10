@@ -1,4 +1,4 @@
-import { redirect, notFound } from "next/navigation"
+import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Box, Container, Typography, Stack, Paper, Chip, IconButton, Tooltip } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
@@ -11,13 +11,13 @@ import DescriptionIcon from "@mui/icons-material/Description"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
-import { createClient } from "@/lib/supabase/server"
+import { requireUserAndProfile } from "@/lib/auth-helpers"
+import { getOwnedProductWithEntries } from "@/lib/data/admin"
 import { Button } from "@/components/ui/button"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminFooter } from "@/components/admin/admin-footer"
 import { DeleteEntryButton } from "@/components/admin/delete-entry-button"
 import { TogglePublishButton } from "@/components/admin/toggle-publish-button"
-import type { Entry, Product, Profile } from "@/lib/types"
 
 // Brand colors
 const colors = {
@@ -35,47 +35,19 @@ interface PageProps {
 export default async function ProductEntriesPage({ params }: PageProps) {
   const { productId } = await params
 
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle()
-
-  if (!profile) {
-    redirect("/auth/onboarding")
-  }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", productId)
-    .eq("user_id", user.id)
-    .single()
+  const { user, profile } = await requireUserAndProfile()
+  const product = await getOwnedProductWithEntries(user.id, productId)
 
   if (!product) {
     notFound()
   }
 
-  // Fetch entries with item counts
-  const { data: entries } = await supabase
-    .from("entries")
-    .select("*, entry_items(id)")
-    .eq("product_id", productId)
-    .order("publish_date", { ascending: false })
-
-  const typedProduct = product as Product
-  const typedProfile = profile as Profile
-  const publicUrl = `/${typedProfile.owner_slug}/${typedProduct.slug}`
+  const entries = product.entries
+  const publicUrl = `/${profile.owner_slug}/${product.slug}`
 
   // Stats
-  const totalEntries = entries?.length || 0
-  const publishedCount = entries?.filter((e: Entry) => e.published)?.length || 0
+  const totalEntries = entries.length
+  const publishedCount = entries.filter((entry) => entry.published).length
   const draftCount = totalEntries - publishedCount
 
   return (
@@ -148,16 +120,16 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                   flexShrink: 0,
                 }}
               >
-                {typedProduct.logo_url ? (
+                {product.logo_url ? (
                   <Box
                     component="img"
-                    src={typedProduct.logo_url}
-                    alt={typedProduct.name}
+                    src={product.logo_url}
+                    alt={product.name}
                     sx={{ width: 40, height: 40, borderRadius: 1.5, objectFit: 'cover' }}
                   />
                 ) : (
                   <Typography sx={{ fontSize: '1.5rem', fontWeight: 700, color: colors.ink }}>
-                    {typedProduct.name.charAt(0).toUpperCase()}
+                    {product.name.charAt(0).toUpperCase()}
                   </Typography>
                 )}
               </Box>
@@ -172,7 +144,7 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                     lineHeight: 1.2,
                   }}
                 >
-                  {typedProduct.name}
+                  {product.name}
                 </Typography>
                 <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
                   <Link href={publicUrl} target="_blank" style={{ textDecoration: "none" }}>
@@ -304,8 +276,8 @@ export default async function ProductEntriesPage({ params }: PageProps) {
           </Paper>
         ) : (
           <Stack spacing={2}>
-            {(entries as (Entry & { entry_items?: { id: string }[] })[]).map((entry, index) => {
-              const itemCount = entry.entry_items?.length || 0
+            {entries.map((entry, index) => {
+              const itemCount = entry.entry_items.length
               const isLatest = index === 0 && entry.published
 
               return (

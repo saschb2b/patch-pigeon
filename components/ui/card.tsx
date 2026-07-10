@@ -6,7 +6,7 @@ import MuiCardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 
-interface CardProps extends React.ComponentProps<typeof MuiCard> {}
+type CardProps = React.ComponentProps<typeof MuiCard>
 
 function Card({ children, sx, ...props }: CardProps) {
   return (
@@ -96,7 +96,7 @@ function CardAction({ children, sx, ...props }: CardActionProps) {
   )
 }
 
-interface CardContentProps extends React.ComponentProps<typeof MuiCardContent> {}
+type CardContentProps = React.ComponentProps<typeof MuiCardContent>
 
 function CardContent({ children, sx, ...props }: CardContentProps) {
   return (

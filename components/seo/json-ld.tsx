@@ -1,6 +1,17 @@
 import type { Product, Profile, EntryWithItems } from "@/lib/types"
+import { getSiteUrl } from "@/lib/site-url"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
+const siteUrl = getSiteUrl()
+
+function JsonLd({ value }: { value: unknown }) {
+  const serialized = JSON.stringify(value).replace(/</g, "\\u003c")
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: serialized }}
+    />
+  )
+}
 
 interface OrganizationJsonLdProps {
   profile: Profile
@@ -15,12 +26,7 @@ export function OrganizationJsonLd({ profile }: OrganizationJsonLdProps) {
     ...(profile.avatar_url && { logo: profile.avatar_url }),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface SoftwareApplicationJsonLdProps {
@@ -48,12 +54,7 @@ export function SoftwareApplicationJsonLd({ product, profile }: SoftwareApplicat
     },
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface ChangelogJsonLdProps {
@@ -89,12 +90,7 @@ export function ChangelogJsonLd({ product, profile, entries }: ChangelogJsonLdPr
     })),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface ArticleJsonLdProps {
@@ -151,12 +147,7 @@ export function ArticleJsonLd({ entry, product, profile }: ArticleJsonLdProps) {
     },
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface BreadcrumbJsonLdProps {
@@ -175,12 +166,7 @@ export function BreadcrumbJsonLd({ items }: BreadcrumbJsonLdProps) {
     })),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface WebsiteJsonLdProps {
@@ -205,12 +191,7 @@ export function WebsiteJsonLd({ name = "PatchPigeon", description }: WebsiteJson
     },
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }
 
 interface FAQJsonLdProps {
@@ -231,10 +212,5 @@ export function FAQJsonLd({ faqs }: FAQJsonLdProps) {
     })),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <JsonLd value={jsonLd} />
 }

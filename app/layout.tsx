@@ -1,14 +1,14 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { DM_Sans, JetBrains_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import { ThemeRegistry } from "@/components/theme-registry"
+import { getSiteUrl } from "@/lib/site-url"
 import "./globals.css"
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" })
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
+const siteUrl = getSiteUrl()
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -118,7 +118,6 @@ export default function RootLayout({
         <ThemeRegistry>
           {children}
         </ThemeRegistry>
-        <Analytics />
       </body>
     </html>
   )

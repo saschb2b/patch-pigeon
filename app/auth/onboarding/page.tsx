@@ -1,10 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { useActionState, useEffect, useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,107 +10,32 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import ErrorIcon from "@mui/icons-material/Error"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import { generateSlug } from "@/lib/utils/slug"
+import { onboardingAction, checkSlugAvailability, type ActionState } from "../actions"
 
 export default function OnboardingPage() {
-  const router = useRouter()
-  const supabase = createClient()
   const [displayName, setDisplayName] = useState("")
   const [ownerSlug, setOwnerSlug] = useState("")
-  const [isChecking, setIsChecking] = useState(false)
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [availability, setAvailability] = useState<{
+    slug: string
+    isAvailable: boolean
+  } | null>(null)
+  const [isChecking, startCheck] = useTransition()
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(onboardingAction, {})
 
-  const handleDisplayNameChange = (value: string) => {
-    setDisplayName(value)
-    const slug = generateSlug(value)
-    setOwnerSlug(slug)
-    if (slug) {
-      checkAvailability(slug)
-    } else {
-      setIsAvailable(null)
-    }
-  }
+  useEffect(() => {
+    if (!ownerSlug) return
+    const handle = setTimeout(() => {
+      startCheck(async () => {
+        const { available } = await checkSlugAvailability(ownerSlug)
+        setAvailability({ slug: ownerSlug, isAvailable: available })
+      })
+    }, 250)
+    return () => clearTimeout(handle)
+  }, [ownerSlug])
 
-  const handleSlugChange = (value: string) => {
-    const slug = generateSlug(value)
-    setOwnerSlug(slug)
-    if (slug) {
-      checkAvailability(slug)
-    } else {
-      setIsAvailable(null)
-    }
-  }
-
-  const checkAvailability = async (slug: string) => {
-    setIsChecking(true)
-    setIsAvailable(null)
-
-    // Reserved slugs that shouldn't be used
-    const reserved = [
-      "admin",
-      "auth",
-      "api",
-      "settings",
-      "profile",
-      "onboarding",
-      "help",
-      "support",
-      "about",
-      "pricing",
-      "blog",
-      "docs",
-    ]
-    if (reserved.includes(slug)) {
-      setIsAvailable(false)
-      setIsChecking(false)
-      return
-    }
-
-    const { data } = await supabase.from("profiles").select("id").eq("owner_slug", slug).maybeSingle()
-
-    setIsAvailable(!data)
-    setIsChecking(false)
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-
-    if (!ownerSlug || !isAvailable) {
-      setError("Please choose an available handle")
-      return
-    }
-
-    setIsSubmitting(true)
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      router.push("/auth/login")
-      return
-    }
-
-    const { error: insertError } = await supabase.from("profiles").insert({
-      id: user.id,
-      owner_slug: ownerSlug,
-      display_name: displayName || null,
-    })
-
-    if (insertError) {
-      if (insertError.code === "23505") {
-        setError("This handle is already taken. Please choose another.")
-        setIsAvailable(false)
-      } else {
-        setError(insertError.message)
-      }
-      setIsSubmitting(false)
-      return
-    }
-
-    router.push("/admin")
-  }
+  const isAvailable = availability?.slug === ownerSlug
+    ? availability.isAvailable
+    : null
 
   return (
     <Box
@@ -138,11 +59,11 @@ export default function OnboardingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Box component="form" onSubmit={handleSubmit}>
+          <Box component="form" action={formAction}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              {error && (
+              {state.error && (
                 <Alert severity="error" icon={<ErrorIcon />}>
-                  {error}
+                  {state.error}
                 </Alert>
               )}
 
@@ -150,9 +71,13 @@ export default function OnboardingPage() {
                 <Label htmlFor="displayName">Display Name</Label>
                 <Input
                   id="displayName"
+                  name="displayName"
                   placeholder="Acme Inc. or John Doe"
                   value={displayName}
-                  onChange={(e) => handleDisplayNameChange(e.target.value)}
+                  onChange={(e) => {
+                    setDisplayName(e.target.value)
+                    setOwnerSlug(generateSlug(e.target.value))
+                  }}
                 />
                 <Box component="p" sx={{ fontSize: "0.75rem", color: "text.secondary", mt: 0.5 }}>
                   Your company or personal name (optional)
@@ -163,13 +88,14 @@ export default function OnboardingPage() {
                 <Label htmlFor="ownerSlug">Your Handle</Label>
                 <Input
                   id="ownerSlug"
+                  name="ownerSlug"
                   placeholder="acme"
                   value={ownerSlug}
-                  onChange={(e) => handleSlugChange(e.target.value)}
+                  onChange={(e) => setOwnerSlug(generateSlug(e.target.value))}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start" sx={{ color: "text.secondary", whiteSpace: 'nowrap' }}>
-                        <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>patchpigeon.com</Box>/
+                      <InputAdornment position="start" sx={{ color: "text.secondary", whiteSpace: "nowrap" }}>
+                        <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>/</Box>
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -192,26 +118,17 @@ export default function OnboardingPage() {
                 </Box>
               </Box>
 
-              <Box
-                sx={{
-                  borderRadius: 2,
-                  bgcolor: "grey.100",
-                  p: 2,
-                }}
-              >
+              <Box sx={{ borderRadius: 2, bgcolor: "grey.100", p: 2 }}>
                 <Box component="p" sx={{ fontSize: "0.875rem", fontWeight: 500, mb: 0.5 }}>
                   Your changelog URLs will look like:
                 </Box>
-                <Box
-                  component="p"
-                  sx={{ fontSize: "0.875rem", fontFamily: "monospace", color: "primary.main" }}
-                >
-                  patchpigeon.com/{ownerSlug || "your-handle"}/your-product
+                <Box component="p" sx={{ fontSize: "0.875rem", fontFamily: "monospace", color: "primary.main" }}>
+                  /{ownerSlug || "your-handle"}/your-product
                 </Box>
               </Box>
 
-              <Button type="submit" disabled={isSubmitting || !isAvailable}>
-                {isSubmitting ? (
+              <Button type="submit" disabled={isPending || !isAvailable}>
+                {isPending ? (
                   <>
                     <CircularProgress size={16} sx={{ mr: 1 }} />
                     Creating profile...

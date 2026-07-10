@@ -1,19 +1,18 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
-import { Box, Container, Typography, Stack, Paper, Chip, Button } from "@mui/material"
+import { Box, Container, Typography, Stack, Paper, Chip } from "@mui/material"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
 import TagIcon from "@mui/icons-material/Tag"
-import ShareIcon from "@mui/icons-material/Share"
-import { createClient } from "@/lib/supabase/server"
+import { getPublicEntry } from "@/lib/data/public"
+import { getSiteUrl } from "@/lib/site-url"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import { EntryCard } from "@/components/changelog/entry-card"
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld"
-import type { EntryWithItems, Product, Profile } from "@/lib/types"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
+const siteUrl = getSiteUrl()
 
 // Brand colors
 const colors = {
@@ -30,36 +29,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ownerSlug, productSlug, entrySlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicEntry(ownerSlug, productSlug, entrySlug)
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
-
-  if (!profile) {
+  if (!result) {
     return { title: "Not Found" }
   }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", profile.id)
-    .eq("slug", productSlug)
-    .maybeSingle()
-
-  if (!product) {
-    return { title: "Not Found" }
-  }
-
-  const { data: entry } = await supabase
-    .from("entries")
-    .select("*, entry_items(*)")
-    .eq("product_id", product.id)
-    .eq("slug", entrySlug)
-    .eq("published", true)
-    .maybeSingle()
-
-  if (!entry) {
-    return { title: "Not Found" }
-  }
+  const { profile, product, entry } = result
 
   const title = `${entry.title} - ${product.name} Changelog`
   const description = entry.summary || `${entry.title} - View the latest changes, features, and fixes for ${product.name}.`
@@ -108,45 +83,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function EntryDetailPage({ params }: PageProps) {
   const { ownerSlug, productSlug, entrySlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicEntry(ownerSlug, productSlug, entrySlug)
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
-
-  if (!profile) {
+  if (!result) {
     notFound()
   }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", profile.id)
-    .eq("slug", productSlug)
-    .maybeSingle()
-
-  if (!product) {
-    notFound()
-  }
-
-  const { data: entry } = await supabase
-    .from("entries")
-    .select("*, entry_items(*)")
-    .eq("product_id", product.id)
-    .eq("slug", entrySlug)
-    .eq("published", true)
-    .maybeSingle()
-
-  if (!entry) {
-    notFound()
-  }
-
-  const { data: relatedEntries } = await supabase
-    .from("entries")
-    .select("*, entry_items(*)")
-    .eq("product_id", product.id)
-    .eq("published", true)
-    .neq("id", entry.id)
-    .order("publish_date", { ascending: false })
-    .limit(3)
+  const { profile, product, entry, relatedEntries } = result
 
   const publishDate = entry.publish_date
     ? new Date(entry.publish_date).toLocaleDateString("en-US", {
@@ -156,15 +98,14 @@ export default async function EntryDetailPage({ params }: PageProps) {
       })
     : null
 
-  const entryWithItems = entry as EntryWithItems
-  const items = entryWithItems.entry_items || []
+  const items = entry.entry_items
 
   return (
     <>
       <ArticleJsonLd 
-        entry={entryWithItems} 
-        product={product as Product} 
-        profile={profile as Profile} 
+        entry={entry}
+        product={product}
+        profile={profile}
       />
       <BreadcrumbJsonLd 
         items={[
@@ -175,7 +116,7 @@ export default async function EntryDetailPage({ params }: PageProps) {
         ]} 
       />
       <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-        <ChangelogHeader product={product as Product} profile={profile as Profile} />
+        <ChangelogHeader product={product} profile={profile} />
 
       {/* Hero section for entry */}
       <Box
@@ -331,7 +272,7 @@ export default async function EntryDetailPage({ params }: PageProps) {
                 {relatedEntries.map((related) => (
                   <EntryCard
                     key={related.id}
-                    entry={related as EntryWithItems}
+                    entry={related}
                     ownerSlug={ownerSlug}
                     productSlug={productSlug}
                   />

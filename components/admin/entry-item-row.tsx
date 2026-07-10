@@ -15,54 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
-import BugReportIcon from "@mui/icons-material/BugReport"
-import BoltIcon from "@mui/icons-material/Bolt"
-import WarningIcon from "@mui/icons-material/Warning"
-import RemoveIcon from "@mui/icons-material/Remove"
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"
+import { changeTypeConfig } from "@/components/change-type-config"
 import type { ChangeType, EntryItem } from "@/lib/types"
-
-export const changeTypeConfig: Record<
-  ChangeType,
-  { label: string; icon: React.ReactNode; muiColor: string }
-> = {
-  FEATURE: {
-    label: "Feature",
-    icon: <AutoAwesomeIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#0ea5e9",
-  },
-  FIX: {
-    label: "Fix",
-    icon: <BugReportIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#10b981",
-  },
-  IMPROVEMENT: {
-    label: "Improvement",
-    icon: <BoltIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#f97316",
-  },
-  KNOWNISSUE: {
-    label: "Known Issue",
-    icon: <WarningIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#eab308",
-  },
-  BREAKING: {
-    label: "Breaking",
-    icon: <WarningIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#ef4444",
-  },
-  REMOVED: {
-    label: "Removed",
-    icon: <RemoveIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#6b7280",
-  },
-  NOTE: {
-    label: "Note",
-    icon: <ChatBubbleOutlineIcon sx={{ fontSize: 14 }} />,
-    muiColor: "#6b7280",
-  },
-}
 
 interface EntryItemRowProps {
   item: EntryItem
@@ -172,10 +126,10 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                 sx={{
                   fontSize: "0.75rem",
                   fontWeight: 500,
-                  color: config.muiColor,
-                  bgcolor: `${config.muiColor}10`,
+                  color: config.color,
+                  bgcolor: config.backgroundColor,
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `${config.muiColor}40`,
+                    borderColor: config.borderColor,
                   },
                   "& .MuiSelect-select": {
                     display: "flex",
@@ -186,22 +140,26 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                 }}
                 renderValue={(value) => {
                   const cfg = changeTypeConfig[value as ChangeType]
+                  const Icon = cfg.icon
                   return (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: cfg.muiColor }}>
-                      {cfg.icon}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: cfg.color }}>
+                      <Icon sx={{ fontSize: 14 }} />
                       {cfg.label}
                     </Box>
                   )
                 }}
               >
-                {Object.entries(changeTypeConfig).map(([type, cfg]) => (
-                  <MenuItem key={type} value={type}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
-                      {cfg.icon}
-                      {cfg.label}
-                    </Box>
-                  </MenuItem>
-                ))}
+                {Object.entries(changeTypeConfig).map(([type, cfg]) => {
+                  const Icon = cfg.icon
+                  return (
+                    <MenuItem key={type} value={type}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
+                        <Icon sx={{ fontSize: 14 }} />
+                        {cfg.label}
+                      </Box>
+                    </MenuItem>
+                  )
+                })}
               </MuiSelect>
             </Box>
 
@@ -291,13 +249,13 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               sx={{
                 fontSize: "0.75rem",
                 fontWeight: 500,
-                color: config.muiColor,
-                bgcolor: `${config.muiColor}10`,
+                color: config.color,
+                bgcolor: config.backgroundColor,
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `${config.muiColor}40`,
+                  borderColor: config.borderColor,
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: config.muiColor,
+                  borderColor: config.color,
                 },
                 "& .MuiSelect-select": {
                   display: "flex",
@@ -308,22 +266,26 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               }}
               renderValue={(value) => {
                 const cfg = changeTypeConfig[value as ChangeType]
+                const Icon = cfg.icon
                 return (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
-                    {cfg.icon}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
+                    <Icon sx={{ fontSize: 14 }} />
                     {cfg.label}
                   </Box>
                 )
               }}
             >
-              {Object.entries(changeTypeConfig).map(([type, cfg]) => (
-                <MenuItem key={type} value={type}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.muiColor }}>
-                    {cfg.icon}
-                    {cfg.label}
-                  </Box>
-                </MenuItem>
-              ))}
+              {Object.entries(changeTypeConfig).map(([type, cfg]) => {
+                const Icon = cfg.icon
+                return (
+                  <MenuItem key={type} value={type}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
+                      <Icon sx={{ fontSize: 14 }} />
+                      {cfg.label}
+                    </Box>
+                  </MenuItem>
+                )
+              })}
             </MuiSelect>
           </Box>
 

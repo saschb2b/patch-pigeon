@@ -6,7 +6,6 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
 import BugReportIcon from "@mui/icons-material/BugReport"
 import BoltIcon from "@mui/icons-material/Bolt"
 import WarningIcon from "@mui/icons-material/Warning"
-import TrendingUpIcon from "@mui/icons-material/TrendingUp"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import type { EntryWithItems, ChangeType } from "@/lib/types"
 

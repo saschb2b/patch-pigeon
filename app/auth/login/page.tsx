@@ -1,50 +1,23 @@
 "use client"
 
-import type React from "react"
-import { createClient } from "@/lib/supabase/client"
+import { useActionState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { Box, Container, Typography, Paper, Stack, Alert, InputAdornment } from "@mui/material"
 import MailOutlineIcon from "@mui/icons-material/MailOutline"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import { loginAction, type ActionState } from "../actions"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      if (error) throw error
-      router.push("/admin")
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(loginAction, {})
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", width: "100%" }}>
-      {/* Left side - Decorative */}
       <Box
         sx={{
           display: { xs: "none", lg: "flex" },
@@ -57,43 +30,9 @@ export default function LoginPage() {
           overflow: "hidden",
         }}
       >
-        {/* Floating shapes */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 80,
-            left: 80,
-            width: 128,
-            height: 128,
-            borderRadius: "50%",
-            bgcolor: "rgba(167, 216, 255, 0.4)",
-            filter: "blur(32px)",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 128,
-            right: 80,
-            width: 160,
-            height: 160,
-            borderRadius: "50%",
-            bgcolor: "rgba(255, 184, 161, 0.4)",
-            filter: "blur(32px)",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "33%",
-            width: 96,
-            height: 96,
-            borderRadius: "50%",
-            bgcolor: "rgba(191, 235, 214, 0.4)",
-            filter: "blur(32px)",
-          }}
-        />
+        <Box sx={{ position: "absolute", top: 80, left: 80, width: 128, height: 128, borderRadius: "50%", bgcolor: "rgba(167, 216, 255, 0.4)", filter: "blur(32px)" }} />
+        <Box sx={{ position: "absolute", bottom: 128, right: 80, width: 160, height: 160, borderRadius: "50%", bgcolor: "rgba(255, 184, 161, 0.4)", filter: "blur(32px)" }} />
+        <Box sx={{ position: "absolute", top: "50%", left: "33%", width: 96, height: 96, borderRadius: "50%", bgcolor: "rgba(191, 235, 214, 0.4)", filter: "blur(32px)" }} />
 
         <Box sx={{ position: "relative", zIndex: 1, maxWidth: 400, textAlign: "center" }}>
           <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
@@ -111,7 +50,6 @@ export default function LoginPage() {
             Join hundreds of indie devs who keep their users in the loop with beautiful, hassle-free changelogs.
           </Typography>
 
-          {/* Testimonial card */}
           <Paper
             elevation={0}
             sx={{
@@ -126,37 +64,19 @@ export default function LoginPage() {
             }}
           >
             <Typography variant="body1" sx={{ fontStyle: "italic", mb: 2, color: "text.primary" }}>
-              "Coo coo! This tool is the bread crumbs I've been searching for. No more scattered updates across the park!"
+              &quot;Coo coo! This tool is the bread crumbs I&apos;ve been searching for. No more scattered updates across the park!&quot;
             </Typography>
             <Stack direction="row" spacing={1.5} alignItems="center">
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  bgcolor: "#a7d8ff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.25rem",
-                }}
-              >
-                🐦
-              </Box>
+              <Box sx={{ width: 40, height: 40, borderRadius: "50%", bgcolor: "#a7d8ff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>🐦</Box>
               <Box>
-                <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>
-                  Colonel Feathers
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Chief Nesting Officer
-                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>Colonel Feathers</Typography>
+                <Typography variant="caption" color="text.secondary">Chief Nesting Officer</Typography>
               </Box>
             </Stack>
           </Paper>
         </Box>
       </Box>
 
-      {/* Right side - Form */}
       <Box
         sx={{
           width: { xs: "100%", lg: "50%" },
@@ -168,38 +88,30 @@ export default function LoginPage() {
         }}
       >
         <Container maxWidth="sm">
-          {/* Mobile logo */}
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center", mb: 4 }}>
             <Link href="/" style={{ textDecoration: "none" }}>
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <PigeonLogo size="md" />
-                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
-                  PatchPigeon
-                </Typography>
+                <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
               </Stack>
             </Link>
           </Box>
 
           <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
-              Welcome back!
-            </Typography>
-            <Typography color="text.secondary">
-              Your changelogs missed you. Let's get you signed in.
-            </Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Welcome back!</Typography>
+            <Typography color="text.secondary">Your changelogs missed you. Let&apos;s get you signed in.</Typography>
           </Box>
 
-          <Box component="form" onSubmit={handleLogin}>
+          <Box component="form" action={formAction}>
             <Stack spacing={2.5}>
               <Box>
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -214,11 +126,10 @@ export default function LoginPage() {
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   placeholder="Enter your password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -236,14 +147,14 @@ export default function LoginPage() {
                 </Box>
               </Box>
 
-              {error && (
+              {state.error && (
                 <Alert severity="error" sx={{ borderRadius: 2 }}>
-                  {error}
+                  {state.error}
                 </Alert>
               )}
 
-              <Button type="submit" disabled={isLoading} sx={{ height: 48 }}>
-                {isLoading ? (
+              <Button type="submit" disabled={isPending} sx={{ height: 48 }}>
+                {isPending ? (
                   "Signing in..."
                 ) : (
                   <>
@@ -259,17 +170,13 @@ export default function LoginPage() {
             <Typography color="text.secondary">
               {"New to PatchPigeon? "}
               <Link href="/auth/sign-up" style={{ textDecoration: "none" }}>
-                <Typography
-                  component="span"
-                  sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}
-                >
+                <Typography component="span" sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}>
                   Create an account
                 </Typography>
               </Link>
             </Typography>
           </Box>
 
-          {/* Back to home */}
           <Box sx={{ mt: 3, textAlign: "center" }}>
             <Link href="/" style={{ textDecoration: "none" }}>
               <Typography variant="body2" sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}>

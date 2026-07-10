@@ -86,6 +86,35 @@ function Button({
     )
   }
 
+  const child = asChild ? React.Children.only(children) : null
+  if (child && React.isValidElement(child)) {
+    const childProps = child.props as React.ComponentProps<React.ElementType>
+    return (
+      <MuiButton
+        component={child.type as React.ElementType}
+        {...childProps}
+        {...props}
+        variant={getMuiVariant()}
+        color={getMuiColor()}
+        size={getMuiSize()}
+        startIcon={startIcon}
+        endIcon={endIcon}
+        sx={{
+          ...(variant === 'link' && {
+            textDecoration: 'underline',
+            '&:hover': {
+              textDecoration: 'underline',
+              backgroundColor: 'transparent',
+            },
+          }),
+          ...sx,
+        }}
+      >
+        {childProps.children}
+      </MuiButton>
+    )
+  }
+
   return (
     <MuiButton
       variant={getMuiVariant()}

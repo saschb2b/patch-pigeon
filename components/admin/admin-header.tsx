@@ -1,27 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import type { User } from "@supabase/supabase-js"
 import { AppBar, Toolbar, Container, Box, Typography, Stack } from "@mui/material"
 import LogoutIcon from "@mui/icons-material/Logout"
-import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
+import { signOutAction } from "@/app/auth/actions"
 
 interface AdminHeaderProps {
-  user: User
+  user: { email: string }
 }
 
 export function AdminHeader({ user }: AdminHeaderProps) {
-  const router = useRouter()
-
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/")
-  }
-
   return (
     <AppBar
       position="static"
@@ -42,18 +32,16 @@ export function AdminHeader({ user }: AdminHeaderProps) {
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  "&:hover svg": {
-                    transform: "scale(1.05)",
-                  },
+                  "&:hover svg": { transform: "scale(1.05)" },
                 }}
               >
                 <PigeonLogo size="sm" sx={{ transition: "transform 0.2s" }} />
-                <Typography 
-                  variant="h6" 
-                  sx={{ 
-                    fontWeight: 700, 
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
                     color: "text.primary",
-                    fontSize: { xs: '1rem', sm: '1.25rem' },
+                    fontSize: { xs: "1rem", sm: "1.25rem" },
                   }}
                 >
                   PatchPigeon
@@ -61,25 +49,27 @@ export function AdminHeader({ user }: AdminHeaderProps) {
               </Box>
             </Link>
             <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
-              <Typography 
-                variant="body2" 
+              <Typography
+                variant="body2"
                 color="text.secondary"
                 sx={{
-                  display: { xs: 'none', sm: 'block' },
+                  display: { xs: "none", sm: "block" },
                   maxWidth: 200,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {user.email}
               </Typography>
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogoutIcon sx={{ fontSize: 18, mr: { xs: 0, sm: 1 } }} />
-                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                  Sign Out
-                </Box>
-              </Button>
+              <form action={signOutAction}>
+                <Button type="submit" variant="ghost" size="sm">
+                  <LogoutIcon sx={{ fontSize: 18, mr: { xs: 0, sm: 1 } }} />
+                  <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                    Sign Out
+                  </Box>
+                </Button>
+              </form>
             </Stack>
           </Box>
         </Toolbar>

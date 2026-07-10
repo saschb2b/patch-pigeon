@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { Box, Container, Typography, Stack, Paper, Chip } from "@mui/material"
-import { createClient } from "@/lib/supabase/server"
+import { getPublicProductWithEntries } from "@/lib/data/public"
+import { getSiteUrl } from "@/lib/site-url"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { ChangelogJsonLd, BreadcrumbJsonLd, SoftwareApplicationJsonLd } from "@/components/seo/json-ld"
-import type { EntryWithItems, Product, Profile } from "@/lib/types"
+import type { EntryWithItems } from "@/lib/types"
 import HistoryIcon from "@mui/icons-material/History"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://patchpigeon.com"
+const siteUrl = getSiteUrl()
 
 interface PageProps {
   params: Promise<{ ownerSlug: string; productSlug: string }>
@@ -16,30 +17,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ownerSlug, productSlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicProductWithEntries(ownerSlug, productSlug)
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
-
-  if (!profile) {
+  if (!result) {
     return { title: "Not Found" }
   }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", profile.id)
-    .eq("slug", productSlug)
-    .maybeSingle()
-
-  if (!product) {
-    return { title: "Not Found" }
-  }
-
-  const { count } = await supabase
-    .from("entries")
-    .select("*", { count: "exact", head: true })
-    .eq("product_id", product.id)
-    .eq("published", true)
+  const { product, entries } = result
 
   const title = `${product.name} Changelog`
   const description = product.description || `Latest updates, features, and bug fixes for ${product.name}. Stay informed about all product changes.`
@@ -78,49 +61,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     other: {
-      "release-count": String(count || 0),
+      "release-count": String(entries.length),
     },
   }
 }
 
 export default async function ChangelogPage({ params }: PageProps) {
   const { ownerSlug, productSlug } = await params
-  const supabase = await createClient()
+  const result = await getPublicProductWithEntries(ownerSlug, productSlug)
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("owner_slug", ownerSlug).maybeSingle()
-
-  if (!profile) {
+  if (!result) {
     notFound()
   }
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", profile.id)
-    .eq("slug", productSlug)
-    .maybeSingle()
-
-  if (!product) {
-    notFound()
-  }
-
-  const { data: entries } = await supabase
-    .from("entries")
-    .select("*, entry_items(*)")
-    .eq("product_id", product.id)
-    .eq("published", true)
-    .order("publish_date", { ascending: false })
-
-  const groupedEntries = groupEntriesByMonth((entries as EntryWithItems[]) || [])
-  const totalEntries = entries?.length || 0
+  const { profile, product, entries } = result
+  const groupedEntries = groupEntriesByMonth(entries)
+  const totalEntries = entries.length
 
   return (
     <>
-      <SoftwareApplicationJsonLd product={product as Product} profile={profile as Profile} />
+      <SoftwareApplicationJsonLd product={product} profile={profile} />
       <ChangelogJsonLd 
-        product={product as Product} 
-        profile={profile as Profile} 
-        entries={(entries as EntryWithItems[]) || []} 
+        product={product}
+        profile={profile}
+        entries={entries}
       />
       <BreadcrumbJsonLd 
         items={[
@@ -131,8 +94,8 @@ export default async function ChangelogPage({ params }: PageProps) {
       />
       <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
         <ChangelogHeader 
-          product={product as Product} 
-          profile={profile as Profile} 
+          product={product}
+          profile={profile}
           entryCount={totalEntries}
         />
 

@@ -1,86 +1,78 @@
 # PatchPigeon
 
-Beautiful changelogs for indie developers. Open source and community funded.
+PatchPigeon is a self-hostable changelog platform for products and small teams. It provides a structured release editor, public owner and product pages, JSON and RSS feeds, and credential-based accounts.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black)
-![License](https://img.shields.io/badge/license-MIT-blue)
+## Quick start with Docker
 
-## What is PatchPigeon?
+Requirements: Docker Engine with Docker Compose.
 
-A simple changelog platform where you can create products, write structured updates, and share public changelog pages with your users. No more scattering updates across Discord, Twitter, and email.
+1. Copy the environment template:
 
-**Live at:** [patchpigeon.com](https://patchpigeon.com)
-
-## Features
-
-- Public changelog pages at `/{owner}/{product}`
-- Structured entry editor with live preview
-- REST API (JSON + RSS feeds)
-- Drag & drop reordering
-- Change type badges (Feature, Fix, Improvement, Breaking, etc.)
-
-## Tech Stack
-
-- Next.js 16 (App Router)
-- Supabase (PostgreSQL + Auth)
-- Material UI v7
-- dnd-kit
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm
-- Supabase account
-
-### Setup
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/saschb2b/patch-pigeon.git
-   cd patch-pigeon
+   ```sh
+   cp .env.example .env
    ```
 
-2. Install dependencies:
-   ```bash
-   pnpm install
+   In PowerShell, use `Copy-Item .env.example .env`.
+
+2. Set `POSTGRES_PASSWORD`, the matching password inside `DATABASE_URL`, and `AUTH_SECRET` in `.env`. Generate the auth secret with `openssl rand -base64 32`.
+
+3. Start PatchPigeon:
+
+   ```sh
+   docker compose up -d --build
    ```
 
-3. Create a Supabase project and run the migrations in order:
-   - `scripts/001_create_tables.sql`
-   - `scripts/002_add_profiles.sql`
-   - `scripts/003_add_entry_items.sql`
+4. Open [http://localhost:3000](http://localhost:3000). Database migrations run automatically before the app starts.
 
-4. Copy `.env.example` to `.env.local` and fill in your Supabase credentials:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your-project-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   ```
+The default Compose configuration binds the app to `127.0.0.1`. Keep that default when a reverse proxy runs on the same host; set `APP_BIND=0.0.0.0` only when the container must be reachable directly from another machine.
 
-5. Run the dev server:
-   ```bash
-   pnpm dev
-   ```
+## Self-hosting
 
-6. Open [http://localhost:3000](http://localhost:3000)
+Production configuration, TLS/reverse-proxy requirements, backups, upgrades, health checks, and SMTP setup are covered in [Self-hosting PatchPigeon](docs/SELF_HOSTING.md).
 
-## API
+If this repository was previously connected to Supabase, read [Migrating from Supabase](docs/MIGRATING_FROM_SUPABASE.md) before importing data. The application tables are portable PostgreSQL data, but Supabase Auth sessions and passwords are not imported by PatchPigeon.
 
-| Endpoint | Description |
-|----------|-------------|
-| `/api/{owner}/{product}/changelog.json` | JSON feed |
+## Local development
+
+Requirements: Node.js 22+, pnpm 10, and PostgreSQL 15+.
+
+```sh
+pnpm install
+cp .env.example .env.local
+pnpm db:migrate
+pnpm dev
+```
+
+Set `DATABASE_URL` (using `localhost`, not the Compose hostname `database`), `AUTH_SECRET`, and `APP_URL=http://localhost:3000` in `.env.local`. See [Development guide](docs/DEVELOPMENT.md) for database and verification commands.
+
+## Main routes
+
+| Route | Purpose |
+| --- | --- |
+| `/{owner}` | Public owner profile |
+| `/{owner}/{product}` | Public changelog |
+| `/{owner}/{product}/{entry}` | Published release detail |
+| `/admin` | Authenticated dashboard |
+| `/api/{owner}/{product}/changelog.json` | Paginated JSON feed |
 | `/api/{owner}/{product}/changelog.rss` | RSS feed |
-| `/api/{owner}/{product}/entries/{slug}` | Single entry |
+| `/api/health` | Database-aware health check |
 
-## Contributing
+## Technology
 
-Contributions are welcome! Feel free to open issues or submit PRs.
+- Next.js 16 and React 19
+- Auth.js credentials authentication
+- PostgreSQL with Drizzle ORM and versioned SQL migrations
+- Material UI 7 and dnd-kit
+- SMTP password-recovery email
 
-## Support
+## Documentation
 
-This project is free and open source. If you find it useful, consider [sponsoring its development](https://github.com/sponsors/saschb2b).
+- [Self-hosting and operations](docs/SELF_HOSTING.md)
+- [Supabase migration guide](docs/MIGRATING_FROM_SUPABASE.md)
+- [Development guide](docs/DEVELOPMENT.md)
+- [Agent knowledge index](knowledge/index.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## License
 
-MIT
+[MIT](LICENSE)

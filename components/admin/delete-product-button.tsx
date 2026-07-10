@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { deleteProductAction } from "@/app/admin/actions"
 import { Button } from "@/components/ui/button"
 import DeleteIcon from "@mui/icons-material/Delete"
 import {
@@ -28,11 +28,12 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
 
   const handleDelete = async () => {
     setIsDeleting(true)
-    const supabase = createClient()
-
-    await supabase.from("products").delete().eq("id", productId)
-
-    router.push("/admin")
+    try {
+      await deleteProductAction(productId)
+      router.push("/admin")
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   return (
