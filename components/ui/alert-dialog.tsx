@@ -48,24 +48,25 @@ function AlertDialog({ children, open: controlledOpen, onOpenChange }: AlertDial
 }
 
 interface AlertDialogTriggerProps {
-  children: React.ReactNode
-  asChild?: boolean
+  children: React.ReactElement
 }
 
-function AlertDialogTrigger({ children, asChild }: AlertDialogTriggerProps) {
+interface AlertDialogTriggerChildProps {
+  onClick?: React.MouseEventHandler<HTMLElement>
+}
+
+function AlertDialogTrigger({ children }: AlertDialogTriggerProps) {
   const { setOpen } = useAlertDialogContext()
-  
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
-      onClick: () => setOpen(true),
-    })
+  const child = children as React.ReactElement<AlertDialogTriggerChildProps>
+
+  const handleClick: React.MouseEventHandler<HTMLElement> = (event) => {
+    child.props.onClick?.(event)
+    if (!event.defaultPrevented) {
+      setOpen(true)
+    }
   }
-  
-  return (
-    <span onClick={() => setOpen(true)} style={{ cursor: 'pointer' }}>
-      {children}
-    </span>
-  )
+
+  return React.cloneElement(child, { onClick: handleClick })
 }
 
 function AlertDialogPortal({ children }: { children: React.ReactNode }) {

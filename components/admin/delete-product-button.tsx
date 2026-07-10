@@ -38,7 +38,7 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger>
         <Button variant="destructive">
           <DeleteIcon sx={{ fontSize: 18, mr: 1 }} />
           Delete Product

@@ -39,7 +39,7 @@ export function DeleteEntryButton({ entryId, entryTitle }: DeleteEntryButtonProp
   return (
     <AlertDialog>
       <Tooltip title="Delete entry">
-        <AlertDialogTrigger asChild>
+        <AlertDialogTrigger>
           <IconButton
             aria-label={`Delete ${entryTitle}`}
             size="small"
