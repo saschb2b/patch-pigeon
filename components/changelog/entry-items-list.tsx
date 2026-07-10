@@ -51,8 +51,8 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
                 <Icon sx={{ fontSize: 18 }} />
               </Box>
               <Typography variant="caption" sx={{ color: config.color, fontWeight: 600 }}>
-                {typeItems.length} {config.label.toLowerCase()}
-                {typeItems.length > 1 ? "s" : ""}
+                {typeItems.length}{" "}
+                {typeItems.length === 1 ? config.countLabel : config.pluralCountLabel}
               </Typography>
             </Stack>
           );

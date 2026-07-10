@@ -2,11 +2,8 @@
 
 import Link from "next/link"
 import { Box, Typography, Stack, Paper, Chip } from "@mui/material"
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
-import BugReportIcon from "@mui/icons-material/BugReport"
-import BoltIcon from "@mui/icons-material/Bolt"
-import WarningIcon from "@mui/icons-material/Warning"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import { CHANGE_TYPE_ORDER, changeTypeConfig } from "@/components/change-type-config"
 import type { EntryWithItems, ChangeType } from "@/lib/types"
 
 // Brand colors
@@ -41,8 +38,12 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
       acc[item.type] = (acc[item.type] || 0) + 1
       return acc
     },
-    {} as Record<ChangeType, number>,
+    {} as Partial<Record<ChangeType, number>>,
   )
+  const visibleTypeCounts = CHANGE_TYPE_ORDER.flatMap((type) => {
+    const count = typeCounts[type] ?? 0
+    return count > 0 ? [{ type, count }] : []
+  })
 
   // Get summary: either from summary field or first few item titles
   const summaryText =
@@ -53,35 +54,13 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
       .join(" • ")
 
   // Determine primary type for card accent
-  const primaryType = typeCounts.FEATURE ? 'FEATURE' 
-    : typeCounts.IMPROVEMENT ? 'IMPROVEMENT'
-    : typeCounts.FIX ? 'FIX'
-    : typeCounts.BREAKING ? 'BREAKING'
-    : null
-
-  const accentColors: Record<string, string> = {
-    FEATURE: colors.sky,
-    IMPROVEMENT: colors.peach,
-    FIX: colors.mint,
-    BREAKING: '#fca5a5',
-  }
-
-  const accentColor = primaryType ? accentColors[primaryType] : colors.sky
-  const changeCountLabel = [
-    typeCounts.FEATURE > 0
-      ? `${typeCounts.FEATURE} feature${typeCounts.FEATURE === 1 ? "" : "s"}`
-      : null,
-    typeCounts.IMPROVEMENT > 0
-      ? `${typeCounts.IMPROVEMENT} improvement${typeCounts.IMPROVEMENT === 1 ? "" : "s"}`
-      : null,
-    typeCounts.FIX > 0
-      ? `${typeCounts.FIX} fix${typeCounts.FIX === 1 ? "" : "es"}`
-      : null,
-    typeCounts.BREAKING > 0
-      ? `${typeCounts.BREAKING} breaking change${typeCounts.BREAKING === 1 ? "" : "s"}`
-      : null,
-  ]
-    .filter((label) => label !== null)
+  const primaryType = visibleTypeCounts[0]?.type
+  const accentColor = primaryType ? changeTypeConfig[primaryType].dotColor : colors.sky
+  const changeCountLabel = visibleTypeCounts
+    .map(({ type, count }) => {
+      const config = changeTypeConfig[type]
+      return `${count} ${count === 1 ? config.countLabel : config.pluralCountLabel}`
+    })
     .join(", ")
   const entryLinkLabel = [
     `View ${entry.title}`,
@@ -253,98 +232,41 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                 borderTop: 1,
                 borderColor: "divider"
               }}>
-              {typeCounts.FEATURE > 0 && (
-                <Stack direction="row" spacing={0.5} sx={{
-                  alignItems: "center"
-                }}>
-                  <Box
-                    sx={{
-                      width: { xs: 20, sm: 24 },
-                      height: { xs: 20, sm: 24 },
-                      borderRadius: 1.5,
-                      bgcolor: `${colors.sky}40`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <AutoAwesomeIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#0284c7" }} />
-                  </Box>
-                  <Typography variant="caption" sx={{ color: "#0284c7", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    {typeCounts.FEATURE}
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> feature{typeCounts.FEATURE > 1 ? "s" : ""}</Box>
-                  </Typography>
-                </Stack>
-              )}
-              {typeCounts.IMPROVEMENT > 0 && (
-                <Stack direction="row" spacing={0.5} sx={{
-                  alignItems: "center"
-                }}>
-                  <Box
-                    sx={{
-                      width: { xs: 20, sm: 24 },
-                      height: { xs: 20, sm: 24 },
-                      borderRadius: 1.5,
-                      bgcolor: `${colors.peach}40`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <BoltIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#c2410c" }} />
-                  </Box>
-                  <Typography variant="caption" sx={{ color: "#c2410c", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    {typeCounts.IMPROVEMENT}
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> improvement{typeCounts.IMPROVEMENT > 1 ? "s" : ""}</Box>
-                  </Typography>
-                </Stack>
-              )}
-              {typeCounts.FIX > 0 && (
-                <Stack direction="row" spacing={0.5} sx={{
-                  alignItems: "center"
-                }}>
-                  <Box
-                    sx={{
-                      width: { xs: 20, sm: 24 },
-                      height: { xs: 20, sm: 24 },
-                      borderRadius: 1.5,
-                      bgcolor: `${colors.mint}40`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <BugReportIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#15803d" }} />
-                  </Box>
-                  <Typography variant="caption" sx={{ color: "#15803d", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    {typeCounts.FIX}
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> fix{typeCounts.FIX > 1 ? "es" : ""}</Box>
-                  </Typography>
-                </Stack>
-              )}
-              {typeCounts.BREAKING > 0 && (
-                <Stack direction="row" spacing={0.5} sx={{
-                  alignItems: "center"
-                }}>
-                  <Box
-                    sx={{
-                      width: { xs: 20, sm: 24 },
-                      height: { xs: 20, sm: 24 },
-                      borderRadius: 1.5,
-                      bgcolor: '#fee2e2',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <WarningIcon sx={{ fontSize: { xs: 12, sm: 14 }, color: "#dc2626" }} />
-                  </Box>
-                  <Typography variant="caption" sx={{ color: "#dc2626", fontWeight: 600, fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    {typeCounts.BREAKING}
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}> breaking</Box>
-                  </Typography>
-                </Stack>
-              )}
+              {visibleTypeCounts.map(({ type, count }) => {
+                const config = changeTypeConfig[type]
+                const Icon = config.icon
+
+                return (
+                  <Stack key={type} direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        width: { xs: 20, sm: 24 },
+                        height: { xs: 20, sm: 24 },
+                        borderRadius: 1.5,
+                        bgcolor: config.backgroundColor,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon sx={{ fontSize: { xs: 12, sm: 14 }, color: config.color }} />
+                    </Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: config.color,
+                        fontWeight: 600,
+                        fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                      }}
+                    >
+                      {count}
+                      <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                        {` ${count === 1 ? config.countLabel : config.pluralCountLabel}`}
+                      </Box>
+                    </Typography>
+                  </Stack>
+                )
+              })}
             </Stack>
           )}
         </Paper>

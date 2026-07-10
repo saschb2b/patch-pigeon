@@ -9,6 +9,8 @@ import type { ChangeType } from "@/lib/types"
 
 interface ChangeTypeConfig {
   label: string
+  countLabel: string
+  pluralCountLabel: string
   sectionLabel: string
   pluralSectionLabel: string
   icon: SvgIconComponent
@@ -31,6 +33,8 @@ export const CHANGE_TYPE_ORDER: ChangeType[] = [
 export const changeTypeConfig = {
   FEATURE: {
     label: "Feature",
+    countLabel: "feature",
+    pluralCountLabel: "features",
     sectionLabel: "New Feature",
     pluralSectionLabel: "New Features",
     icon: AutoAwesomeIcon,
@@ -41,6 +45,8 @@ export const changeTypeConfig = {
   },
   IMPROVEMENT: {
     label: "Improvement",
+    countLabel: "improvement",
+    pluralCountLabel: "improvements",
     sectionLabel: "Improvement",
     pluralSectionLabel: "Improvements",
     icon: BoltIcon,
@@ -51,6 +57,8 @@ export const changeTypeConfig = {
   },
   FIX: {
     label: "Fix",
+    countLabel: "fix",
+    pluralCountLabel: "fixes",
     sectionLabel: "Bug Fix",
     pluralSectionLabel: "Bug Fixes",
     icon: BugReportIcon,
@@ -61,6 +69,8 @@ export const changeTypeConfig = {
   },
   KNOWNISSUE: {
     label: "Known Issue",
+    countLabel: "known issue",
+    pluralCountLabel: "known issues",
     sectionLabel: "Known Issue",
     pluralSectionLabel: "Known Issues",
     icon: WarningIcon,
@@ -71,6 +81,8 @@ export const changeTypeConfig = {
   },
   BREAKING: {
     label: "Breaking",
+    countLabel: "breaking change",
+    pluralCountLabel: "breaking changes",
     sectionLabel: "Breaking Change",
     pluralSectionLabel: "Breaking Changes",
     icon: WarningIcon,
@@ -81,6 +93,8 @@ export const changeTypeConfig = {
   },
   REMOVED: {
     label: "Removed",
+    countLabel: "removal",
+    pluralCountLabel: "removals",
     sectionLabel: "Removed",
     pluralSectionLabel: "Removed",
     icon: RemoveIcon,
@@ -91,6 +105,8 @@ export const changeTypeConfig = {
   },
   NOTE: {
     label: "Note",
+    countLabel: "note",
+    pluralCountLabel: "notes",
     sectionLabel: "Note",
     pluralSectionLabel: "Notes",
     icon: ChatBubbleOutlinedIcon,
