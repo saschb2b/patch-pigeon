@@ -11,6 +11,9 @@
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e:report": "playwright show-report",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.mjs",
     "db:push": "node --env-file-if-exists=.env.local node_modules/drizzle-kit/bin.cjs push",
@@ -39,6 +42,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "@types/node": "^22.20.1",
     "@types/nodemailer": "8.0.1",
     "@types/react": "^19.2.0",

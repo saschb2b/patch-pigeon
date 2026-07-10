@@ -19,6 +19,13 @@ yarn-error.log*
 # local browser QA artifacts
 /dogfood-output/
 
+# Playwright artifacts and browser session state
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.auth/
+/.playwright-cli/
+
 # env files
 .env*
 !.env.example

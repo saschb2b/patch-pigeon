@@ -40,6 +40,34 @@ pnpm build
 docker compose config
 ```
 
+## End-to-end tests
+
+The Playwright suite covers the public demo, signup and onboarding, sign-out
+and login, product creation, release publishing, public changelog pages, and
+JSON/RSS feeds. Install Chromium once, then run the managed suite:
+
+```sh
+pnpm test:e2e:install
+pnpm test:e2e
+```
+
+The managed command builds a production image on `127.0.0.1:3100`, starts a
+project-scoped PostgreSQL database, runs migrations through the normal
+container entrypoint, and removes the containers and volume afterward. It
+does not use `.env`, `.env.local`, or development data. Set
+`E2E_KEEP_STACK=1` to retain a failed stack for investigation; the next managed
+run removes it before starting.
+
+To run against an already-running deployment instead, set `E2E_BASE_URL`; in
+that mode the command does not start or stop Docker:
+
+```sh
+E2E_BASE_URL=https://staging.example.com pnpm test:e2e
+```
+
+Failure traces, screenshots, and videos are written under `test-results/`.
+Open the HTML summary with `pnpm test:e2e:report`.
+
 `pnpm check` runs TypeScript and strict React Compiler-aware ESLint rules. The compiler is enabled in `next.config.mjs`; avoid manual `useMemo`, `useCallback`, and `React.memo` unless referential identity is required outside React or for effect correctness.
 
 ## Dependency maintenance

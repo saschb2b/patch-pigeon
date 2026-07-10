@@ -1,6 +1,16 @@
 .git
+.agents
+.github
 .next
+.playwright
+.playwright-cli
+blob-report
+dogfood-output
 node_modules
+playwright-report
+specs
+test-results
+tests
 .env*
 npm-debug.log*
 pnpm-debug.log*
