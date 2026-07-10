@@ -82,7 +82,7 @@ export default function SignUpPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Create a password (min 6 chars)"
+                  placeholder="Create a password (min 8 chars)"
                   required
                   slotProps={{
                     htmlInput: { minLength: 8 },

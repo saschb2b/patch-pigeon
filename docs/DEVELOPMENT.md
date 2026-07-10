@@ -10,6 +10,12 @@ pnpm db:migrate
 pnpm dev
 ```
 
+The project does not seed a default account. Once the database is running and
+the migrations have completed, create a local account at
+`http://localhost:3000/auth/sign-up`; passwords must contain at least eight
+characters. Signup and login require a working `DATABASE_URL` even though the
+public demo routes do not.
+
 When SMTP is unset in development, requested password-reset URLs appear in the server log.
 
 ## Database workflow

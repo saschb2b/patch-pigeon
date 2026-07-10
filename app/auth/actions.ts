@@ -7,7 +7,7 @@ import { z } from "zod"
 import { createHash, randomBytes } from "node:crypto"
 import { signIn, signOut } from "@/auth"
 import { AuthError } from "next-auth"
-import { db } from "@/lib/db"
+import { db, isDatabaseConfigured } from "@/lib/db"
 import { users, profiles, passwordResetTokens } from "@/lib/db/schema"
 import { sendPasswordResetEmail } from "@/lib/email"
 import { generateSlug } from "@/lib/utils/slug"
@@ -15,6 +15,8 @@ import { getSiteUrl } from "@/lib/site-url"
 import { getProfile, requireUser } from "@/lib/auth-helpers"
 
 const PASSWORD_HASH_ROUNDS = 12
+const DATABASE_UNAVAILABLE_MESSAGE =
+  "Account creation is unavailable because the database is not configured. Check DATABASE_URL and run the migrations."
 
 const RESERVED_SLUGS = [
   "admin",
@@ -63,11 +65,22 @@ export async function signUpAction(_: ActionState, formData: FormData): Promise<
   const { email, password } = parsed.data
   const normalizedEmail = email.toLowerCase()
 
-  const [existing] = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, normalizedEmail))
-    .limit(1)
+  if (!isDatabaseConfigured) {
+    return { error: DATABASE_UNAVAILABLE_MESSAGE }
+  }
+
+  let existing: { id: string } | undefined
+  try {
+    const existingUsers = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.email, normalizedEmail))
+      .limit(1)
+    existing = existingUsers[0]
+  } catch (error) {
+    console.error("Sign-up database lookup failed:", error)
+    return { error: DATABASE_UNAVAILABLE_MESSAGE }
+  }
 
   if (existing) {
     return { error: "An account with this email already exists" }
@@ -81,7 +94,8 @@ export async function signUpAction(_: ActionState, formData: FormData): Promise<
     if (message.includes("users_email_unique")) {
       return { error: "An account with this email already exists" }
     }
-    return { error: "Unable to create account. Please try again." }
+    console.error("Sign-up database insert failed:", error)
+    return { error: DATABASE_UNAVAILABLE_MESSAGE }
   }
 
   try {
