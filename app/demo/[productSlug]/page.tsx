@@ -10,7 +10,7 @@ import { getDemoData } from "@/lib/demo-data"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 
 export const metadata = {
-  title: "Demo Changelog | PatchPigeon",
+  title: "Demo Changelog",
   description: "See how your changelog could look with PatchPigeon",
 }
 

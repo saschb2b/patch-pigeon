@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   return {
-    title: `${entry.title} | ${product.name} Changelog | PatchPigeon`,
+    title: `${entry.title} | ${product.name} Changelog`,
     description: entry.summary || `Changelog entry for ${product.name}`,
   }
 }

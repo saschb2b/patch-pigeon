@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   return {
-    title: `${profile.display_name || profile.owner_slug} - PatchPigeon`,
+    title: profile.display_name || profile.owner_slug,
     description: `Explore changelogs from ${profile.display_name || profile.owner_slug}`,
   }
 }
