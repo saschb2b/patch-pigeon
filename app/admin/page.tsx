@@ -47,7 +47,6 @@ export default async function AdminPage() {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
       <AdminHeader user={user} />
-
       <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 }, flex: 1 }}>
         {/* Welcome Section */}
         <Paper
@@ -77,7 +76,13 @@ export default async function AdminPage() {
             }}
           />
           
-          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={2}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: 'flex-start', sm: 'center' }
+            }}>
             <Box sx={{ position: 'relative' }}>
               <Typography
                 variant="h4"
@@ -90,8 +95,18 @@ export default async function AdminPage() {
               >
                 Welcome back! 👋
               </Typography>
-              <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                <Typography color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  alignItems: "center",
+                  flexWrap: "wrap"
+                }}>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }}>
                   Your changelogs live at
                 </Typography>
                 <Chip
@@ -123,26 +138,47 @@ export default async function AdminPage() {
               sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}
             >
               <Box>
-                <Typography variant="h5" fontWeight={700} color="text.primary">
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: "text.primary"
+                  }}>
                   {totalProducts}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {totalProducts === 1 ? 'Product' : 'Products'}
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="h5" fontWeight={700} color="text.primary">
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: "text.primary"
+                  }}>
                   {totalEntries}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {totalEntries === 1 ? 'Entry' : 'Entries'}
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="h5" fontWeight={700} sx={{ color: colors.mint }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: colors.mint
+                  }}>
                   {publishedEntries}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Published
                 </Typography>
               </Box>
@@ -151,7 +187,13 @@ export default async function AdminPage() {
         </Paper>
 
         {/* Products Section */}
-        <Typography variant="h6" fontWeight={600} sx={{ mb: 2, color: 'text.primary' }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 600,
+            mb: 2,
+            color: 'text.primary'
+          }}>
           Your Products
         </Typography>
 
@@ -182,10 +224,21 @@ export default async function AdminPage() {
             >
               <InventoryIcon sx={{ fontSize: 40, color: colors.ink, opacity: 0.5 }} />
             </Box>
-            <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                mb: 1
+              }}>
               No products yet
             </Typography>
-            <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 300, mx: 'auto' }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                mb: 3,
+                maxWidth: 300,
+                mx: 'auto'
+              }}>
               Create your first product to start sharing changelogs with your users.
             </Typography>
             <Button asChild size="lg">
@@ -233,8 +286,15 @@ export default async function AdminPage() {
                         borderColor: 'divider',
                       }}
                     >
-                      <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-                        <Stack direction="row" spacing={2} alignItems="center">
+                      <Stack
+                        direction="row"
+                        sx={{
+                          justifyContent: "space-between",
+                          alignItems: "flex-start"
+                        }}>
+                        <Stack direction="row" spacing={2} sx={{
+                          alignItems: "center"
+                        }}>
                           {/* Product Icon */}
                           <Box
                             sx={{
@@ -264,7 +324,12 @@ export default async function AdminPage() {
                             )}
                           </Box>
                           <Box>
-                            <Typography variant="h6" fontWeight={700} sx={{ lineHeight: 1.2 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                fontWeight: 700,
+                                lineHeight: 1.2
+                              }}>
                               {product.name}
                             </Typography>
                             <Typography
@@ -305,16 +370,15 @@ export default async function AdminPage() {
                     <Box sx={{ p: 2.5 }}>
                       <Typography
                         variant="body2"
-                        color="text.secondary"
                         sx={{
+                          color: "text.secondary",
                           mb: 2,
                           minHeight: 40,
                           overflow: "hidden",
                           display: "-webkit-box",
                           WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
+                          WebkitBoxOrient: "vertical"
+                        }}>
                         {product.description || "No description yet"}
                       </Typography>
 
@@ -353,7 +417,7 @@ export default async function AdminPage() {
                     </Box>
                   </Paper>
                 </Grid>
-              )
+              );
             })}
           </Grid>
         )}
@@ -396,7 +460,9 @@ export default async function AdminPage() {
               transition: 'all 0.2s ease',
             }}
           />
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Enjoying PatchPigeon? Consider{' '}
             <Typography
               component="span"
@@ -409,8 +475,7 @@ export default async function AdminPage() {
           <GitHubIcon sx={{ fontSize: 16, color: 'text.secondary', ml: 0.5 }} />
         </Paper>
       </Container>
-
       <AdminFooter />
     </Box>
-  )
+  );
 }

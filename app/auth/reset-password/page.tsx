@@ -27,13 +27,14 @@ function ResetPasswordForm() {
     <Box sx={{ width: "100%", maxWidth: 448 }}>
       <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
         <Link href="/" style={{ textDecoration: "none" }}>
-          <Stack direction="row" spacing={1.5} alignItems="center">
+          <Stack direction="row" spacing={1.5} sx={{
+            alignItems: "center"
+          }}>
             <PigeonLogo size="lg" />
             <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
           </Stack>
         </Link>
       </Box>
-
       <Paper
         elevation={0}
         sx={{
@@ -51,7 +52,11 @@ function ResetPasswordForm() {
               <CheckCircleIcon sx={{ fontSize: 32, color: "#22c55e" }} />
             </Box>
             <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Password updated!</Typography>
-            <Typography color="text.secondary" sx={{ mb: 3 }}>{state.success}</Typography>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                mb: 3
+              }}>{state.success}</Typography>
             <Button asChild sx={{ height: 48 }}>
               <Link href="/auth/login">
                 Sign in now
@@ -66,7 +71,9 @@ function ResetPasswordForm() {
                 <ShieldIcon sx={{ fontSize: 32, color: "#a7d8ff" }} />
               </Box>
               <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Create new password</Typography>
-              <Typography color="text.secondary">Choose a strong password to keep your account secure.</Typography>
+              <Typography sx={{
+                color: "text.secondary"
+              }}>Choose a strong password to keep your account secure.</Typography>
             </Box>
 
             <Box component="form" action={formAction}>
@@ -80,13 +87,15 @@ function ResetPasswordForm() {
                     type="password"
                     placeholder="Enter new password"
                     required
-                    inputProps={{ minLength: 8 }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LockOutlinedIcon sx={{ color: "text.secondary" }} />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      htmlInput: { minLength: 8 },
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                   />
                 </Box>
@@ -99,12 +108,14 @@ function ResetPasswordForm() {
                     type="password"
                     placeholder="Confirm new password"
                     required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <LockOutlinedIcon sx={{ color: "text.secondary" }} />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                   />
                 </Box>
@@ -131,7 +142,7 @@ function ResetPasswordForm() {
         )}
       </Paper>
     </Box>
-  )
+  );
 }
 
 export default function ResetPasswordPage() {

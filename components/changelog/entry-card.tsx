@@ -113,8 +113,20 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
           }}
         >
           {/* Header row */}
-          <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="space-between">
-            <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}>
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{
+                alignItems: "center",
+                flexWrap: "wrap"
+              }}>
               {entry.version && (
                 <Chip
                   label={`v${entry.version}`}
@@ -131,7 +143,12 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                 />
               )}
               {publishDate && (
-                <Typography variant="caption" color="text.secondary" fontWeight={500}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 500
+                  }}>
                   {publishDate}
                 </Typography>
               )}
@@ -184,15 +201,14 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
           {summaryText && (
             <Typography
               variant="body2"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 overflow: "hidden",
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: "vertical",
-                lineHeight: 1.6,
-              }}
-            >
+                lineHeight: 1.6
+              }}>
               {summaryText}
             </Typography>
           )}
@@ -202,12 +218,17 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
             <Stack
               direction="row"
               spacing={{ xs: 1, sm: 2 }}
-              flexWrap="wrap"
               useFlexGap
-              sx={{ pt: { xs: 1.5, sm: 2 }, borderTop: 1, borderColor: "divider" }}
-            >
+              sx={{
+                flexWrap: "wrap",
+                pt: { xs: 1.5, sm: 2 },
+                borderTop: 1,
+                borderColor: "divider"
+              }}>
               {typeCounts.FEATURE > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
+                <Stack direction="row" spacing={0.5} sx={{
+                  alignItems: "center"
+                }}>
                   <Box
                     sx={{
                       width: { xs: 20, sm: 24 },
@@ -228,7 +249,9 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                 </Stack>
               )}
               {typeCounts.IMPROVEMENT > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
+                <Stack direction="row" spacing={0.5} sx={{
+                  alignItems: "center"
+                }}>
                   <Box
                     sx={{
                       width: { xs: 20, sm: 24 },
@@ -249,7 +272,9 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                 </Stack>
               )}
               {typeCounts.FIX > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
+                <Stack direction="row" spacing={0.5} sx={{
+                  alignItems: "center"
+                }}>
                   <Box
                     sx={{
                       width: { xs: 20, sm: 24 },
@@ -270,7 +295,9 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
                 </Stack>
               )}
               {typeCounts.BREAKING > 0 && (
-                <Stack direction="row" spacing={0.5} alignItems="center">
+                <Stack direction="row" spacing={0.5} sx={{
+                  alignItems: "center"
+                }}>
                   <Box
                     sx={{
                       width: { xs: 20, sm: 24 },
@@ -295,5 +322,5 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
         </Paper>
       </Link>
     </Box>
-  )
+  );
 }

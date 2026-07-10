@@ -22,10 +22,11 @@ export function AdminFooter() {
       <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
-          justifyContent="space-between"
-          alignItems="center"
           spacing={2}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
           <Box
             component="a"
             href="https://www.saschb2b.com/"
@@ -36,9 +37,13 @@ export function AdminFooter() {
               '&:hover .author-name': { color: colors.peach },
             }}
           >
-            <Stack direction="row" spacing={0.75} alignItems="center">
+            <Stack direction="row" spacing={0.75} sx={{
+              alignItems: "center"
+            }}>
               <FavoriteIcon sx={{ fontSize: 14, color: colors.peach }} />
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Made with love by{' '}
                 <Typography
                   component="span"
@@ -52,7 +57,9 @@ export function AdminFooter() {
             </Stack>
           </Box>
 
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2} sx={{
+            alignItems: "center"
+          }}>
             <Box
               component="a"
               href="https://github.com/saschb2b/patch-pigeon"
@@ -62,9 +69,10 @@ export function AdminFooter() {
             >
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ '&:hover': { color: 'text.primary' } }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  '&:hover': { color: 'text.primary' }
+                }}>
                 Source Code
               </Typography>
             </Box>
@@ -78,9 +86,10 @@ export function AdminFooter() {
             >
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ '&:hover': { color: 'text.primary' } }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  '&:hover': { color: 'text.primary' }
+                }}>
                 Impressum
               </Typography>
             </Box>
@@ -105,5 +114,5 @@ export function AdminFooter() {
         </Stack>
       </Container>
     </Box>
-  )
+  );
 }

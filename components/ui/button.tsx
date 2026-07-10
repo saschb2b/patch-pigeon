@@ -92,6 +92,7 @@ function Button({
     return (
       <MuiButton
         component={child.type as React.ElementType}
+        nativeButton={false}
         {...childProps}
         {...props}
         variant={getMuiVariant()}

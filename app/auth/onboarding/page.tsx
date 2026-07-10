@@ -92,23 +92,25 @@ export default function OnboardingPage() {
                   placeholder="acme"
                   value={ownerSlug}
                   onChange={(e) => setOwnerSlug(generateSlug(e.target.value))}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ color: "text.secondary", whiteSpace: "nowrap" }}>
-                        <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>/</Box>
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {isChecking && <CircularProgress size={16} />}
-                        {!isChecking && isAvailable === true && (
-                          <CheckCircleIcon sx={{ fontSize: 18, color: "success.main" }} />
-                        )}
-                        {!isChecking && isAvailable === false && (
-                          <ErrorIcon sx={{ fontSize: 18, color: "error.main" }} />
-                        )}
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ color: "text.secondary", whiteSpace: "nowrap" }}>
+                          <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>/</Box>
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {isChecking && <CircularProgress size={16} />}
+                          {!isChecking && isAvailable === true && (
+                            <CheckCircleIcon sx={{ fontSize: 18, color: "success.main" }} />
+                          )}
+                          {!isChecking && isAvailable === false && (
+                            <ErrorIcon sx={{ fontSize: 18, color: "error.main" }} />
+                          )}
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
                 <Box component="p" sx={{ fontSize: "0.75rem", color: "text.secondary", mt: 0.5 }}>

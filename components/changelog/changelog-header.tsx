@@ -52,15 +52,24 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
         }}
       >
         <Container maxWidth="lg" sx={{ py: 2 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" alignItems="center" spacing={1.5}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+            <Stack direction="row" spacing={1.5} sx={{
+              alignItems: "center"
+            }}>
               <Link href={ownerHref} style={{ textDecoration: "none" }}>
                 <Stack
                   direction="row"
-                  alignItems="center"
                   spacing={1}
-                  sx={{ "&:hover": { opacity: 0.7 }, transition: "opacity 0.2s" }}
-                >
+                  sx={{
+                    alignItems: "center",
+                    "&:hover": { opacity: 0.7 },
+                    transition: "opacity 0.2s"
+                  }}>
                   {profile.avatar_url ? (
                     <Avatar
                       src={profile.avatar_url}
@@ -92,10 +101,12 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
               <Link href={productHref} style={{ textDecoration: "none" }}>
                 <Stack
                   direction="row"
-                  alignItems="center"
                   spacing={1}
-                  sx={{ "&:hover": { opacity: 0.7 }, transition: "opacity 0.2s" }}
-                >
+                  sx={{
+                    alignItems: "center",
+                    "&:hover": { opacity: 0.7 },
+                    transition: "opacity 0.2s"
+                  }}>
                   {product.logo_url ? (
                     <Image
                       src={product.logo_url}
@@ -135,7 +146,9 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
               </Link>
             </Stack>
 
-            <Stack direction="row" alignItems="center" spacing={0.5}>
+            <Stack direction="row" spacing={0.5} sx={{
+              alignItems: "center"
+            }}>
               {/* API/RSS buttons - hidden on very small screens */}
               <Tooltip title="RSS Feed">
                 <IconButton
@@ -173,14 +186,13 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
               <Link href="/" style={{ textDecoration: "none" }}>
                 <Stack
                   direction="row"
-                  alignItems="center"
                   spacing={0.5}
-                  sx={{ 
-                    color: "text.secondary", 
-                    "&:hover": { color: "text.primary" }, 
-                    transition: "color 0.2s" 
-                  }}
-                >
+                  sx={{
+                    alignItems: "center",
+                    color: "text.secondary",
+                    "&:hover": { color: "text.primary" },
+                    transition: "color 0.2s"
+                  }}>
                   <PigeonLogo size="sm" sx={{ width: 18, height: 18 }} />
                   <Typography 
                     variant="caption" 
@@ -194,7 +206,6 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
           </Stack>
         </Container>
       </Box>
-
       {/* Hero Section */}
       <Box
         component="header"
@@ -239,13 +250,16 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
         />
 
         <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 }, position: 'relative' }}>
-          <Stack 
-            direction={{ xs: 'column', md: 'row' }} 
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
             spacing={{ xs: 2, md: 3 }}
-            alignItems={{ md: 'center' }}
-            justifyContent="space-between"
-          >
-            <Stack direction="row" spacing={{ xs: 2, md: 3 }} alignItems="flex-start">
+            sx={{
+              alignItems: { md: 'center' },
+              justifyContent: "space-between"
+            }}>
+            <Stack direction="row" spacing={{ xs: 2, md: 3 }} sx={{
+              alignItems: "flex-start"
+            }}>
               {/* Product Logo */}
               {product.logo_url ? (
                 <Image
@@ -276,12 +290,13 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
               )}
 
               <Box sx={{ minWidth: 0 }}>
-                <Stack 
-                  direction={{ xs: 'column', sm: 'row' }} 
-                  spacing={{ xs: 0.5, sm: 1.5 }} 
-                  alignItems={{ sm: 'center' }} 
-                  sx={{ mb: 1 }}
-                >
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={{ xs: 0.5, sm: 1.5 }}
+                  sx={{
+                    alignItems: { sm: 'center' },
+                    mb: 1
+                  }}>
                   <Typography 
                     variant="h4" 
                     sx={{ 
@@ -307,19 +322,18 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                   />
                 </Stack>
                 {product.description && (
-                  <Typography 
-                    variant="body1" 
-                    color="text.secondary" 
-                    sx={{ 
-                      maxWidth: 500, 
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "text.secondary",
+                      maxWidth: 500,
                       lineHeight: 1.6,
                       fontSize: { xs: '0.875rem', md: '1rem' },
                       display: { xs: '-webkit-box', md: 'block' },
                       WebkitLineClamp: { xs: 2, md: 'unset' },
                       WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
+                      overflow: 'hidden'
+                    }}>
                     {product.description}
                   </Typography>
                 )}
@@ -340,10 +354,20 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
                 }}
               >
                 <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5" fontWeight={800} color="text.primary">
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 800,
+                      color: "text.primary"
+                    }}>
                     {entryCount}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary" fontWeight={500}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                      fontWeight: 500
+                    }}>
                     Release{entryCount !== 1 ? 's' : ''}
                   </Typography>
                 </Box>
@@ -353,5 +377,5 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
         </Container>
       </Box>
     </>
-  )
+  );
 }

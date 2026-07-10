@@ -23,7 +23,9 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
   if (compact) {
     // Compact view: just show counts by type
     return (
-      <Stack direction="row" spacing={1.5} flexWrap="wrap">
+      <Stack direction="row" spacing={1.5} sx={{
+        flexWrap: "wrap"
+      }}>
         {CHANGE_TYPE_ORDER.map((type) => {
           const typeItems = groupedItems[type]
           if (!typeItems || typeItems.length === 0) return null
@@ -31,7 +33,9 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
           const Icon = config.icon
 
           return (
-            <Stack key={type} direction="row" spacing={0.75} alignItems="center">
+            <Stack key={type} direction="row" spacing={0.75} sx={{
+              alignItems: "center"
+            }}>
               <Box
                 sx={{
                   width: 22,
@@ -51,10 +55,10 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
                 {typeItems.length > 1 ? "s" : ""}
               </Typography>
             </Stack>
-          )
+          );
         })}
       </Stack>
-    )
+    );
   }
 
   // Full view: grouped list with cards
@@ -70,12 +74,13 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
         return (
           <Box key={type}>
             {/* Section header */}
-            <Stack 
-              direction="row" 
-              spacing={1.5} 
-              alignItems="center" 
-              sx={{ mb: 3 }}
-            >
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{
+                alignItems: "center",
+                mb: 3
+              }}>
               <Box
                 sx={{
                   width: 36,
@@ -101,12 +106,13 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
                 >
                   {typeItems.length > 1 ? config.pluralSectionLabel : config.sectionLabel}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {typeItems.length} {typeItems.length === 1 ? 'item' : 'items'}
                 </Typography>
               </Box>
             </Stack>
-
             {/* Items list */}
             <Stack spacing={2}>
               {typeItems
@@ -141,13 +147,14 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
 
                     {/* Content */}
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Stack 
-                        direction="row" 
-                        spacing={1.5} 
-                        alignItems="flex-start" 
-                        flexWrap="wrap"
-                        sx={{ mb: item.description ? 0.75 : 0 }}
-                      >
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        sx={{
+                          alignItems: "flex-start",
+                          flexWrap: "wrap",
+                          mb: item.description ? 0.75 : 0
+                        }}>
                         {item.area && (
                           <Chip
                             label={item.area}
@@ -175,14 +182,13 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
                         </Typography>
                       </Stack>
                       {item.description && (
-                        <Typography 
-                          variant="body2" 
-                          color="text.secondary" 
-                          sx={{ 
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "text.secondary",
                             lineHeight: 1.6,
-                            pl: item.area ? 0 : 0,
-                          }}
-                        >
+                            pl: item.area ? 0 : 0
+                          }}>
                           {item.description}
                         </Typography>
                       )}
@@ -191,8 +197,8 @@ export function EntryItemsList({ items, compact = false }: EntryItemsListProps) 
                 ))}
             </Stack>
           </Box>
-        )
+        );
       })}
     </Stack>
-  )
+  );
 }

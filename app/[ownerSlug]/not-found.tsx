@@ -19,7 +19,13 @@ export default function OwnerNotFound() {
         <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
           Profile Not Found
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 4, maxWidth: 400, mx: "auto" }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            mb: 4,
+            maxWidth: 400,
+            mx: "auto"
+          }}>
           This profile doesn&apos;t exist or hasn&apos;t been set up yet. Check the URL or head back home.
         </Typography>
         <Button asChild>
@@ -27,5 +33,5 @@ export default function OwnerNotFound() {
         </Button>
       </Box>
     </Box>
-  )
+  );
 }

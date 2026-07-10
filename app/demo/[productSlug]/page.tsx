@@ -50,15 +50,18 @@ export default function DemoProductPage() {
           textAlign: "center",
         }}
       >
-        <Stack 
-          direction="row" 
-          spacing={1.5} 
-          alignItems="center" 
-          justifyContent="center"
-          flexWrap="wrap"
-        >
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap"
+          }}>
           <RocketLaunchIcon sx={{ fontSize: 18 }} />
-          <Typography variant="body2" fontWeight={500}>
+          <Typography variant="body2" sx={{
+            fontWeight: 500
+          }}>
             This is a demo changelog. Want your own?
           </Typography>
           <MuiLink
@@ -74,14 +77,12 @@ export default function DemoProductPage() {
           </MuiLink>
         </Stack>
       </Box>
-
       <ChangelogHeader 
         product={product} 
         profile={profile} 
         isDemo 
         entryCount={entries.length}
       />
-
       <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ maxWidth: 800, mx: "auto" }}>
           <Stack spacing={8}>
@@ -98,7 +99,6 @@ export default function DemoProductPage() {
           </Stack>
         </Box>
       </Container>
-
       {/* Footer */}
       <Box 
         component="footer" 
@@ -110,13 +110,16 @@ export default function DemoProductPage() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack 
+          <Stack
             direction={{ xs: 'column', sm: 'row' }}
-            justifyContent="space-between" 
-            alignItems="center"
             spacing={2}
-          >
-            <Typography variant="body2" color="text.secondary">
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Powered by{' '}
               <Box 
                 component="a" 
@@ -148,5 +151,5 @@ export default function DemoProductPage() {
         </Container>
       </Box>
     </Box>
-  )
+  );
 }

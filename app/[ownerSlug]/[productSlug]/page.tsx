@@ -129,10 +129,17 @@ export default async function ChangelogPage({ params }: PageProps) {
               >
                 <HistoryIcon sx={{ fontSize: 32, color: 'text.disabled' }} />
               </Box>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "text.secondary",
+                  mb: 1
+                }}>
                 No changelog entries yet
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Check back soon for updates!
               </Typography>
             </Paper>
@@ -164,13 +171,16 @@ export default async function ChangelogPage({ params }: PageProps) {
         }}
       >
         <Container maxWidth="lg">
-          <Stack 
+          <Stack
             direction={{ xs: 'column', sm: 'row' }}
-            justifyContent="space-between" 
-            alignItems="center"
             spacing={2}
-          >
-            <Typography variant="body2" color="text.secondary">
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Powered by{' '}
               <Box 
                 component="a" 
@@ -222,7 +232,7 @@ export default async function ChangelogPage({ params }: PageProps) {
       </Box>
       </Box>
     </>
-  )
+  );
 }
 
 function groupEntriesByMonth(entries: EntryWithItems[]): { date: string; entries: EntryWithItems[] }[] {

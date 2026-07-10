@@ -40,7 +40,7 @@ export type ActionState = { error?: string; success?: string }
 
 const signUpSchema = z
   .object({
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(8, "Password must be at least 8 characters"),
     repeatPassword: z.string(),
   })
@@ -99,7 +99,7 @@ export async function signUpAction(_: ActionState, formData: FormData): Promise<
 }
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(1),
 })
 
@@ -134,7 +134,7 @@ export async function signOutAction() {
 }
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 })
 
 export async function forgotPasswordAction(

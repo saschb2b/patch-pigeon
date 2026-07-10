@@ -66,9 +66,11 @@ function CardDescription({ children, sx, ...props }: CardDescriptionProps) {
   return (
     <Typography
       variant="body2"
-      color="text.secondary"
-      sx={sx}
       {...props}
+      sx={[
+        { color: "text.secondary" },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {children}
     </Typography>

@@ -4,7 +4,7 @@ import BugReportIcon from "@mui/icons-material/BugReport"
 import BoltIcon from "@mui/icons-material/Bolt"
 import WarningIcon from "@mui/icons-material/Warning"
 import RemoveIcon from "@mui/icons-material/Remove"
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"
+import ChatBubbleOutlinedIcon from "@mui/icons-material/ChatBubbleOutlined"
 import type { ChangeType } from "@/lib/types"
 
 interface ChangeTypeConfig {
@@ -93,7 +93,7 @@ export const changeTypeConfig = {
     label: "Note",
     sectionLabel: "Note",
     pluralSectionLabel: "Notes",
-    icon: ChatBubbleOutlineIcon,
+    icon: ChatBubbleOutlinedIcon,
     color: "#64748b",
     backgroundColor: "#f1f5f9",
     borderColor: "#e0e0e0",

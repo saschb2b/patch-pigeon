@@ -51,14 +51,14 @@ export function TimelineGroup({ date, entries, ownerSlug, productSlug, isFirst }
           display: { xs: "none", md: "block" },
         }}
       />
-
       {/* Month header */}
-      <Stack 
-        direction="row" 
-        spacing={2} 
-        alignItems="center" 
-        sx={{ mb: 3 }}
-      >
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          alignItems: "center",
+          mb: 3
+        }}>
         {/* Timeline node */}
         <Box
           sx={{
@@ -103,12 +103,13 @@ export function TimelineGroup({ date, entries, ownerSlug, productSlug, isFirst }
         </Box>
 
         {entries.length > 1 && (
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{
+            color: "text.secondary"
+          }}>
             {entries.length} releases
           </Typography>
         )}
       </Stack>
-
       {/* Entry cards */}
       <Stack spacing={2.5} sx={{ pl: { xs: 0, md: 6 } }}>
         {entries.map((entry, index) => (
@@ -130,5 +131,5 @@ export function TimelineGroup({ date, entries, ownerSlug, productSlug, isFirst }
         ))}
       </Stack>
     </Box>
-  )
+  );
 }

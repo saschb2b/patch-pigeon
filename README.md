@@ -62,7 +62,7 @@ Set `DATABASE_URL` (using `localhost`, not the Compose hostname `database`), `AU
 - Next.js 16 and React 19
 - Auth.js credentials authentication
 - PostgreSQL with Drizzle ORM and versioned SQL migrations
-- Material UI 7 and dnd-kit
+- Material UI 9 and dnd-kit
 - SMTP password-recovery email
 
 ## Documentation

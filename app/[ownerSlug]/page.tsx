@@ -59,8 +59,15 @@ export default async function OwnerProfilePage({ params }: PageProps) {
         }}
       >
         <Container maxWidth="lg" sx={{ py: 3 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" alignItems="center" spacing={2}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+            <Stack direction="row" spacing={2} sx={{
+              alignItems: "center"
+            }}>
               {profile.avatar_url ? (
                 <Avatar
                   src={profile.avatar_url}
@@ -78,13 +85,22 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                 <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
                   {profile.display_name || profile.owner_slug}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   @{profile.owner_slug}
                 </Typography>
               </Box>
             </Stack>
             <Link href="/" style={{ textDecoration: "none" }}>
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  alignItems: "center",
+                  color: "text.secondary",
+                  "&:hover": { color: "text.primary" }
+                }}>
                 <Typography variant="caption">Powered by</Typography>
                 <PigeonLogo size="sm" sx={{ width: 20, height: 20 }} />
                 <Typography variant="caption" sx={{ fontWeight: 500 }}>PatchPigeon</Typography>
@@ -93,14 +109,15 @@ export default async function OwnerProfilePage({ params }: PageProps) {
           </Stack>
         </Container>
       </Box>
-
       <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ maxWidth: 896, mx: "auto" }}>
           <Box sx={{ mb: 5 }}>
             <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>
               Projects
             </Typography>
-            <Typography color="text.secondary">
+            <Typography sx={{
+              color: "text.secondary"
+            }}>
               Explore all changelogs from {profile.display_name || profile.owner_slug}
             </Typography>
           </Box>
@@ -117,7 +134,9 @@ export default async function OwnerProfilePage({ params }: PageProps) {
               }}
             >
               <InventoryIcon sx={{ fontSize: 48, color: "text.disabled", mb: 2 }} />
-              <Typography color="text.secondary">No public changelogs yet.</Typography>
+              <Typography sx={{
+                color: "text.secondary"
+              }}>No public changelogs yet.</Typography>
             </Box>
           ) : (
             <Box
@@ -147,7 +166,9 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                     }}
                   >
                     <CardContent sx={{ p: 3 }}>
-                      <Stack direction="row" spacing={2} alignItems="flex-start">
+                      <Stack direction="row" spacing={2} sx={{
+                        alignItems: "flex-start"
+                      }}>
                         {product.logo_url ? (
                           <Box
                             component="img"
@@ -174,7 +195,13 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                           </Box>
                         )}
                         <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{
+                              alignItems: "center",
+                              mb: 0.5
+                            }}>
                             <Typography
                               className="product-name"
                               sx={{
@@ -202,19 +229,24 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                           {product.description && (
                             <Typography
                               variant="body2"
-                              color="text.secondary"
                               sx={{
+                                color: "text.secondary",
                                 mb: 1.5,
                                 overflow: "hidden",
                                 display: "-webkit-box",
                                 WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                              }}
-                            >
+                                WebkitBoxOrient: "vertical"
+                              }}>
                               {product.description}
                             </Typography>
                           )}
-                          <Stack direction="row" spacing={1.5} flexWrap="wrap" alignItems="center">
+                          <Stack
+                            direction="row"
+                            spacing={1.5}
+                            sx={{
+                              flexWrap: "wrap",
+                              alignItems: "center"
+                            }}>
                             {product.latest_entry?.version && (
                               <Chip
                                 label={`v${product.latest_entry.version}`}
@@ -228,13 +260,19 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                                 }}
                               />
                             )}
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{
+                              color: "text.secondary"
+                            }}>
                               {product.entry_count} {product.entry_count === 1 ? "update" : "updates"}
                             </Typography>
                             {product.latest_entry?.publish_date && (
-                              <Stack direction="row" spacing={0.5} alignItems="center">
+                              <Stack direction="row" spacing={0.5} sx={{
+                                alignItems: "center"
+                              }}>
                                 <CalendarTodayIcon sx={{ fontSize: 12, color: "text.secondary" }} />
-                                <Typography variant="caption" color="text.secondary">
+                                <Typography variant="caption" sx={{
+                                  color: "text.secondary"
+                                }}>
                                   {new Date(product.latest_entry.publish_date).toLocaleDateString("en-US", {
                                     month: "short",
                                     day: "numeric",
@@ -250,7 +288,13 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                       {/* Latest update preview */}
                       {product.latest_entry && (
                         <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: "divider" }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: "block" }}>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "text.secondary",
+                              mb: 0.5,
+                              display: "block"
+                            }}>
                             Latest update
                           </Typography>
                           <Typography
@@ -276,5 +320,5 @@ export default async function OwnerProfilePage({ params }: PageProps) {
         </Box>
       </Container>
     </Box>
-  )
+  );
 }

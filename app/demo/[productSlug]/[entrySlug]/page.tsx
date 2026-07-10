@@ -77,15 +77,18 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
           textAlign: "center",
         }}
       >
-        <Stack 
-          direction="row" 
-          spacing={1.5} 
-          alignItems="center" 
-          justifyContent="center"
-          flexWrap="wrap"
-        >
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap"
+          }}>
           <RocketLaunchIcon sx={{ fontSize: 18 }} />
-          <Typography variant="body2" fontWeight={500}>
+          <Typography variant="body2" sx={{
+            fontWeight: 500
+          }}>
             This is a demo changelog. Want your own?
           </Typography>
           <MuiLink
@@ -101,9 +104,7 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
           </MuiLink>
         </Stack>
       </Box>
-
       <ChangelogHeader product={product} profile={profile} isDemo />
-
       {/* Hero section for entry */}
       <Box
         sx={{
@@ -142,7 +143,13 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
 
             {/* Entry header */}
             <Stack spacing={2}>
-              <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+              <Stack
+                direction="row"
+                spacing={1.5}
+                sx={{
+                  alignItems: "center",
+                  flexWrap: "wrap"
+                }}>
                 {entry.version && (
                   <Chip
                     icon={<TagIcon sx={{ fontSize: 14 }} />}
@@ -160,9 +167,16 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
                   />
                 )}
                 {publishDate && (
-                  <Stack direction="row" spacing={0.5} alignItems="center">
+                  <Stack direction="row" spacing={0.5} sx={{
+                    alignItems: "center"
+                  }}>
                     <CalendarTodayIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        fontWeight: 500
+                      }}>
                       {publishDate}
                     </Typography>
                   </Stack>
@@ -185,15 +199,14 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
               </Typography>
 
               {entry.summary && (
-                <Typography 
-                  variant="h6" 
-                  color="text.secondary" 
-                  sx={{ 
-                    fontWeight: 400, 
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 400,
                     lineHeight: 1.6,
-                    maxWidth: 600,
-                  }}
-                >
+                    maxWidth: 600
+                  }}>
                   {entry.summary}
                 </Typography>
               )}
@@ -201,7 +214,6 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
           </Box>
         </Container>
       </Box>
-
       <Container component="main" maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ maxWidth: 800, mx: "auto" }}>
           <Box component="article">
@@ -222,12 +234,13 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
           {/* Related entries */}
           {relatedEntries.length > 0 && (
             <Box component="section" sx={{ mt: 10 }}>
-              <Stack 
-                direction="row" 
-                justifyContent="space-between" 
-                alignItems="center"
-                sx={{ mb: 4 }}
-              >
+              <Stack
+                direction="row"
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 4
+                }}>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>
                   More Updates
                 </Typography>
@@ -258,7 +271,6 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
           )}
         </Box>
       </Container>
-
       {/* Footer */}
       <Box 
         component="footer" 
@@ -270,13 +282,16 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
         }}
       >
         <Container maxWidth="lg">
-          <Stack 
+          <Stack
             direction={{ xs: 'column', sm: 'row' }}
-            justifyContent="space-between" 
-            alignItems="center"
             spacing={2}
-          >
-            <Typography variant="body2" color="text.secondary">
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Powered by{' '}
               <Box 
                 component="a" 
@@ -308,5 +323,5 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
         </Container>
       </Box>
     </Box>
-  )
+  );
 }

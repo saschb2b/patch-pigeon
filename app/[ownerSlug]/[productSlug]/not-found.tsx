@@ -19,7 +19,11 @@ export default function NotFound() {
         <Typography variant="h2" sx={{ fontWeight: 700, color: "text.primary", mb: 2 }}>
           404
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 4 }}>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            mb: 4
+          }}>
           This changelog could not be found.
         </Typography>
         <Button asChild>
@@ -27,5 +31,5 @@ export default function NotFound() {
         </Button>
       </Box>
     </Box>
-  )
+  );
 }

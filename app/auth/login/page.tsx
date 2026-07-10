@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { Box, Container, Typography, Paper, Stack, Alert, InputAdornment } from "@mui/material"
-import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import MailOutlinedIcon from "@mui/icons-material/MailOutlined"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
@@ -46,7 +46,13 @@ export default function LoginPage() {
           <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 2 }}>
             Your updates deserve to be seen
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ fontSize: "1.125rem", lineHeight: 1.7 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.secondary",
+              fontSize: "1.125rem",
+              lineHeight: 1.7
+            }}>
             Join hundreds of indie devs who keep their users in the loop with beautiful, hassle-free changelogs.
           </Typography>
 
@@ -66,17 +72,20 @@ export default function LoginPage() {
             <Typography variant="body1" sx={{ fontStyle: "italic", mb: 2, color: "text.primary" }}>
               &quot;Coo coo! This tool is the bread crumbs I&apos;ve been searching for. No more scattered updates across the park!&quot;
             </Typography>
-            <Stack direction="row" spacing={1.5} alignItems="center">
+            <Stack direction="row" spacing={1.5} sx={{
+              alignItems: "center"
+            }}>
               <Box sx={{ width: 40, height: 40, borderRadius: "50%", bgcolor: "#a7d8ff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>🐦</Box>
               <Box>
                 <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>Colonel Feathers</Typography>
-                <Typography variant="caption" color="text.secondary">Chief Nesting Officer</Typography>
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>Chief Nesting Officer</Typography>
               </Box>
             </Stack>
           </Paper>
         </Box>
       </Box>
-
       <Box
         sx={{
           width: { xs: "100%", lg: "50%" },
@@ -90,7 +99,9 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center", mb: 4 }}>
             <Link href="/" style={{ textDecoration: "none" }}>
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack direction="row" spacing={1.5} sx={{
+                alignItems: "center"
+              }}>
                 <PigeonLogo size="md" />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
               </Stack>
@@ -99,7 +110,9 @@ export default function LoginPage() {
 
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Welcome back!</Typography>
-            <Typography color="text.secondary">Your changelogs missed you. Let&apos;s get you signed in.</Typography>
+            <Typography sx={{
+              color: "text.secondary"
+            }}>Your changelogs missed you. Let&apos;s get you signed in.</Typography>
           </Box>
 
           <Box component="form" action={formAction}>
@@ -112,12 +125,14 @@ export default function LoginPage() {
                   type="email"
                   placeholder="you@example.com"
                   required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MailOutlineIcon sx={{ color: "text.secondary" }} />
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <MailOutlinedIcon sx={{ color: "text.secondary" }} />
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               </Box>
@@ -130,12 +145,14 @@ export default function LoginPage() {
                   type="password"
                   placeholder="Enter your password"
                   required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
                 <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
@@ -167,7 +184,9 @@ export default function LoginPage() {
           </Box>
 
           <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Typography color="text.secondary">
+            <Typography sx={{
+              color: "text.secondary"
+            }}>
               {"New to PatchPigeon? "}
               <Link href="/auth/sign-up" style={{ textDecoration: "none" }}>
                 <Typography component="span" sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}>
@@ -187,5 +206,5 @@ export default function LoginPage() {
         </Container>
       </Box>
     </Box>
-  )
+  );
 }

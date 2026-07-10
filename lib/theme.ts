@@ -85,6 +85,18 @@ export const theme = createTheme({
           '&:hover': {
             boxShadow: 'none',
           },
+          variants: [
+            {
+              props: { variant: 'contained', color: 'primary' },
+              style: {
+                backgroundColor: brandColors.ink,
+                color: '#ffffff',
+                '&:hover': {
+                  backgroundColor: '#374151',
+                },
+              },
+            },
+          ],
         },
         sizeSmall: {
           padding: '6px 12px',
@@ -93,13 +105,6 @@ export const theme = createTheme({
         sizeLarge: {
           padding: '12px 24px',
           fontSize: '1rem',
-        },
-        containedPrimary: {
-          backgroundColor: brandColors.ink,
-          color: '#ffffff',
-          '&:hover': {
-            backgroundColor: '#374151',
-          },
         },
         outlined: {
           borderColor: '#e2e8f0',

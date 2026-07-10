@@ -48,18 +48,19 @@ export function AdminHeader({ user }: AdminHeaderProps) {
                 </Typography>
               </Box>
             </Link>
-            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{
+              alignItems: "center"
+            }}>
               <Typography
                 variant="body2"
-                color="text.secondary"
                 sx={{
+                  color: "text.secondary",
                   display: { xs: "none", sm: "block" },
                   maxWidth: 200,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
+                  whiteSpace: "nowrap"
+                }}>
                 {user.email}
               </Typography>
               <form action={signOutAction}>
@@ -75,5 +76,5 @@ export function AdminHeader({ user }: AdminHeaderProps) {
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  );
 }

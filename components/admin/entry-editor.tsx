@@ -471,15 +471,30 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           backdropFilter: "blur(8px)",
         }}
       >
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: { xs: 2, sm: 3 }, py: 2 }}>
-          <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center" sx={{ minWidth: 0 }}>
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: { xs: 2, sm: 3 },
+            py: 2
+          }}>
+          <Stack
+            direction="row"
+            spacing={{ xs: 1, sm: 2 }}
+            sx={{
+              alignItems: "center",
+              minWidth: 0
+            }}>
             <Tooltip title="Back to entries">
               <IconButton onClick={() => router.back()} size="small">
                 <ArrowBackIcon sx={{ fontSize: 20 }} />
               </IconButton>
             </Tooltip>
             <Box sx={{ minWidth: 0 }}>
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction="row" spacing={1} sx={{
+                alignItems: "center"
+              }}>
                 <Typography 
                   variant="subtitle1" 
                   sx={{ 
@@ -502,22 +517,23 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   />
                 )}
               </Stack>
-              <Typography 
-                variant="body2" 
-                color="text.secondary"
+              <Typography
+                variant="body2"
                 sx={{
+                  color: "text.secondary",
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                   maxWidth: { xs: 100, sm: 200 },
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+                  whiteSpace: 'nowrap'
+                }}>
                 {productName}
               </Typography>
             </Box>
           </Stack>
-          <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} alignItems="center">
+          <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{
+            alignItems: "center"
+          }}>
             {/* Mobile view toggle */}
             <Tooltip title={mobileView === "editor" ? "Show preview" : "Show editor"}>
               <IconButton
@@ -540,6 +556,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
               <Tooltip title="Open public preview">
                 <IconButton
                   component={Link}
+                  nativeButton={false}
                   href={`/${ownerSlug}/${productSlug}/${slug}`}
                   target="_blank"
                   size="small"
@@ -554,7 +571,13 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                 <KeyboardIcon sx={{ fontSize: 18 }} />
               </IconButton>
             </Tooltip>
-            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ display: { xs: 'none', sm: 'flex' } }}>
+            <Stack
+              direction="row"
+              spacing={0.5}
+              sx={{
+                alignItems: "center",
+                display: { xs: 'none', sm: 'flex' }
+              }}>
               <Switch id="published" checked={published} onCheckedChange={setPublished} />
               <Label htmlFor="published" style={{ cursor: "pointer", fontSize: '0.875rem' }}>
                 {published ? "Published" : "Draft"}
@@ -573,7 +596,6 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           </Stack>
         </Stack>
       </Box>
-
       {error && (
         <Box sx={{ mx: 3, mt: 2 }}>
           <Alert severity="error" onClose={() => setError(null)}>
@@ -581,7 +603,6 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           </Alert>
         </Box>
       )}
-
       {hasDraft && (
         <Box sx={{ mx: 3, mt: 2 }}>
           <Alert 
@@ -602,7 +623,6 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           </Alert>
         </Box>
       )}
-
       {/* Split Screen Editor */}
       <Grid container sx={{ minHeight: "calc(100vh - 73px)" }}>
         {/* Left: Form */}
@@ -620,7 +640,13 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
             <Stack spacing={3}>
               {/* Version Details */}
               <Paper elevation={0} sx={{ p: 2, border: 1, borderColor: "divider" }}>
-                <Typography variant="overline" color="text.secondary" sx={{ mb: 2, display: "block" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2,
+                    display: "block"
+                  }}>
                   Version Details
                 </Typography>
 
@@ -644,7 +670,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                         value={version}
                         onChange={(e) => setVersion(e.target.value)}
                         placeholder="1.2.0"
-                        inputProps={{ style: { fontFamily: "monospace" } }}
+                        slotProps={{ htmlInput: { style: { fontFamily: "monospace" } } }}
                       />
                     </Grid>
                     <Grid size={{ xs: 6 }}>
@@ -676,9 +702,15 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                       value={slug}
                       onChange={(e) => setSlug(e.target.value)}
                       placeholder="2025-01-january-update"
-                      inputProps={{ style: { fontFamily: "monospace", fontSize: "0.875rem" } }}
+                      slotProps={{ htmlInput: { style: { fontFamily: "monospace", fontSize: "0.875rem" } } }}
                     />
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "text.secondary",
+                        mt: 0.5,
+                        display: "block"
+                      }}>
                       /{ownerSlug}/{productSlug}/{slug || "your-slug"}
                     </Typography>
                   </Box>
@@ -687,11 +719,21 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
 
               {/* Changes List */}
               <Box>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                  <Typography variant="overline" color="text.secondary">
+                <Stack
+                  direction="row"
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2
+                  }}>
+                  <Typography variant="overline" sx={{
+                    color: "text.secondary"
+                  }}>
                     Changes *
                   </Typography>
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack direction="row" spacing={1} sx={{
+                    alignItems: "center"
+                  }}>
                     {lastDeletedItem && (
                       <Tooltip title="Undo delete (Ctrl+Z)">
                         <Button variant="ghost" size="sm" onClick={handleUndoDelete}>
@@ -700,7 +742,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                         </Button>
                       </Tooltip>
                     )}
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                      color: "text.secondary"
+                    }}>
                       {validItemCount} item{validItemCount !== 1 ? "s" : ""}
                     </Typography>
                   </Stack>
@@ -738,7 +782,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                           bgcolor: 'background.paper',
                         }}
                       >
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                          color: "text.secondary"
+                        }}>
                           {item.title || 'Loading...'}
                         </Typography>
                       </Paper>
@@ -759,19 +805,36 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                     }}
                   >
                     <AutoAwesomeIcon sx={{ fontSize: 40, color: "text.disabled", mb: 2 }} />
-                    <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "text.secondary",
+                        mb: 1
+                      }}>
                       Start adding changes
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        mb: 3
+                      }}>
                       Click a button below or use keyboard shortcuts
                     </Typography>
-                    <Stack direction="row" spacing={1} justifyContent="center">
+                    <Stack direction="row" spacing={1} sx={{
+                      justifyContent: "center"
+                    }}>
                       <Chip
                         label="Ctrl+Shift+F"
                         size="small"
                         sx={{ fontFamily: "monospace", fontSize: "0.7rem" }}
                       />
-                      <Typography variant="caption" color="text.secondary" sx={{ lineHeight: "24px" }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "text.secondary",
+                          lineHeight: "24px"
+                        }}>
                         Feature
                       </Typography>
                       <Chip
@@ -779,7 +842,12 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                         size="small"
                         sx={{ fontFamily: "monospace", fontSize: "0.7rem" }}
                       />
-                      <Typography variant="caption" color="text.secondary" sx={{ lineHeight: "24px" }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "text.secondary",
+                          lineHeight: "24px"
+                        }}>
                         Fix
                       </Typography>
                     </Stack>
@@ -787,7 +855,13 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                 )}
 
                 {/* Quick Add Buttons */}
-                <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 2 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{
+                    flexWrap: "wrap",
+                    mt: 2
+                  }}>
                   <Tooltip title="Ctrl+Shift+F">
                     <Button
                       variant="outline"
@@ -860,9 +934,13 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
               py: 1.5,
             }}
           >
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} sx={{
+              alignItems: "center"
+            }}>
               <VisibilityIcon sx={{ fontSize: 18, color: "text.secondary" }} />
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Live Preview
               </Typography>
             </Stack>
@@ -872,7 +950,14 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
             <Box sx={{ maxWidth: 768 }}>
               {/* Preview Header */}
               <Box sx={{ mb: 4 }}>
-                <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap" sx={{ mb: 2 }}>
+                <Stack
+                  direction="row"
+                  spacing={1.5}
+                  sx={{
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    mb: 2
+                  }}>
                   {version && (
                     <Chip
                       label={`v${version}`}
@@ -886,7 +971,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                     />
                   )}
                   {formattedDate && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                      color: "text.secondary"
+                    }}>
                       {formattedDate}
                     </Typography>
                   )}
@@ -914,7 +1001,9 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                 </Typography>
 
                 {summary && (
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography variant="body1" sx={{
+                    color: "text.secondary"
+                  }}>
                     {summary}
                   </Typography>
                 )}
@@ -932,12 +1021,21 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
 
                     return (
                       <Box key={type}>
-                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2, color: config.color }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          sx={{
+                            alignItems: "center",
+                            mb: 2,
+                            color: config.color
+                          }}>
                           <Icon sx={{ fontSize: 14 }} />
                           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                             {config.label}s
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             ({typeItems.length})
                           </Typography>
                         </Stack>
@@ -961,7 +1059,13 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                                     }}
                                   />
                                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                                    <Stack
+                                      direction="row"
+                                      spacing={1}
+                                      sx={{
+                                        alignItems: "center",
+                                        flexWrap: "wrap"
+                                      }}>
                                       {item.area && (
                                         <Chip
                                           label={item.area}
@@ -974,12 +1078,19 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                                           }}
                                         />
                                       )}
-                                      <Typography variant="body2" color="text.primary">
+                                      <Typography variant="body2" sx={{
+                                        color: "text.primary"
+                                      }}>
                                         {item.title}
                                       </Typography>
                                     </Stack>
                                     {item.description && (
-                                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                      <Typography
+                                        variant="body2"
+                                        sx={{
+                                          color: "text.secondary",
+                                          mt: 0.5
+                                        }}>
                                         {item.description}
                                       </Typography>
                                     )}
@@ -990,7 +1101,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                           </Stack>
                         </Box>
                       </Box>
-                    )
+                    );
                   })}
 
                   {Object.keys(groupedItems).length === 0 && (
@@ -1004,10 +1115,17 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                         borderRadius: 2,
                       }}
                     >
-                      <Typography color="text.secondary" variant="h6" sx={{ mb: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          color: "text.secondary",
+                          mb: 1
+                        }}>
                         No changes yet
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         Add changes on the left to see the preview
                       </Typography>
                     </Paper>
@@ -1018,14 +1136,15 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
           </Box>
         </Grid>
       </Grid>
-
       {/* Success Snackbar */}
       <Snackbar
         open={!!successMessage}
         autoHideDuration={3000}
         onClose={() => setSuccessMessage(null)}
         message={
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{
+            alignItems: "center"
+          }}>
             <CheckCircleIcon sx={{ fontSize: 18, color: "success.light" }} />
             <span>{successMessage}</span>
           </Stack>
@@ -1033,5 +1152,5 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </Box>
-  )
+  );
 }

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { Box, Typography, Stack, Paper, Alert, InputAdornment } from "@mui/material"
-import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import MailOutlinedIcon from "@mui/icons-material/MailOutlined"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import SendIcon from "@mui/icons-material/Send"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
@@ -34,7 +34,9 @@ export default function ForgotPasswordPage() {
       <Box sx={{ width: "100%", maxWidth: 448, position: "relative", zIndex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <Stack direction="row" spacing={1.5} alignItems="center">
+            <Stack direction="row" spacing={1.5} sx={{
+              alignItems: "center"
+            }}>
               <PigeonLogo size="lg" />
               <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
             </Stack>
@@ -58,7 +60,11 @@ export default function ForgotPasswordPage() {
                 <CheckCircleIcon sx={{ fontSize: 32, color: "#22c55e" }} />
               </Box>
               <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Check your inbox!</Typography>
-              <Typography color="text.secondary" sx={{ mb: 3 }}>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  mb: 3
+                }}>
                 {state.success}
               </Typography>
               <Button variant="ghost" asChild>
@@ -72,10 +78,12 @@ export default function ForgotPasswordPage() {
             <>
               <Box sx={{ textAlign: "center", mb: 4 }}>
                 <Box sx={{ width: 64, height: 64, borderRadius: "50%", bgcolor: "rgba(255, 231, 163, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 3 }}>
-                  <MailOutlineIcon sx={{ fontSize: 32, color: "#ffe7a3" }} />
+                  <MailOutlinedIcon sx={{ fontSize: 32, color: "#ffe7a3" }} />
                 </Box>
                 <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Forgot your password?</Typography>
-                <Typography color="text.secondary">No worries! Enter your email and we&apos;ll send you a reset link.</Typography>
+                <Typography sx={{
+                  color: "text.secondary"
+                }}>No worries! Enter your email and we&apos;ll send you a reset link.</Typography>
               </Box>
 
               <Box component="form" action={formAction}>
@@ -88,12 +96,14 @@ export default function ForgotPasswordPage() {
                       type="email"
                       placeholder="you@example.com"
                       required
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <MailOutlineIcon sx={{ color: "text.secondary" }} />
-                          </InputAdornment>
-                        ),
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <MailOutlinedIcon sx={{ color: "text.secondary" }} />
+                            </InputAdornment>
+                          ),
+                        },
                       }}
                     />
                   </Box>
@@ -117,7 +127,15 @@ export default function ForgotPasswordPage() {
 
               <Box sx={{ mt: 3, textAlign: "center" }}>
                 <Link href="/auth/login" style={{ textDecoration: "none" }}>
-                  <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ color: "text.secondary", "&:hover": { color: "text.primary" } }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "text.secondary",
+                      "&:hover": { color: "text.primary" }
+                    }}>
                     <ArrowBackIcon sx={{ fontSize: 16 }} />
                     <Typography variant="body2">Back to sign in</Typography>
                   </Stack>
@@ -128,5 +146,5 @@ export default function ForgotPasswordPage() {
         </Paper>
       </Box>
     </Box>
-  )
+  );
 }

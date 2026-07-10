@@ -53,22 +53,20 @@ export default async function ProductEntriesPage({ params }: PageProps) {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
       <AdminHeader user={user} />
-
       <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 }, flex: 1 }}>
         {/* Back link */}
         <Link href="/admin" style={{ textDecoration: "none" }}>
           <Stack
             direction="row"
             spacing={1}
-            alignItems="center"
             sx={{
+              alignItems: "center",
               color: "text.secondary",
               "&:hover": { color: "text.primary" },
               transition: "color 0.2s",
               mb: 3,
-              width: 'fit-content',
-            }}
-          >
+              width: 'fit-content'
+            }}>
             <ArrowBackIcon sx={{ fontSize: 18 }} />
             <Typography variant="body2">Back to products</Typography>
           </Stack>
@@ -102,8 +100,16 @@ export default async function ProductEntriesPage({ params }: PageProps) {
             }}
           />
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={3}>
-            <Stack direction="row" spacing={2.5} alignItems="center">
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={3}
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: 'flex-start', sm: 'center' }
+            }}>
+            <Stack direction="row" spacing={2.5} sx={{
+              alignItems: "center"
+            }}>
               {/* Product Icon */}
               <Box
                 sx={{
@@ -146,7 +152,13 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                 >
                   {product.name}
                 </Typography>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{
+                    alignItems: "center",
+                    mt: 0.5
+                  }}>
                   <Link href={publicUrl} target="_blank" style={{ textDecoration: "none" }}>
                     <Chip
                       label={publicUrl}
@@ -198,27 +210,48 @@ export default async function ProductEntriesPage({ params }: PageProps) {
               sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}
             >
               <Box>
-                <Typography variant="h5" fontWeight={700} color="text.primary">
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: "text.primary"
+                  }}>
                   {totalEntries}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Total {totalEntries === 1 ? 'Entry' : 'Entries'}
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="h5" fontWeight={700} sx={{ color: '#15803d' }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: '#15803d'
+                  }}>
                   {publishedCount}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Published
                 </Typography>
               </Box>
               {draftCount > 0 && (
                 <Box>
-                  <Typography variant="h5" fontWeight={700} sx={{ color: colors.butter }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 700,
+                      color: colors.butter
+                    }}>
                     {draftCount}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     {draftCount === 1 ? 'Draft' : 'Drafts'}
                   </Typography>
                 </Box>
@@ -228,8 +261,19 @@ export default async function ProductEntriesPage({ params }: PageProps) {
         </Paper>
 
         {/* Entries Section */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-          <Typography variant="h6" fontWeight={600} color="text.primary">
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2
+          }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: "text.primary"
+            }}>
             Changelog Entries
           </Typography>
         </Stack>
@@ -261,10 +305,21 @@ export default async function ProductEntriesPage({ params }: PageProps) {
             >
               <DescriptionIcon sx={{ fontSize: 40, color: colors.ink, opacity: 0.5 }} />
             </Box>
-            <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                mb: 1
+              }}>
               No entries yet
             </Typography>
-            <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 320, mx: 'auto' }}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                mb: 3,
+                maxWidth: 320,
+                mx: 'auto'
+              }}>
               Create your first changelog entry to start keeping your users informed.
             </Typography>
             <Button asChild size="lg">
@@ -300,13 +355,21 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                 >
                   <Stack
                     direction={{ xs: 'column', sm: 'row' }}
-                    justifyContent="space-between"
-                    alignItems={{ xs: 'flex-start', sm: 'center' }}
                     spacing={2}
-                    sx={{ p: 2.5 }}
-                  >
+                    sx={{
+                      justifyContent: "space-between",
+                      alignItems: { xs: 'flex-start', sm: 'center' },
+                      p: 2.5
+                    }}>
                     {/* Left side - Entry info */}
-                    <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ flex: 1, minWidth: 0 }}>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{
+                        alignItems: "flex-start",
+                        flex: 1,
+                        minWidth: 0
+                      }}>
                       {/* Status indicator */}
                       <Box
                         sx={{
@@ -329,7 +392,15 @@ export default async function ProductEntriesPage({ params }: PageProps) {
 
                       <Box sx={{ minWidth: 0, flex: 1 }}>
                         {/* Meta row */}
-                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ mb: 0.5 }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          useFlexGap
+                          sx={{
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                            mb: 0.5
+                          }}>
                           {entry.version && (
                             <Chip
                               label={`v${entry.version}`}
@@ -345,9 +416,13 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                             />
                           )}
                           {entry.publish_date && (
-                            <Stack direction="row" spacing={0.5} alignItems="center">
+                            <Stack direction="row" spacing={0.5} sx={{
+                              alignItems: "center"
+                            }}>
                               <CalendarTodayIcon sx={{ fontSize: 12, color: 'text.secondary' }} />
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" sx={{
+                                color: "text.secondary"
+                              }}>
                                 {new Date(entry.publish_date).toLocaleDateString('en-US', {
                                   month: 'short',
                                   day: 'numeric',
@@ -400,7 +475,13 @@ export default async function ProductEntriesPage({ params }: PageProps) {
 
                         {/* Item count */}
                         {itemCount > 0 && (
-                          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "text.secondary",
+                              mt: 0.5,
+                              display: 'block'
+                            }}>
                             {itemCount} {itemCount === 1 ? 'change' : 'changes'}
                           </Typography>
                         )}
@@ -408,7 +489,13 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                     </Stack>
 
                     {/* Right side - Actions */}
-                    <Stack direction="row" spacing={1} alignItems="center" sx={{ flexShrink: 0 }}>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{
+                        alignItems: "center",
+                        flexShrink: 0
+                      }}>
                       <TogglePublishButton entry={entry} />
                       <Tooltip title="Edit entry">
                         <IconButton
@@ -427,13 +514,12 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                     </Stack>
                   </Stack>
                 </Paper>
-              )
+              );
             })}
           </Stack>
         )}
       </Container>
-
       <AdminFooter />
     </Box>
-  )
+  );
 }

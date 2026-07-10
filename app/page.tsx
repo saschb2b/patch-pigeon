@@ -85,18 +85,20 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <Stack
             direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ py: 2 }}
-          >
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center",
+              py: 2
+            }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <PigeonLogo size="sm" />
-              <Typography 
-                variant="h6" 
-                fontWeight={700} 
-                color="text.primary"
-                sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
-              >
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  color: "text.primary",
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}>
                 PatchPigeon
               </Typography>
             </Link>
@@ -137,15 +139,24 @@ export default function HomePage() {
           anchor="right"
           open={mobileMenuOpen}
           onClose={() => setMobileMenuOpen(false)}
-          PaperProps={{
-            sx: { width: '100%', maxWidth: 320, p: 2 }
+          slotProps={{
+            paper: { sx: { width: '100%', maxWidth: 320, p: 2 } }
           }}
         >
           <Stack spacing={3}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Stack direction="row" spacing={1} alignItems="center">
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
+              <Stack direction="row" spacing={1} sx={{
+                alignItems: "center"
+              }}>
                 <PigeonLogo size="sm" />
-                <Typography variant="h6" fontWeight={700}>PatchPigeon</Typography>
+                <Typography variant="h6" sx={{
+                  fontWeight: 700
+                }}>PatchPigeon</Typography>
               </Stack>
               <IconButton onClick={() => setMobileMenuOpen(false)}>
                 <CloseIcon />
@@ -176,7 +187,6 @@ export default function HomePage() {
           </Stack>
         </Drawer>
       </Box>
-
       {/* Hero Section */}
       <Box
         component="section"
@@ -225,7 +235,9 @@ export default function HomePage() {
         />
 
         <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center">
+          <Grid container spacing={6} sx={{
+            alignItems: "center"
+          }}>
             {/* Left: Copy */}
             <Grid size={{ xs: 12, lg: 6 }}>
               <Stack spacing={3}>
@@ -246,13 +258,12 @@ export default function HomePage() {
                 <Typography
                   variant="h1"
                   component="h1"
-                  fontWeight={800}
                   sx={{
+                    fontWeight: 800,
                     fontSize: { xs: '2rem', sm: '2.5rem', md: '3.75rem' },
                     lineHeight: 1.1,
-                    letterSpacing: '-0.02em',
-                  }}
-                >
+                    letterSpacing: '-0.02em'
+                  }}>
                   Your users deserve to know{' '}
                   <Box
                     component="span"
@@ -269,9 +280,13 @@ export default function HomePage() {
 
                 <Typography
                   variant="h6"
-                  color="text.secondary"
-                  sx={{ maxWidth: 500, fontWeight: 400, lineHeight: 1.7, fontSize: { xs: '1rem', sm: '1.125rem' } }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    maxWidth: 500,
+                    fontWeight: 400,
+                    lineHeight: 1.7,
+                    fontSize: { xs: '1rem', sm: '1.125rem' }
+                  }}>
                   Stop burying updates in Discord or Twitter. Give your product a beautiful,
                   public changelog that keeps users excited and informed.
                 </Typography>
@@ -289,28 +304,50 @@ export default function HomePage() {
                   </Button>
                 </Stack>
 
-                <Stack 
-                  direction="row" 
-                  spacing={{ xs: 2, sm: 3 }} 
-                  flexWrap="wrap"
+                <Stack
+                  direction="row"
+                  spacing={{ xs: 2, sm: 3 }}
                   useFlexGap
-                  sx={{ pt: 1 }}
-                >
-                  <Stack direction="row" spacing={0.75} alignItems="center">
+                  sx={{
+                    flexWrap: "wrap",
+                    pt: 1
+                  }}>
+                  <Stack direction="row" spacing={0.75} sx={{
+                    alignItems: "center"
+                  }}>
                     <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                      }}>
                       Open source
                     </Typography>
                   </Stack>
-                  <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Stack direction="row" spacing={0.75} sx={{
+                    alignItems: "center"
+                  }}>
                     <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                      }}>
                       Community funded
                     </Typography>
                   </Stack>
-                  <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Stack direction="row" spacing={0.75} sx={{
+                    alignItems: "center"
+                  }}>
                     <CheckIcon sx={{ fontSize: 16, color: colors.ink }} />
-                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                      }}>
                       2 min setup
                     </Typography>
                   </Stack>
@@ -376,7 +413,13 @@ export default function HomePage() {
 
                 {/* Preview Content */}
                 <Box sx={{ p: 3, bgcolor: 'white' }}>
-                  <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                      alignItems: "center",
+                      mb: 3
+                    }}>
                     <Box
                       sx={{
                         width: 48,
@@ -391,8 +434,12 @@ export default function HomePage() {
                       <RocketLaunchIcon sx={{ color: 'white', fontSize: 24 }} />
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight={700}>Acme App</Typography>
-                      <Typography variant="caption" color="text.secondary">Changelog</Typography>
+                      <Typography variant="subtitle1" sx={{
+                        fontWeight: 700
+                      }}>Acme App</Typography>
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>Changelog</Typography>
                     </Box>
                     <Box sx={{ flex: 1 }} />
                     <Chip
@@ -408,14 +455,13 @@ export default function HomePage() {
                         <Stack
                           direction="row"
                           spacing={1.5}
-                          alignItems="flex-start"
                           sx={{
+                            alignItems: "flex-start",
                             pb: 2,
                             borderBottom: i < demoEntries.length - 1 ? 1 : 0,
                             borderColor: 'divider',
-                            opacity: i < visibleEntries ? 1 : 0,
-                          }}
-                        >
+                            opacity: i < visibleEntries ? 1 : 0
+                          }}>
                           <Box
                             sx={{
                               width: 28,
@@ -431,7 +477,9 @@ export default function HomePage() {
                             {entry.icon}
                           </Box>
                           <Box sx={{ flex: 1 }}>
-                            <Stack direction="row" spacing={1} alignItems="center">
+                            <Stack direction="row" spacing={1} sx={{
+                              alignItems: "center"
+                            }}>
                               <Chip
                                 label={entry.type}
                                 size="small"
@@ -444,10 +492,17 @@ export default function HomePage() {
                                 }}
                               />
                             </Stack>
-                            <Typography variant="body2" fontWeight={500} sx={{ mt: 0.5 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 500,
+                                mt: 0.5
+                              }}>
                               {entry.title}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{
+                              color: "text.secondary"
+                            }}>
                               Jan {6 - i * 2}, 2025
                             </Typography>
                           </Box>
@@ -484,14 +539,12 @@ export default function HomePage() {
           </Grid>
         </Container>
       </Box>
-
       {/* Stats Section */}
       <Box component="section" sx={{ py: 8, bgcolor: '#f8fafc', borderTop: 1, borderBottom: 1, borderColor: 'divider' }}>
         <Container maxWidth="lg">
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             spacing={4}
-            justifyContent="center"
             divider={
               <Box
                 sx={{
@@ -501,18 +554,38 @@ export default function HomePage() {
                 }}
               />
             }
+            sx={{
+              justifyContent: "center"
+            }}
           >
             {[
               { value: "2 min", label: "Setup time", icon: <AccessTimeIcon /> },
               { value: "Open", label: "Source & free", icon: <FavoriteIcon /> },
               { value: "REST + RSS", label: "API included", icon: <RssFeedIcon /> },
             ].map((stat, i) => (
-              <Stack key={i} alignItems="center" spacing={1} sx={{ flex: 1, py: { xs: 2, md: 0 } }}>
+              <Stack
+                key={i}
+                spacing={1}
+                sx={{
+                  alignItems: "center",
+                  flex: 1,
+                  py: { xs: 2, md: 0 }
+                }}>
                 <Box sx={{ color: colors.ink, opacity: 0.6 }}>{stat.icon}</Box>
-                <Typography variant="h3" fontWeight={800} color="text.primary">
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontWeight: 800,
+                    color: "text.primary"
+                  }}>
                   {stat.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 500
+                  }}>
                   {stat.label}
                 </Typography>
               </Stack>
@@ -520,19 +593,30 @@ export default function HomePage() {
           </Stack>
         </Container>
       </Box>
-
       {/* Pain Point Section */}
       <Box component="section" sx={{ py: 12 }}>
         <Container maxWidth="lg">
-          <Stack alignItems="center" textAlign="center" spacing={2} sx={{ mb: 8 }}>
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              textAlign: "center",
+              mb: 8
+            }}>
             <Typography
               variant="h3"
-              fontWeight={700}
-              sx={{ maxWidth: 600 }}
-            >
+              sx={{
+                fontWeight: 700,
+                maxWidth: 600
+              }}>
               Sound familiar?
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 500 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "text.secondary",
+                maxWidth: 500
+              }}>
               You&apos;re shipping fast, but nobody knows. Your updates are buried across platforms.
             </Typography>
           </Stack>
@@ -540,7 +624,9 @@ export default function HomePage() {
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             spacing={3}
-            justifyContent="center"
+            sx={{
+              justifyContent: "center"
+            }}
           >
             {[
               {
@@ -592,10 +678,20 @@ export default function HomePage() {
                 }}
               >
                 <Typography variant="h2" sx={{ mb: 2, fontSize: '3rem' }}>{pain.emoji}</Typography>
-                <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 600,
+                    mb: 1
+                  }}>
                   {pain.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.7
+                  }}>
                   {pain.desc}
                 </Typography>
               </Paper>
@@ -603,7 +699,6 @@ export default function HomePage() {
           </Stack>
         </Container>
       </Box>
-
       {/* Solution Section */}
       <Box
         component="section"
@@ -613,7 +708,13 @@ export default function HomePage() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack alignItems="center" textAlign="center" spacing={2} sx={{ mb: 8 }}>
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: "center",
+              textAlign: "center",
+              mb: 8
+            }}>
             <Box
               sx={{
                 width: 80,
@@ -628,10 +729,18 @@ export default function HomePage() {
             >
               <PigeonLogo size="lg" />
             </Box>
-            <Typography variant="h3" fontWeight={700}>
+            <Typography variant="h3" sx={{
+              fontWeight: 700
+            }}>
               PatchPigeon delivers your changelog
             </Typography>
-            <Typography variant="h6" color="text.secondary" fontWeight={400} sx={{ maxWidth: 500 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: "text.secondary",
+                fontWeight: 400,
+                maxWidth: 500
+              }}>
               A beautiful home for all your updates. Takes 2 minutes to set up.
             </Typography>
           </Stack>
@@ -696,10 +805,20 @@ export default function HomePage() {
                       {feature.icon}
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={600} sx={{ mb: 0.5 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          mb: 0.5
+                        }}>
                         {feature.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "text.secondary",
+                          lineHeight: 1.7
+                        }}>
                         {feature.desc}
                       </Typography>
                     </Box>
@@ -710,16 +829,16 @@ export default function HomePage() {
           </Grid>
         </Container>
       </Box>
-
       {/* How It Works */}
       <Box component="section" sx={{ py: 12 }}>
         <Container maxWidth="md">
           <Typography
             variant="h3"
-            fontWeight={700}
-            textAlign="center"
-            sx={{ mb: 8 }}
-          >
+            sx={{
+              fontWeight: 700,
+              textAlign: "center",
+              mb: 8
+            }}>
             Up and running in 3 steps
           </Typography>
 
@@ -733,13 +852,12 @@ export default function HomePage() {
                 key={i}
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={3}
-                alignItems={{ sm: 'center' }}
                 sx={{
+                  alignItems: { sm: 'center' },
                   py: 4,
                   borderBottom: i < 2 ? 1 : 0,
-                  borderColor: 'divider',
-                }}
-              >
+                  borderColor: 'divider'
+                }}>
                 <Box
                   sx={{
                     width: 64,
@@ -758,10 +876,17 @@ export default function HomePage() {
                   {item.step}
                 </Box>
                 <Box>
-                  <Typography variant="h5" fontWeight={600} sx={{ mb: 0.5 }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 0.5
+                    }}>
                     {item.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography variant="body1" sx={{
+                    color: "text.secondary"
+                  }}>
                     {item.desc}
                   </Typography>
                 </Box>
@@ -770,17 +895,23 @@ export default function HomePage() {
           </Stack>
         </Container>
       </Box>
-
       {/* Social Proof Section */}
       <Box component="section" sx={{ py: 12, bgcolor: '#f8fafc' }}>
         <Container maxWidth="lg">
           <Stack
             direction={{ xs: 'column', lg: 'row' }}
             spacing={6}
-            alignItems="center"
+            sx={{
+              alignItems: "center"
+            }}
           >
             <Box sx={{ flex: 1 }}>
-              <Typography variant="h3" fontWeight={700} sx={{ mb: 3 }}>
+              <Typography
+                variant="h3"
+                sx={{
+                  fontWeight: 700,
+                  mb: 3
+                }}>
                 Why a dedicated changelog?
               </Typography>
               <Stack spacing={2.5}>
@@ -791,7 +922,9 @@ export default function HomePage() {
                   "Makes your hard work visible to the world",
                   "Helps with SEO and discoverability",
                 ].map((item, i) => (
-                  <Stack key={i} direction="row" spacing={2} alignItems="center">
+                  <Stack key={i} direction="row" spacing={2} sx={{
+                    alignItems: "center"
+                  }}>
                     <Box
                       sx={{
                         width: 24,
@@ -859,7 +992,9 @@ export default function HomePage() {
                   >
                     &ldquo;{testimonial.quote}&rdquo;
                   </Typography>
-                  <Stack direction="row" spacing={2} alignItems="center">
+                  <Stack direction="row" spacing={2} sx={{
+                    alignItems: "center"
+                  }}>
                     <Box
                       sx={{
                         width: 40,
@@ -875,8 +1010,12 @@ export default function HomePage() {
                       {testimonial.emoji}
                     </Box>
                     <Box>
-                      <Typography variant="subtitle2" fontWeight={600}>{testimonial.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">{testimonial.role}</Typography>
+                      <Typography variant="subtitle2" sx={{
+                        fontWeight: 600
+                      }}>{testimonial.name}</Typography>
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>{testimonial.role}</Typography>
                     </Box>
                   </Stack>
                 </Paper>
@@ -885,7 +1024,6 @@ export default function HomePage() {
           </Stack>
         </Container>
       </Box>
-
       {/* Final CTA */}
       <Box
         component="section"
@@ -911,7 +1049,12 @@ export default function HomePage() {
         />
         
         <Container maxWidth="sm" sx={{ position: 'relative' }}>
-          <Stack alignItems="center" textAlign="center" spacing={4}>
+          <Stack
+            spacing={4}
+            sx={{
+              alignItems: "center",
+              textAlign: "center"
+            }}>
             <Box
               sx={{
                 width: 80,
@@ -925,7 +1068,12 @@ export default function HomePage() {
             >
               <PigeonLogo size="lg" />
             </Box>
-            <Typography variant="h2" fontWeight={800} sx={{ letterSpacing: '-0.02em' }}>
+            <Typography
+              variant="h2"
+              sx={{
+                fontWeight: 800,
+                letterSpacing: '-0.02em'
+              }}>
               Your changelog, delivered.
             </Typography>
             <Typography variant="h6" sx={{ opacity: 0.7, fontWeight: 400 }}>
@@ -964,7 +1112,6 @@ export default function HomePage() {
           </Stack>
         </Container>
       </Box>
-
       {/* Footer */}
       <Box
         component="footer"
@@ -978,18 +1125,30 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            justifyContent="space-between"
-            alignItems={{ xs: 'center', md: 'flex-start' }}
             spacing={4}
-          >
-            <Stack spacing={2} alignItems={{ xs: 'center', md: 'flex-start' }}>
-              <Stack direction="row" spacing={1.5} alignItems="center">
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: 'center', md: 'flex-start' }
+            }}>
+            <Stack spacing={2} sx={{
+              alignItems: { xs: 'center', md: 'flex-start' }
+            }}>
+              <Stack direction="row" spacing={1.5} sx={{
+                alignItems: "center"
+              }}>
                 <PigeonLogo size="sm" />
-                <Typography variant="h6" fontWeight={700}>
+                <Typography variant="h6" sx={{
+                  fontWeight: 700
+                }}>
                   PatchPigeon
                 </Typography>
               </Stack>
-              <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  maxWidth: 280
+                }}>
                 Beautiful changelogs for indie developers and small teams.
               </Typography>
               <Box
@@ -1002,9 +1161,13 @@ export default function HomePage() {
                   '&:hover .author-name': { color: colors.peach },
                 }}
               >
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} sx={{
+                  alignItems: "center"
+                }}>
                   <FavoriteIcon sx={{ fontSize: 14, color: colors.peach }} />
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     Made with love by{' '}
                     <Typography 
                       component="span" 
@@ -1021,16 +1184,31 @@ export default function HomePage() {
 
             <Stack direction="row" spacing={{ xs: 4, sm: 6 }}>
               <Stack spacing={1.5}>
-                <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 600
+                  }}>
                   Product
                 </Typography>
                 <Link href="/demo" style={{ textDecoration: 'none' }}>
-                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      '&:hover': { color: 'text.primary' }
+                    }}>
                     Demo
                   </Typography>
                 </Link>
                 <Link href="/auth/sign-up" style={{ textDecoration: 'none' }}>
-                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      '&:hover': { color: 'text.primary' }
+                    }}>
                     Get Started
                   </Typography>
                 </Link>
@@ -1041,14 +1219,24 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   style={{ textDecoration: 'none' }}
                 >
-                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      '&:hover': { color: 'text.primary' }
+                    }}>
                     Source Code
                   </Typography>
                 </Box>
               </Stack>
 
               <Stack spacing={1.5}>
-                <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 600
+                  }}>
                   Legal
                 </Typography>
                 <Box
@@ -1058,14 +1246,24 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   style={{ textDecoration: 'none' }}
                 >
-                  <Typography variant="body2" color="text.secondary" sx={{ '&:hover': { color: 'text.primary' } }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      '&:hover': { color: 'text.primary' }
+                    }}>
                     Impressum
                   </Typography>
                 </Box>
               </Stack>
 
               <Stack spacing={1.5}>
-                <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 600
+                  }}>
                   Connect
                 </Typography>
                 <Stack direction="row" spacing={1}>
@@ -1112,12 +1310,14 @@ export default function HomePage() {
           </Stack>
 
           <Box sx={{ mt: 6, pt: 3, borderTop: 1, borderColor: 'divider', textAlign: 'center' }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               &copy; {new Date().getFullYear()} PatchPigeon. All rights reserved.
             </Typography>
           </Box>
         </Container>
       </Box>
     </Box>
-  )
+  );
 }

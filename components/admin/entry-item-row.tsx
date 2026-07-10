@@ -96,7 +96,13 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
       {isMobile ? (
         <Box sx={{ p: 1.5 }}>
           {/* Top row: Drag handle + Type + Actions */}
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: "center",
+              mb: 1.5
+            }}>
             <Box
               component="button"
               {...attributes}
@@ -198,7 +204,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
             placeholder="Area (optional)"
             fullWidth
-            inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
+            slotProps={{ htmlInput: { style: { fontSize: "0.75rem", fontFamily: "monospace" } } }}
           />
 
           {/* Description (expandable) */}
@@ -215,7 +221,13 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
         </Box>
       ) : (
         /* Desktop Layout */
-        <Stack direction="row" alignItems="flex-start" spacing={1} sx={{ p: 1.5 }}>
+        (<Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: "flex-start",
+            p: 1.5
+          }}>
           {/* Drag Handle */}
           <Tooltip title="Drag to reorder">
             <Box
@@ -238,7 +250,6 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               <DragIndicatorIcon sx={{ fontSize: 18, color: "text.secondary" }} />
             </Box>
           </Tooltip>
-
           {/* Type Selector */}
           <Box sx={{ flexShrink: 0, width: 140 }}>
             <MuiSelect
@@ -288,7 +299,6 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               })}
             </MuiSelect>
           </Box>
-
           {/* Title & Area */}
           <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 }}>
             <Stack direction="row" spacing={1}>
@@ -306,7 +316,7 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
                     value={item.area || ""}
                     onChange={(e) => onUpdate(item.id, { area: e.target.value || null })}
                     placeholder="Area"
-                    inputProps={{ style: { fontSize: "0.75rem", fontFamily: "monospace" } }}
+                    slotProps={{ htmlInput: { style: { fontSize: "0.75rem", fontFamily: "monospace" } } }}
                   />
                 </Box>
               </Tooltip>
@@ -323,7 +333,6 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               />
             )}
           </Box>
-
           {/* Actions */}
           <Stack direction="row" spacing={0.5}>
             <Tooltip title={isExpanded ? "Hide description" : "Add description (Enter)"}>
@@ -359,8 +368,8 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
               </IconButton>
             </Tooltip>
           </Stack>
-        </Stack>
+        </Stack>)
       )}
     </Box>
-  )
+  );
 }

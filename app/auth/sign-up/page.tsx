@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { PigeonLogo } from "@/components/brand/pigeon-logo"
 import Link from "next/link"
 import { Box, Container, Typography, Stack, Alert, InputAdornment } from "@mui/material"
-import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import MailOutlinedIcon from "@mui/icons-material/MailOutlined"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import CheckIcon from "@mui/icons-material/Check"
@@ -38,7 +38,9 @@ export default function SignUpPage() {
         <Container maxWidth="sm">
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center", mb: 4 }}>
             <Link href="/" style={{ textDecoration: "none" }}>
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack direction="row" spacing={1.5} sx={{
+                alignItems: "center"
+              }}>
                 <PigeonLogo size="md" />
                 <Typography variant="h5" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
               </Stack>
@@ -47,7 +49,9 @@ export default function SignUpPage() {
 
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}>Start your journey</Typography>
-            <Typography color="text.secondary">Create your account and ship your first changelog in minutes.</Typography>
+            <Typography sx={{
+              color: "text.secondary"
+            }}>Create your account and ship your first changelog in minutes.</Typography>
           </Box>
 
           <Box component="form" action={formAction}>
@@ -60,12 +64,14 @@ export default function SignUpPage() {
                   type="email"
                   placeholder="you@example.com"
                   required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MailOutlineIcon sx={{ color: "text.secondary" }} />
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <MailOutlinedIcon sx={{ color: "text.secondary" }} />
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               </Box>
@@ -78,13 +84,15 @@ export default function SignUpPage() {
                   type="password"
                   placeholder="Create a password (min 6 chars)"
                   required
-                  inputProps={{ minLength: 8 }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    htmlInput: { minLength: 8 },
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               </Box>
@@ -97,12 +105,14 @@ export default function SignUpPage() {
                   type="password"
                   placeholder="Confirm your password"
                   required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlinedIcon sx={{ color: "text.secondary" }} />
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon sx={{ color: "text.secondary" }} />
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                 />
               </Box>
@@ -124,12 +134,21 @@ export default function SignUpPage() {
             </Stack>
           </Box>
 
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "center", mt: 2 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              textAlign: "center",
+              mt: 2
+            }}>
             By signing up, you agree to our Terms of Service and Privacy Policy.
           </Typography>
 
           <Box sx={{ mt: 4, textAlign: "center" }}>
-            <Typography color="text.secondary">
+            <Typography sx={{
+              color: "text.secondary"
+            }}>
               {"Already have an account? "}
               <Link href="/auth/login" style={{ textDecoration: "none" }}>
                 <Typography component="span" sx={{ fontWeight: 600, color: "text.primary", "&:hover": { color: "#a7d8ff" } }}>
@@ -148,7 +167,6 @@ export default function SignUpPage() {
           </Box>
         </Container>
       </Box>
-
       <Box
         sx={{
           display: { xs: "none", lg: "flex" },
@@ -166,7 +184,13 @@ export default function SignUpPage() {
         <Box sx={{ position: "absolute", top: "33%", right: "33%", width: 96, height: 96, borderRadius: "50%", bgcolor: "rgba(167, 216, 255, 0.4)", filter: "blur(32px)" }} />
 
         <Box sx={{ position: "relative", zIndex: 1, maxWidth: 400 }}>
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{
+              alignItems: "center",
+              mb: 4
+            }}>
             <PigeonLogo size="lg" />
             <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>PatchPigeon</Typography>
           </Stack>
@@ -177,7 +201,9 @@ export default function SignUpPage() {
 
           <Stack spacing={2}>
             {benefits.map((benefit, index) => (
-              <Stack key={index} direction="row" spacing={1.5} alignItems="center">
+              <Stack key={index} direction="row" spacing={1.5} sx={{
+                alignItems: "center"
+              }}>
                 <Box sx={{ width: 24, height: 24, borderRadius: "50%", bgcolor: "#bfebd6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <CheckIcon sx={{ fontSize: 16, color: "text.primary" }} />
                 </Box>
@@ -188,5 +214,5 @@ export default function SignUpPage() {
         </Box>
       </Box>
     </Box>
-  )
+  );
 }

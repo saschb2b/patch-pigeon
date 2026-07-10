@@ -36,6 +36,12 @@ docker compose config
 
 `pnpm check` runs TypeScript and strict React Compiler-aware ESLint rules. The compiler is enabled in `next.config.mjs`; avoid manual `useMemo`, `useCallback`, and `React.memo` unless referential identity is required outside React or for effect correctness.
 
+## Dependency maintenance
+
+Use `pnpm outdated` to review available updates and `pnpm audit` to check the full dependency tree. Keep framework, lint, and TypeScript upgrades inside the peer ranges declared by Next.js and its ESLint plugins; a newer standalone release is not an upgrade if the surrounding toolchain does not support it yet.
+
+Auth.js v5 is intentionally pinned to its current beta. Better Auth is a future migration option, but switching requires migrating credential records and validating existing sessions rather than only replacing packages.
+
 For an end-to-end container check:
 
 ```sh

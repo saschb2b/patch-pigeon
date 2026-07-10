@@ -87,8 +87,12 @@ export function ProductForm({ product }: ProductFormProps) {
 
             <Box>
               <Label htmlFor="slug">URL Slug</Label>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography color="text.secondary">/</Typography>
+              <Stack direction="row" spacing={1} sx={{
+                alignItems: "center"
+              }}>
+                <Typography sx={{
+                  color: "text.secondary"
+                }}>/</Typography>
                 <Input
                   id="slug"
                   value={slug}
@@ -97,7 +101,13 @@ export function ProductForm({ product }: ProductFormProps) {
                   required
                 />
               </Stack>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "text.secondary",
+                  mt: 0.5,
+                  display: "block"
+                }}>
                 This will be your public changelog URL
               </Typography>
             </Box>
@@ -138,5 +148,5 @@ export function ProductForm({ product }: ProductFormProps) {
         </Box>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -20,7 +20,7 @@ const productSchema = z.object({
   logo_url: z
     .union([
       z.literal(""),
-      z.string().url().refine((value) => /^https?:\/\//.test(value), "Use an HTTP or HTTPS URL"),
+      z.url().refine((value) => /^https?:\/\//.test(value), "Use an HTTP or HTTPS URL"),
     ])
     .optional()
     .nullable(),
@@ -154,7 +154,7 @@ export async function deleteEntryAction(entryId: string): Promise<void> {
 }
 
 const entryItemInputSchema = z.object({
-  id: z.union([z.string().uuid(), z.string().regex(/^temp-[a-zA-Z0-9-]+$/)]),
+  id: z.union([z.uuid(), z.string().regex(/^temp-[a-zA-Z0-9-]+$/)]),
   type: z.enum(["FEATURE", "FIX", "IMPROVEMENT", "KNOWNISSUE", "BREAKING", "REMOVED", "NOTE"]),
   title: z.string().trim().max(240),
   description: z.string().trim().max(10_000).nullable(),
@@ -163,8 +163,8 @@ const entryItemInputSchema = z.object({
 })
 
 const saveEntrySchema = z.object({
-  productId: z.string().uuid(),
-  entryId: z.string().uuid().optional(),
+  productId: z.uuid(),
+  entryId: z.uuid().optional(),
   title: z.string().trim().min(1).max(240),
   slug: z
     .string()
@@ -177,7 +177,7 @@ const saveEntrySchema = z.object({
   published: z.boolean(),
   publish_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use a valid publish date"),
   items: z.array(entryItemInputSchema).max(500),
-  deletedItemIds: z.array(z.string().uuid()),
+  deletedItemIds: z.array(z.uuid()),
 })
 
 export async function saveEntryAction(
