@@ -62,6 +62,7 @@ export default function SignUpPage() {
                   id="email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
                   required
                   slotProps={{
@@ -82,6 +83,7 @@ export default function SignUpPage() {
                   id="password"
                   name="password"
                   type="password"
+                  autoComplete="new-password"
                   placeholder="Create a password (min 8 chars)"
                   required
                   slotProps={{
@@ -103,6 +105,7 @@ export default function SignUpPage() {
                   id="repeatPassword"
                   name="repeatPassword"
                   type="password"
+                  autoComplete="new-password"
                   placeholder="Confirm your password"
                   required
                   slotProps={{

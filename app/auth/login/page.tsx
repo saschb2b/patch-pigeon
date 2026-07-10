@@ -70,12 +70,14 @@ export default function LoginPage() {
             }}
           >
             <Typography variant="body1" sx={{ fontStyle: "italic", mb: 2, color: "text.primary" }}>
-              &quot;Coo coo! This tool is the bread crumbs I&apos;ve been searching for. No more scattered updates across the park!&quot;
+              {"“Coo coo! This tool is the bread crumbs I've been searching for. No more scattered updates across the park!”"}
             </Typography>
             <Stack direction="row" spacing={1.5} sx={{
               alignItems: "center"
             }}>
-              <Box sx={{ width: 40, height: 40, borderRadius: "50%", bgcolor: "#a7d8ff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>🐦</Box>
+              <Box sx={{ width: 40, height: 40, borderRadius: "50%", bgcolor: "#a7d8ff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <PigeonLogo size="sm" />
+              </Box>
               <Box>
                 <Typography variant="body2" sx={{ fontWeight: 500, color: "text.primary" }}>Colonel Feathers</Typography>
                 <Typography variant="caption" sx={{
@@ -123,6 +125,7 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
                   required
                   slotProps={{
@@ -143,6 +146,7 @@ export default function LoginPage() {
                   id="password"
                   name="password"
                   type="password"
+                  autoComplete="current-password"
                   placeholder="Enter your password"
                   required
                   slotProps={{

@@ -854,6 +854,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   }}>
                   <Tooltip title="Ctrl+Shift+F">
                     <Button
+                      aria-label="Add feature"
                       variant="outline"
                       size="sm"
                       onClick={() => handleAddItem("FEATURE")}
@@ -865,6 +866,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   </Tooltip>
                   <Tooltip title="Ctrl+Shift+I">
                     <Button
+                      aria-label="Add improvement"
                       variant="outline"
                       size="sm"
                       onClick={() => handleAddItem("IMPROVEMENT")}
@@ -876,6 +878,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                   </Tooltip>
                   <Tooltip title="Ctrl+Shift+B">
                     <Button
+                      aria-label="Add fix"
                       variant="outline"
                       size="sm"
                       onClick={() => handleAddItem("FIX")}
@@ -886,6 +889,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                     </Button>
                   </Tooltip>
                   <Button
+                    aria-label="Add breaking change"
                     variant="outline"
                     size="sm"
                     onClick={() => handleAddItem("BREAKING")}
@@ -894,7 +898,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
                     <WarningIcon sx={{ fontSize: 14, mr: 0.5 }} />
                     Breaking
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleAddItem("NOTE")}>
+                  <Button aria-label="Add note" variant="outline" size="sm" onClick={() => handleAddItem("NOTE")}>
                     <AddIcon sx={{ fontSize: 14, mr: 0.5 }} />
                     More
                   </Button>
