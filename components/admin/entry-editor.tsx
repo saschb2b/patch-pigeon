@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { EntryItemRow } from "./entry-item-row"
-import { CHANGE_TYPE_ORDER, changeTypeConfig } from "@/components/change-type-config"
+import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import {
   Box,
   Typography,
@@ -31,7 +31,6 @@ import {
   Grid,
   Snackbar,
   Tooltip,
-  Fade,
   IconButton,
 } from "@mui/material"
 import SaveIcon from "@mui/icons-material/Save"
@@ -444,18 +443,8 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
       })
     : null
 
-  // Group items by type for preview
-  const groupedItems = items.reduce(
-    (acc, item) => {
-      if (!item.title.trim()) return acc
-      if (!acc[item.type]) acc[item.type] = []
-      acc[item.type].push(item)
-      return acc
-    },
-    {} as Record<ChangeType, EntryItem[]>,
-  )
-
-  const validItemCount = items.filter((i) => i.title.trim()).length
+  const validItems = items.filter((item) => item.title.trim())
+  const validItemCount = validItems.length
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
@@ -1011,126 +1000,34 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
 
               {/* Preview Content - Grouped by Type */}
               <Box sx={{ borderTop: 1, borderColor: "divider", pt: 4 }}>
-                <Stack spacing={4}>
-                  {CHANGE_TYPE_ORDER.map((type) => {
-                    const typeItems = groupedItems[type]
-                    if (!typeItems || typeItems.length === 0) return null
-
-                    const config = changeTypeConfig[type]
-                    const Icon = config.icon
-
-                    return (
-                      <Box key={type}>
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          sx={{
-                            alignItems: "center",
-                            mb: 2,
-                            color: config.color
-                          }}>
-                          <Icon sx={{ fontSize: 14 }} />
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                            {config.label}s
-                          </Typography>
-                          <Typography variant="caption" sx={{
-                            color: "text.secondary"
-                          }}>
-                            ({typeItems.length})
-                          </Typography>
-                        </Stack>
-                        <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0 }}>
-                          <Stack spacing={1.5}>
-                            {typeItems.map((item) => (
-                              <Fade in key={item.id}>
-                                <Box
-                                  component="li"
-                                  sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
-                                >
-                                  <Box
-                                    sx={{
-                                      mt: 1,
-                                      width: "6px",
-                                      height: "6px",
-                                      borderRadius: "50%",
-                                      bgcolor: config.color,
-                                      flexShrink: 0,
-                                      opacity: 0.6,
-                                    }}
-                                  />
-                                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                                    <Stack
-                                      direction="row"
-                                      spacing={1}
-                                      sx={{
-                                        alignItems: "center",
-                                        flexWrap: "wrap"
-                                      }}>
-                                      {item.area && (
-                                        <Chip
-                                          label={item.area}
-                                          size="small"
-                                          sx={{
-                                            height: 20,
-                                            fontSize: "0.7rem",
-                                            bgcolor: "grey.100",
-                                            color: "text.secondary",
-                                          }}
-                                        />
-                                      )}
-                                      <Typography variant="body2" sx={{
-                                        color: "text.primary"
-                                      }}>
-                                        {item.title}
-                                      </Typography>
-                                    </Stack>
-                                    {item.description && (
-                                      <Typography
-                                        variant="body2"
-                                        sx={{
-                                          color: "text.secondary",
-                                          mt: 0.5
-                                        }}>
-                                        {item.description}
-                                      </Typography>
-                                    )}
-                                  </Box>
-                                </Box>
-                              </Fade>
-                            ))}
-                          </Stack>
-                        </Box>
-                      </Box>
-                    );
-                  })}
-
-                  {Object.keys(groupedItems).length === 0 && (
-                    <Paper
-                      elevation={0}
+                {validItems.length > 0 ? (
+                  <EntryItemsList items={validItems} />
+                ) : (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      textAlign: "center",
+                      py: 6,
+                      border: "1px dashed",
+                      borderColor: "divider",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
                       sx={{
-                        textAlign: "center",
-                        py: 6,
-                        border: "1px dashed",
-                        borderColor: "divider",
-                        borderRadius: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          color: "text.secondary",
-                          mb: 1
-                        }}>
-                        No changes yet
-                      </Typography>
-                      <Typography variant="body2" sx={{
-                        color: "text.secondary"
+                        color: "text.secondary",
+                        mb: 1
                       }}>
-                        Add changes on the left to see the preview
-                      </Typography>
-                    </Paper>
-                  )}
-                </Stack>
+                      No changes yet
+                    </Typography>
+                    <Typography variant="body2" sx={{
+                      color: "text.secondary"
+                    }}>
+                      Add changes on the left to see the preview
+                    </Typography>
+                  </Paper>
+                )}
               </Box>
             </Box>
           </Box>
