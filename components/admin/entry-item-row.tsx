@@ -15,7 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import { changeTypeConfig } from "@/components/change-type-config"
+import { CHANGE_TYPE_ORDER, changeTypeConfig } from "@/components/change-type-config"
 import type { ChangeType, EntryItem } from "@/lib/types"
 
 interface EntryItemRowProps {
@@ -25,6 +25,72 @@ interface EntryItemRowProps {
   onDuplicate?: (item: EntryItem) => void
   onNavigate?: (direction: "up" | "down") => void
   autoFocus?: boolean
+}
+
+interface ChangeTypeSelectProps {
+  value: ChangeType
+  layout: "mobile" | "desktop"
+  onChange: (event: SelectChangeEvent<string>) => void
+}
+
+function ChangeTypeSelect({ value, layout, onChange }: ChangeTypeSelectProps) {
+  const config = changeTypeConfig[value]
+  const isMobile = layout === "mobile"
+
+  return (
+    <MuiSelect
+      value={value}
+      onChange={onChange}
+      inputProps={{ "aria-label": "Change type" }}
+      size="small"
+      fullWidth
+      sx={{
+        fontSize: "0.75rem",
+        fontWeight: 500,
+        color: config.color,
+        bgcolor: config.backgroundColor,
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: config.borderColor,
+        },
+        ...(!isMobile && {
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: config.color,
+          },
+        }),
+        "& .MuiSelect-select": {
+          display: "flex",
+          alignItems: "center",
+          gap: isMobile ? 0.5 : 1,
+          py: isMobile ? 0.75 : 1,
+        },
+      }}
+      renderValue={(selectedValue) => {
+        const selectedConfig = changeTypeConfig[selectedValue as ChangeType]
+        const Icon = selectedConfig.icon
+
+        return (
+          <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 0.5 : 1, color: selectedConfig.color }}>
+            <Icon sx={{ fontSize: 14 }} />
+            {selectedConfig.label}
+          </Box>
+        )
+      }}
+    >
+      {CHANGE_TYPE_ORDER.map((type) => {
+        const optionConfig = changeTypeConfig[type]
+        const Icon = optionConfig.icon
+
+        return (
+          <MenuItem key={type} value={type}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: optionConfig.color }}>
+              <Icon sx={{ fontSize: 14 }} />
+              {optionConfig.label}
+            </Box>
+          </MenuItem>
+        )
+      })}
+    </MuiSelect>
+  )
 }
 
 export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate, autoFocus }: EntryItemRowProps) {
@@ -39,8 +105,6 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
     transform: CSS.Transform.toString(transform),
     transition,
   }
-
-  const config = changeTypeConfig[item.type]
 
   // Auto-focus when this is a new item
   useEffect(() => {
@@ -126,50 +190,11 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
             </Box>
 
             <Box sx={{ flex: 1 }}>
-              <MuiSelect
+              <ChangeTypeSelect
                 value={item.type}
                 onChange={handleTypeChange}
-                inputProps={{ "aria-label": "Change type" }}
-                size="small"
-                fullWidth
-                sx={{
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  color: config.color,
-                  bgcolor: config.backgroundColor,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: config.borderColor,
-                  },
-                  "& .MuiSelect-select": {
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.5,
-                    py: 0.75,
-                  },
-                }}
-                renderValue={(value) => {
-                  const cfg = changeTypeConfig[value as ChangeType]
-                  const Icon = cfg.icon
-                  return (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: cfg.color }}>
-                      <Icon sx={{ fontSize: 14 }} />
-                      {cfg.label}
-                    </Box>
-                  )
-                }}
-              >
-                {Object.entries(changeTypeConfig).map(([type, cfg]) => {
-                  const Icon = cfg.icon
-                  return (
-                    <MenuItem key={type} value={type}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
-                        <Icon sx={{ fontSize: 14 }} />
-                        {cfg.label}
-                      </Box>
-                    </MenuItem>
-                  )
-                })}
-              </MuiSelect>
+                layout="mobile"
+              />
             </Box>
 
             <Stack direction="row" spacing={0}>
@@ -266,53 +291,11 @@ export function EntryItemRow({ item, onUpdate, onDelete, onDuplicate, onNavigate
           </Tooltip>
           {/* Type Selector */}
           <Box sx={{ flexShrink: 0, width: 140 }}>
-            <MuiSelect
+            <ChangeTypeSelect
               value={item.type}
               onChange={handleTypeChange}
-              inputProps={{ "aria-label": "Change type" }}
-              size="small"
-              fullWidth
-              sx={{
-                fontSize: "0.75rem",
-                fontWeight: 500,
-                color: config.color,
-                bgcolor: config.backgroundColor,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: config.borderColor,
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: config.color,
-                },
-                "& .MuiSelect-select": {
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  py: 1,
-                },
-              }}
-              renderValue={(value) => {
-                const cfg = changeTypeConfig[value as ChangeType]
-                const Icon = cfg.icon
-                return (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
-                    <Icon sx={{ fontSize: 14 }} />
-                    {cfg.label}
-                  </Box>
-                )
-              }}
-            >
-              {Object.entries(changeTypeConfig).map(([type, cfg]) => {
-                const Icon = cfg.icon
-                return (
-                  <MenuItem key={type} value={type}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, color: cfg.color }}>
-                      <Icon sx={{ fontSize: 14 }} />
-                      {cfg.label}
-                    </Box>
-                  </MenuItem>
-                )
-              })}
-            </MuiSelect>
+              layout="desktop"
+            />
           </Box>
           {/* Title & Area */}
           <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 }}>
