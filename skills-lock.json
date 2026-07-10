@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "autopilot": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/autopilot/SKILL.md",
+      "computedHash": "ef4bce9e563e4ecb36a697303d09cc1de58471894d5b6122f0b2023c4d22ad0e"
+    },
+    "okf": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/okf/SKILL.md",
+      "computedHash": "91cfe3c2bca3698621c003b190bfc2bfc3b4fc5808a2220180fd7f13c19f78e1"
+    },
+    "react-compiler": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/react-compiler/SKILL.md",
+      "computedHash": "1c507e206ed2b552c9eae9f689c30a54623925a42134ea81bf6679e8bac56ee1"
+    },
+    "react-stinky": {
+      "source": "saschb2b/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/react-stinky/SKILL.md",
+      "computedHash": "28c108225b19b8c61f69dcf820cad2298db67386b47c1fdadd55414162dc1b93"
+    }
+  }
+}
