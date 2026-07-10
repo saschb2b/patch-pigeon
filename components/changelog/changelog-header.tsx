@@ -61,7 +61,11 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
             <Stack direction="row" spacing={1.5} sx={{
               alignItems: "center"
             }}>
-              <Link href={ownerHref} style={{ textDecoration: "none" }}>
+              <Link
+                href={ownerHref}
+                aria-label={`${profile.display_name || profile.owner_slug} profile`}
+                style={{ textDecoration: "none" }}
+              >
                 <Stack
                   direction="row"
                   spacing={1}
@@ -98,7 +102,11 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
 
               <ChevronRightIcon sx={{ fontSize: 16, color: "text.disabled" }} />
 
-              <Link href={productHref} style={{ textDecoration: "none" }}>
+              <Link
+                href={productHref}
+                aria-label={`${product.name} changelog`}
+                style={{ textDecoration: "none" }}
+              >
                 <Stack
                   direction="row"
                   spacing={1}
@@ -183,7 +191,7 @@ export function ChangelogHeader({ product, profile, isDemo, entryCount }: Change
 
               <Box sx={{ width: '1px', height: 20, bgcolor: 'divider', mx: 0.5, display: { xs: 'none', sm: 'block' } }} />
 
-              <Link href="/" style={{ textDecoration: "none" }}>
+              <Link href="/" aria-label="PatchPigeon home" style={{ textDecoration: "none" }}>
                 <Stack
                   direction="row"
                   spacing={0.5}

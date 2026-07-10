@@ -126,6 +126,7 @@ export default function HomePage() {
 
             {/* Mobile menu button */}
             <IconButton 
+              aria-label="Open navigation menu"
               onClick={() => setMobileMenuOpen(true)}
               sx={{ display: { xs: 'flex', sm: 'none' } }}
             >
@@ -158,7 +159,10 @@ export default function HomePage() {
                   fontWeight: 700
                 }}>PatchPigeon</Typography>
               </Stack>
-              <IconButton onClick={() => setMobileMenuOpen(false)}>
+              <IconButton
+                aria-label="Close navigation menu"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 <CloseIcon />
               </IconButton>
             </Stack>
@@ -1269,6 +1273,7 @@ export default function HomePage() {
                 <Stack direction="row" spacing={1}>
                   <Box
                     component="a"
+                    aria-label="GitHub profile"
                     href="https://github.com/saschb2b"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1288,6 +1293,7 @@ export default function HomePage() {
                   </Box>
                   <Box
                     component="a"
+                    aria-label="X"
                     href="https://x.com"
                     target="_blank"
                     rel="noopener noreferrer"

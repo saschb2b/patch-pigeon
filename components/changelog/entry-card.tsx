@@ -67,10 +67,38 @@ export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: Entr
   }
 
   const accentColor = primaryType ? accentColors[primaryType] : colors.sky
+  const changeCountLabel = [
+    typeCounts.FEATURE > 0
+      ? `${typeCounts.FEATURE} feature${typeCounts.FEATURE === 1 ? "" : "s"}`
+      : null,
+    typeCounts.IMPROVEMENT > 0
+      ? `${typeCounts.IMPROVEMENT} improvement${typeCounts.IMPROVEMENT === 1 ? "" : "s"}`
+      : null,
+    typeCounts.FIX > 0
+      ? `${typeCounts.FIX} fix${typeCounts.FIX === 1 ? "" : "es"}`
+      : null,
+    typeCounts.BREAKING > 0
+      ? `${typeCounts.BREAKING} breaking change${typeCounts.BREAKING === 1 ? "" : "s"}`
+      : null,
+  ]
+    .filter((label) => label !== null)
+    .join(", ")
+  const entryLinkLabel = [
+    `View ${entry.title}`,
+    entry.version ? `version ${entry.version}` : null,
+    publishDate,
+    changeCountLabel || null,
+  ]
+    .filter((label) => label !== null)
+    .join(". ")
 
   return (
     <Box component="article" sx={{ position: "relative" }}>
-      <Link href={`/${ownerSlug}/${productSlug}/${entry.slug}`} style={{ textDecoration: "none" }}>
+      <Link
+        href={`/${ownerSlug}/${productSlug}/${entry.slug}`}
+        aria-label={entryLinkLabel}
+        style={{ textDecoration: "none" }}
+      >
         <Paper
           elevation={0}
           sx={{
