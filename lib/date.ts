@@ -1,9 +1,10 @@
 const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/
+const DATE_PREFIX_PATTERN = /^(\d{4})-(\d{2})-(\d{2})(?:$|T)/
 
 function parseDateOnly(value: string): Date {
-  const match = DATE_ONLY_PATTERN.exec(value)
+  const match = DATE_PREFIX_PATTERN.exec(value)
   if (!match) {
-    throw new Error(`Expected a date in YYYY-MM-DD format, received: ${value}`)
+    throw new Error(`Expected a calendar date, received: ${value}`)
   }
 
   const [, year, month, day] = match
