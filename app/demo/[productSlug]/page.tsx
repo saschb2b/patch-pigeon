@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
@@ -9,9 +10,22 @@ import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { getDemoData } from "@/lib/demo-data"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 
-export const metadata = {
-  title: "Demo Changelog",
-  description: "See how your changelog could look with PatchPigeon",
+interface PageProps {
+  params: Promise<{ productSlug: string }>
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { productSlug } = await params
+  const { product } = getDemoData()
+
+  if (productSlug !== product.slug) {
+    return { title: "Not Found" }
+  }
+
+  return {
+    title: "Demo Changelog",
+    description: "See how your changelog could look with PatchPigeon",
+  }
 }
 
 function groupEntriesByMonth(
@@ -34,8 +48,14 @@ function groupEntriesByMonth(
     .map(([date, entries]) => ({ date, entries }))
 }
 
-export default function DemoProductPage() {
+export default async function DemoProductPage({ params }: PageProps) {
+  const { productSlug } = await params
   const { profile, product, entries } = getDemoData()
+
+  if (productSlug !== product.slug) {
+    notFound()
+  }
+
   const groupedEntries = groupEntriesByMonth(entries)
 
   return (
@@ -92,7 +112,7 @@ export default function DemoProductPage() {
                 date={group.date}
                 entries={group.entries}
                 ownerSlug="demo"
-                productSlug="acme-app"
+                productSlug={product.slug}
                 isFirst={index === 0}
               />
             ))}

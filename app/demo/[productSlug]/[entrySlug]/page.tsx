@@ -30,11 +30,11 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { entrySlug } = await params
+  const { productSlug, entrySlug } = await params
   const { product, entries } = getDemoData()
   const entry = entries.find((e) => e.slug === entrySlug)
 
-  if (!entry) {
+  if (productSlug !== product.slug || !entry) {
     return { title: "Not Found" }
   }
 
@@ -50,7 +50,7 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
 
   const entry = entries.find((e) => e.slug === entrySlug)
 
-  if (!entry) {
+  if (productSlug !== product.slug || !entry) {
     notFound()
   }
 
