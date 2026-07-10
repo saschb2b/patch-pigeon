@@ -262,6 +262,7 @@ export default function HomePage() {
                 <Typography
                   variant="h1"
                   component="h1"
+                  aria-label="Your users deserve to know what's new"
                   sx={{
                     fontWeight: 800,
                     fontSize: { xs: '2rem', sm: '2.5rem', md: '3.75rem' },
@@ -1157,6 +1158,7 @@ export default function HomePage() {
               </Typography>
               <Box
                 component="a"
+                aria-label="Made with love by Sascha"
                 href="https://www.saschb2b.com/"
                 target="_blank"
                 rel="noopener noreferrer"
