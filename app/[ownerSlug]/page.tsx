@@ -7,6 +7,7 @@ import { Box, Container, Typography, Stack, Chip, Avatar } from "@mui/material"
 import InventoryIcon from "@mui/icons-material/Inventory2Outlined"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
+import { formatDateOnly } from "@/lib/date"
 
 interface PageProps {
   params: Promise<{ ownerSlug: string }>
@@ -273,7 +274,7 @@ export default async function OwnerProfilePage({ params }: PageProps) {
                                 <Typography variant="caption" sx={{
                                   color: "text.secondary"
                                 }}>
-                                  {new Date(product.latest_entry.publish_date).toLocaleDateString("en-US", {
+                                  {formatDateOnly(product.latest_entry.publish_date, {
                                     month: "short",
                                     day: "numeric",
                                     year: "numeric",

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Box, Typography, Stack, Paper, Chip } from "@mui/material"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import { CHANGE_TYPE_ORDER, changeTypeConfig } from "@/components/change-type-config"
+import { formatDateOnly } from "@/lib/date"
 import type { EntryWithItems, ChangeType } from "@/lib/types"
 
 // Brand colors
@@ -24,7 +25,7 @@ interface EntryCardProps {
 
 export function EntryCard({ entry, ownerSlug, productSlug, isHighlighted }: EntryCardProps) {
   const publishDate = entry.publish_date
-    ? new Date(entry.publish_date).toLocaleDateString("en-US", {
+    ? formatDateOnly(entry.publish_date, {
         year: "numeric",
         month: "short",
         day: "numeric",

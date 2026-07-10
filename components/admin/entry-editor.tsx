@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { EntryItemRow } from "./entry-item-row"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
+import { formatDateOnly } from "@/lib/date"
 import {
   Box,
   Typography,
@@ -436,7 +437,7 @@ export function EntryEditor({ productId, productSlug, productName, ownerSlug, en
   }
 
   const formattedDate = publishDate
-    ? new Date(publishDate).toLocaleDateString("en-US", {
+    ? formatDateOnly(publishDate, {
         year: "numeric",
         month: "long",
         day: "numeric",

@@ -15,6 +15,7 @@ import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import { EntryCard } from "@/components/changelog/entry-card"
 import { getDemoData } from "@/lib/demo-data"
+import { formatDateOnly } from "@/lib/date"
 
 // Brand colors
 const colors = {
@@ -55,7 +56,7 @@ export default async function DemoEntryDetailPage({ params }: PageProps) {
   }
 
   const publishDate = entry.publish_date
-    ? new Date(entry.publish_date).toLocaleDateString("en-US", {
+    ? formatDateOnly(entry.publish_date, {
         year: "numeric",
         month: "long",
         day: "numeric",

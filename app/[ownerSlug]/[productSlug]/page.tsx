@@ -7,6 +7,7 @@ import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { ChangelogJsonLd, BreadcrumbJsonLd, SoftwareApplicationJsonLd } from "@/components/seo/json-ld"
 import type { EntryWithItems } from "@/lib/types"
+import { getMonthKey } from "@/lib/date"
 import HistoryIcon from "@mui/icons-material/History"
 
 const siteUrl = getSiteUrl()
@@ -239,8 +240,7 @@ function groupEntriesByMonth(entries: EntryWithItems[]): { date: string; entries
   const groups: Record<string, EntryWithItems[]> = {}
 
   entries.forEach((entry) => {
-    const date = entry.publish_date ? new Date(entry.publish_date) : new Date(entry.created_at)
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-01`
+    const key = getMonthKey(entry.publish_date || entry.created_at)
 
     if (!groups[key]) {
       groups[key] = []

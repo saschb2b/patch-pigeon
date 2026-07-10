@@ -18,6 +18,7 @@ import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminFooter } from "@/components/admin/admin-footer"
 import { DeleteEntryButton } from "@/components/admin/delete-entry-button"
 import { TogglePublishButton } from "@/components/admin/toggle-publish-button"
+import { formatDateOnly } from "@/lib/date"
 
 // Brand colors
 const colors = {
@@ -423,7 +424,7 @@ export default async function ProductEntriesPage({ params }: PageProps) {
                               <Typography variant="caption" sx={{
                                 color: "text.secondary"
                               }}>
-                                {new Date(entry.publish_date).toLocaleDateString('en-US', {
+                                {formatDateOnly(entry.publish_date, {
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',

@@ -3,6 +3,7 @@
 import { Box, Typography, Stack } from "@mui/material"
 import { EntryCard } from "./entry-card"
 import type { EntryWithItems } from "@/lib/types"
+import { formatDateOnly } from "@/lib/date"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
 
 // Brand colors
@@ -23,7 +24,7 @@ interface TimelineGroupProps {
 }
 
 export function TimelineGroup({ date, entries, ownerSlug, productSlug, isFirst }: TimelineGroupProps) {
-  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  const formattedDate = formatDateOnly(date, {
     year: "numeric",
     month: "long",
   })

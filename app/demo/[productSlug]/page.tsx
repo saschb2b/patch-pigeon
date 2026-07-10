@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip"
 import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { TimelineGroup } from "@/components/changelog/timeline-group"
 import { getDemoData } from "@/lib/demo-data"
+import { getMonthKey } from "@/lib/date"
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"
 
 interface PageProps {
@@ -34,8 +35,7 @@ function groupEntriesByMonth(
   const groups: Record<string, typeof entries> = {}
 
   entries.forEach((entry) => {
-    const date = entry.publish_date ? new Date(entry.publish_date) : new Date(entry.created_at)
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-01`
+    const key = getMonthKey(entry.publish_date || entry.created_at)
 
     if (!groups[key]) {
       groups[key] = []

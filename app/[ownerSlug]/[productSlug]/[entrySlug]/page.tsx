@@ -11,6 +11,7 @@ import { ChangelogHeader } from "@/components/changelog/changelog-header"
 import { EntryItemsList } from "@/components/changelog/entry-items-list"
 import { EntryCard } from "@/components/changelog/entry-card"
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld"
+import { formatDateOnly } from "@/lib/date"
 
 const siteUrl = getSiteUrl()
 
@@ -91,7 +92,7 @@ export default async function EntryDetailPage({ params }: PageProps) {
   const { profile, product, entry, relatedEntries } = result
 
   const publishDate = entry.publish_date
-    ? new Date(entry.publish_date).toLocaleDateString("en-US", {
+    ? formatDateOnly(entry.publish_date, {
         year: "numeric",
         month: "long",
         day: "numeric",
