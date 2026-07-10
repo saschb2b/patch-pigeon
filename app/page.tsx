@@ -772,8 +772,8 @@ export default function HomePage() {
               },
               {
                 icon: <BoltIcon sx={{ fontSize: 28 }} />,
-                title: "Zero maintenance",
-                desc: "We handle hosting, performance, and uptime. You just write. Focus on building, not ops.",
+                title: "Self-hosted control",
+                desc: "Deploy with Docker and PostgreSQL. Keep your changelog and data on infrastructure you control.",
                 color: colors.butter,
               },
             ].map((feature, i) => (
